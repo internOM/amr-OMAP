@@ -1,0 +1,10 @@
+[console_scripts]
+Automation_and_Lidar = amr_ws.Automation_and_Lidar:main
+Automation_and_Lidar2 = amr_ws.Automation_and_Lidar2:main
+Demo_Automation = amr_ws.Demo_Automation:main
+baselink_laser_tf = amr_ws.baselink_laser_tf:main
+camera_follow = amr_ws.camera_follow:main
+compass = amr_ws.compass:main
+joystick_to_motor = amr_ws.joystick_to_motor:main
+keyboard_listener = amr_ws.keyboard_listener:main
+webcam_line_follow = amr_ws.webcam_line_follow:main

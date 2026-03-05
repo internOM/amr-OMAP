@@ -1,0 +1,14 @@
+[console_scripts]
+cam_line_follow = camera_follow.cam_line_follow:main
+cam_line_follow_d435if_nonshow = camera_follow.cam_line_follow_d435if_nonshow:main
+cam_line_follow_stop = camera_follow.cam_line_follow_stop:main
+cam_line_follow_stop_black = camera_follow.cam_line_follow_stop_black:main
+cam_line_follow_stop_early = camera_follow.cam_line_follow_stop_early:main
+cam_line_follow_stop_early_2line = camera_follow.cam_line_follow_stop_early_2line:main
+cam_line_follow_stop_edge = camera_follow.cam_line_follow_stop_edge:main
+cam_line_follow_stop_grayscale = camera_follow.cam_line_follow_stop_grayscale:main
+cam_line_search = camera_follow.cam_line_search:main
+hand_eye_mrc01 = camera_follow.hand_eye_mrc01:main
+hand_eye_petbottle = camera_follow.hand_eye_petbottle:main
+image_sub = camera_follow.image_sub:main
+webcam_line_follow = camera_follow.webcam_line_follow:main

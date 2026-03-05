@@ -1,0 +1,45 @@
+[0.205s] Invoking command in '/home/intern1/ros2_ws/src/build/examples_rclcpp_minimal_timer': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/intern1/ros2_ws/src/examples/rclcpp/timers/minimal_timer -DCMAKE_INSTALL_PREFIX=/home/intern1/ros2_ws/src/install/examples_rclcpp_minimal_timer
+[1.807s] -- The C compiler identification is GNU 13.3.0
+[1.808s] -- The CXX compiler identification is GNU 13.3.0
+[1.808s] -- Detecting C compiler ABI info
+[1.808s] -- Detecting C compiler ABI info - done
+[1.808s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.808s] -- Detecting C compile features
+[1.808s] -- Detecting C compile features - done
+[1.808s] -- Detecting CXX compiler ABI info
+[1.808s] -- Detecting CXX compiler ABI info - done
+[1.808s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.809s] -- Detecting CXX compile features
+[1.809s] -- Detecting CXX compile features - done
+[1.809s] -- Found ament_cmake: 2.5.5 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[1.809s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[1.809s] -- Found rclcpp: 28.1.16 (/opt/ros/jazzy/share/rclcpp/cmake)
+[1.809s] -- Found rosidl_generator_c: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[1.809s] -- Found rosidl_generator_cpp: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[1.809s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.809s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.810s] -- Found rmw_implementation_cmake: 7.3.3 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[1.810s] -- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[1.810s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[1.810s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[1.810s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.810s] -- Found ament_lint_auto: 0.17.4 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[1.810s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.810s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.810s] -- Configured cppcheck include dirs: 
+[1.810s] -- Configured cppcheck exclude dirs and/or files: 
+[1.810s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[1.810s] -- Configured cpplint exclude dirs and/or files: 
+[1.810s] -- Added test 'lint_cmake' to check CMake code style
+[1.812s] -- Added test 'uncrustify' to check C / C++ code style
+[1.813s] -- Configured uncrustify additional arguments: 
+[1.813s] -- Added test 'xmllint' to check XML markup files
+[1.813s] -- Configuring done (1.5s)
+[1.813s] -- Generating done (0.0s)
+[1.813s] -- Build files have been written to: /home/intern1/ros2_ws/src/build/examples_rclcpp_minimal_timer
+[1.825s] Invoked command in '/home/intern1/ros2_ws/src/build/examples_rclcpp_minimal_timer' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/intern1/ros2_ws/src/examples/rclcpp/timers/minimal_timer -DCMAKE_INSTALL_PREFIX=/home/intern1/ros2_ws/src/install/examples_rclcpp_minimal_timer
+[1.829s] Invoking command in '/home/intern1/ros2_ws/src/build/examples_rclcpp_minimal_timer': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/src/build/examples_rclcpp_minimal_timer -- -j14 -l14
+[1.914s] [ 25%] [32mBuilding CXX object CMakeFiles/timer_member_function.dir/member_function.cpp.o[0m
+[1.930s] [ 50%] [32mBuilding CXX object CMakeFiles/timer_lambda.dir/lambda.cpp.o[0m
+[12.276s] [ 75%] [32m[1mLinking CXX executable timer_lambda[0m
+[14.020s] [ 75%] Built target timer_lambda

@@ -1,0 +1,32 @@
+[2.314s] Invoking command in '/home/intern1/ros2_ws/src/education_material': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/education_material build --build-base /home/intern1/ros2_ws/build/education_material/build install --record /home/intern1/ros2_ws/build/education_material/install.log --single-version-externally-managed install_data
+[2.607s] running egg_info
+[2.628s] writing ../../build/education_material/education_material.egg-info/PKG-INFO
+[2.629s] writing dependency_links to ../../build/education_material/education_material.egg-info/dependency_links.txt
+[2.629s] writing entry points to ../../build/education_material/education_material.egg-info/entry_points.txt
+[2.629s] writing requirements to ../../build/education_material/education_material.egg-info/requires.txt
+[2.629s] writing top-level names to ../../build/education_material/education_material.egg-info/top_level.txt
+[2.671s] reading manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+[2.672s] adding license file 'LICENSE'
+[2.672s] writing manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+[2.672s] running build
+[2.672s] running build_py
+[2.673s] copying education_material/keypressed_to_cmdvel.py -> /home/intern1/ros2_ws/build/education_material/build/lib/education_material
+[2.673s] running install
+[2.679s] running install_lib
+[2.701s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/keypressed_to_cmdvel.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[2.702s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/keypressed_to_cmdvel.py to keypressed_to_cmdvel.cpython-312.pyc
+[2.703s] running install_data
+[2.704s] running install_egg_info
+[2.727s] removing '/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material-0.0.0-py3.12.egg-info' (and everything under it)
+[2.727s] Copying ../../build/education_material/education_material.egg-info to /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material-0.0.0-py3.12.egg-info
+[2.728s] running install_scripts
+[2.874s] Installing evenodd_checker script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.875s] Installing int_pub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.875s] Installing int_sub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.875s] Installing keypressed_calculator script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.875s] Installing keypressed_talker script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.875s] Installing keypressed_to_cmdvel script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.876s] Installing string_pub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.876s] Installing string_sub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[2.876s] writing list of installed files to '/home/intern1/ros2_ws/build/education_material/install.log'
+[3.298s] Invoked command in '/home/intern1/ros2_ws/src/education_material' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/education_material build --build-base /home/intern1/ros2_ws/build/education_material/build install --record /home/intern1/ros2_ws/build/education_material/install.log --single-version-externally-managed install_data

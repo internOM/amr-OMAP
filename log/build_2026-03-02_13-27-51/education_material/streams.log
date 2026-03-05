@@ -1,0 +1,33 @@
+[2.538s] Invoking command in '/home/intern1/ros2_ws/src/education_material': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/education_material build --build-base /home/intern1/ros2_ws/build/education_material/build install --record /home/intern1/ros2_ws/build/education_material/install.log --single-version-externally-managed install_data
+[2.830s] running egg_info
+[2.830s] creating ../../build/education_material/education_material.egg-info
+[2.853s] writing ../../build/education_material/education_material.egg-info/PKG-INFO
+[2.853s] writing dependency_links to ../../build/education_material/education_material.egg-info/dependency_links.txt
+[2.853s] writing requirements to ../../build/education_material/education_material.egg-info/requires.txt
+[2.853s] writing top-level names to ../../build/education_material/education_material.egg-info/top_level.txt
+[2.853s] writing manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+[2.895s] reading manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+[2.895s] adding license file 'LICENSE'
+[2.895s] writing manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+[2.895s] running build
+[2.896s] running build_py
+[2.896s] creating /home/intern1/ros2_ws/build/education_material/build
+[2.896s] creating /home/intern1/ros2_ws/build/education_material/build/lib
+[2.896s] creating /home/intern1/ros2_ws/build/education_material/build/lib/education_material
+[2.899s] copying education_material/__init__.py -> /home/intern1/ros2_ws/build/education_material/build/lib/education_material
+[2.899s] running install
+[2.903s] running install_lib
+[2.923s] creating /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[2.923s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/__init__.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[2.923s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/__init__.py to __init__.cpython-312.pyc
+[2.924s] running install_data
+[2.924s] creating /home/intern1/ros2_ws/install/education_material/share/ament_index
+[2.924s] creating /home/intern1/ros2_ws/install/education_material/share/ament_index/resource_index
+[2.925s] creating /home/intern1/ros2_ws/install/education_material/share/ament_index/resource_index/packages
+[2.925s] copying resource/education_material -> /home/intern1/ros2_ws/install/education_material/share/ament_index/resource_index/packages
+[2.925s] copying package.xml -> /home/intern1/ros2_ws/install/education_material/share/education_material
+[2.925s] running install_egg_info
+[2.947s] Copying ../../build/education_material/education_material.egg-info to /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material-0.0.0-py3.12.egg-info
+[2.948s] running install_scripts
+[3.090s] writing list of installed files to '/home/intern1/ros2_ws/build/education_material/install.log'
+[3.153s] Invoked command in '/home/intern1/ros2_ws/src/education_material' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/education_material build --build-base /home/intern1/ros2_ws/build/education_material/build install --record /home/intern1/ros2_ws/build/education_material/install.log --single-version-externally-managed install_data

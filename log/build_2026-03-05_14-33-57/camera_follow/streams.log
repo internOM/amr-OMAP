@@ -1,0 +1,33 @@
+[5.399s] Invoking command in '/home/intern1/ros2_ws/src/camera_follow': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/camera_follow/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/camera_follow build --build-base /home/intern1/ros2_ws/build/camera_follow/build install --record /home/intern1/ros2_ws/build/camera_follow/install.log --single-version-externally-managed install_data
+[5.996s] running egg_info
+[6.028s] writing ../../build/camera_follow/camera_follow.egg-info/PKG-INFO
+[6.030s] writing dependency_links to ../../build/camera_follow/camera_follow.egg-info/dependency_links.txt
+[6.032s] writing entry points to ../../build/camera_follow/camera_follow.egg-info/entry_points.txt
+[6.033s] writing requirements to ../../build/camera_follow/camera_follow.egg-info/requires.txt
+[6.033s] writing top-level names to ../../build/camera_follow/camera_follow.egg-info/top_level.txt
+[6.097s] reading manifest file '../../build/camera_follow/camera_follow.egg-info/SOURCES.txt'
+[6.098s] writing manifest file '../../build/camera_follow/camera_follow.egg-info/SOURCES.txt'
+[6.099s] running build
+[6.099s] running build_py
+[6.100s] running install
+[6.109s] running install_lib
+[6.146s] running install_data
+[6.147s] running install_egg_info
+[6.190s] removing '/home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow-0.0.0-py3.12.egg-info' (and everything under it)
+[6.193s] Copying ../../build/camera_follow/camera_follow.egg-info to /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow-0.0.0-py3.12.egg-info
+[6.194s] running install_scripts
+[6.520s] Installing cam_line_follow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.520s] Installing cam_line_follow_d435if_nonshow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.521s] Installing cam_line_follow_stop script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.521s] Installing cam_line_follow_stop_black script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.522s] Installing cam_line_follow_stop_early script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.522s] Installing cam_line_follow_stop_early_2line script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.523s] Installing cam_line_follow_stop_edge script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.523s] Installing cam_line_follow_stop_grayscale script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.524s] Installing cam_line_search script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.524s] Installing hand_eye_mrc01 script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.525s] Installing hand_eye_petbottle script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.525s] Installing image_sub script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.526s] Installing webcam_line_follow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+[6.527s] writing list of installed files to '/home/intern1/ros2_ws/build/camera_follow/install.log'
+[6.595s] Invoked command in '/home/intern1/ros2_ws/src/camera_follow' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/camera_follow/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/camera_follow build --build-base /home/intern1/ros2_ws/build/camera_follow/build install --record /home/intern1/ros2_ws/build/camera_follow/install.log --single-version-externally-managed install_data

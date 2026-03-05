@@ -1,0 +1,33 @@
+<style>
+  .battery {
+    width: 60px;
+    height: 25px;
+    border: 3px solid black;
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .battery::after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: 6px;
+    width: 6px;
+    height: 10px;
+    background: black;
+    border-radius: 2px;
+  }
+
+  .battery-level {
+    height: 100%;
+    background: green;
+    width: 50%; /* default 50% level */
+    transition: width 0.3s, background 0.3s;
+  }
+</style>
+
+<div class="battery">
+  <div id="battery-level" class="battery-level"></div>
+</div>
+<p id="battery-text">Battery: 50%</p>

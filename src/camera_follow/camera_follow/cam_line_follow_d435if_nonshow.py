@@ -1,0 +1,299 @@
+#! /usr/bin/env python3
+
+import rclpy
+from rclpy.node import Node
+import cv2
+import numpy as np
+from cv_bridge import CvBridge
+from realsense2_camera_msgs.msg import RGBD
+from geometry_msgs.msg import Twist
+from mvc01_msgs.msg import IO
+from agv_msgs.msg import Mode
+from agv_msgs.msg import Status
+
+# 白線選択の条件
+LINE_MIN_LEN = 20    # 最小長さ(pixel)
+LINE_MIN_RATIO = 0.05    # 最小太さ W/L > 0.05 
+LINE_MAX_RATIO = 0.5    # 最大太さ W/L < 0.3
+
+class CONT_LINE:
+	def __init__(self, contNo, direct, center, boxNP, lineC, lineL):
+		self.contNo = contNo    # 輪郭番号
+		self.direct = direct    # 縦線(0)/横線(1)
+		self.center = center    # 重心位置[x,y]:pixel
+		self.boxNP = boxNP        # 白線外形矩形[[x0,y0],[x1,y1],[x2,y2],[x3,y3]]:pixel
+		self.lineC = lineC        # センターライン[[xs,ys],[xe,ye]]:pixel
+		self.lineLength = lineL    # 白線長さ（boxの長辺)
+
+class ImgReceiver(Node):
+	
+	def __init__(self):
+		super().__init__('cam_line_follow')
+		self.bridge = CvBridge()
+		self.__camera__subscriber = self.create_subscription(
+			RGBD, "/camera/camera/rgbd", self.listener_callback, 10
+		)
+		self.mvc01_io_sub = self.create_subscription(
+			IO, "mvc01_IO", self.io_callback, 10
+		)
+		self.agv_mode_sub = self.create_subscription(
+			Mode, "agv_mode", self.mode_callback, 10
+		)
+		self.cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', 10)
+		self.agv_status_pub = self.create_publisher(Status, 'agv_status', 10)
+		
+		self.twist = Twist()	#Twistインスタンス生成
+		
+		self.agv_status = Status()
+		
+		self.restartCnt = 0
+		self.stopCnt = 0
+		
+		self.io_state = 0
+		self.mode = 0
+		self.start_trg = 0
+		self.start = 0
+		self.stop_trg = 0
+		
+		self.line_state = "wait_stop"
+		
+	def io_callback(self, IO):
+		self.io_state = IO.output
+		#print('output:=',self.io_state)
+		
+	def mode_callback(self, Mode):
+		self.mode = Mode.mode #2:line_follow
+		self.start_trg = Mode.lf_trg
+		self.stop_trg = Mode.stop_trg
+		#print('start_trg:=',self.start_trg)
+		
+		
+	def isThisWhiteLine(self, cnt, box, rectR, minLen, minRatio, maxRatio):
+		# 白線候補を抽出、lineStat=True、中心線：cy = a * x + b 
+		if rectR[1][0] > rectR[1][1]:
+			boxL, boxW = rectR[1][0], rectR[1][1]
+		else:
+			boxL, boxW = rectR[1][1], rectR[1][0]
+		if boxL < 0.001:
+			boxRatio = 10000
+		else:
+			boxRatio = boxW / boxL
+		if boxL >= minLen and (boxRatio > minRatio and boxRatio < maxRatio):
+			lineStat = True
+			M = cv2.moments(cnt)
+			if M['m00'] > 0: #重心が存在する
+				cx = int(M['m10']/M['m00'])        # col
+				cy = int(M['m01']/M['m00'])        # row
+				boxLen0 = (box[1][0] - box[0][0]) ** 2 + (box[1][1] - box[0][1]) ** 2
+				boxLen1 = (box[2][0] - box[1][0]) ** 2 + (box[2][1] - box[1][1]) ** 2
+				if boxLen0 < boxLen1:
+					bp = [[0, 1], [2, 3]]
+				else:
+					bp = [[1, 2], [3, 0]]
+				bpCx, bpCy = [0,0], [0,0]
+				for k in range(2):
+					bpCx[k] = int(box[bp[k][0]][0] + (box[bp[k][1]][0] - box[bp[k][0]][0]) / 2.)
+					bpCy[k] = int(box[bp[k][0]][1] + (box[bp[k][1]][1] - box[bp[k][0]][1]) / 2.)
+				vx = bpCx[1] - bpCx[0]
+				vy = bpCy[1] - bpCy[0]
+				# 白線の傾きvy/vx、点(bpCx[0],bpCy[0])を通る直線, cy = a * x + b
+				if abs(vx) > 0.0:        # 垂直でない場合
+					a, c = vy/vx, 1
+					b = bpCy[0] - a * bpCx[0]
+				else:        # 垂直(vx=0)の場合, x=-b
+					a, b, c = 1, -bpCx[0], 0
+			else:
+				a, b, c, cx, cy = 0, 0, 0, 0, 0
+		else:    # 基準を満たさないbox
+			a, b, c, cx, cy = 0, 0, 0, 0, 0
+			lineStat = False
+		return lineStat, (cx, cy), a, b, c, boxL
+		
+	def listener_callback(self, data):
+		if self.mode == 2: #
+			frame = self.bridge.imgmsg_to_cv2(data.rgb, "bgr8")
+			depth = self.bridge.imgmsg_to_cv2(data.depth, "passthrough")
+			
+			hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+			lower_yellow = np.array([20, 80, 100])
+			upper_yellow = np.array([50, 255, 255])
+			mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+			masked = cv2.bitwise_and(frame, frame, mask = mask)
+			
+			h, w = frame.shape[:2]
+			#print('h:=',h) #D405 480 #D455 480
+			#print('w:=',w) #D405 848 #D455 640
+			RESIZE = (w//2, h//2)
+			search_top = (h//4)*3#-100 #3
+			search_bot = h #search_top + 100
+			mask[0:search_top, 0:w] = 0
+			mask[search_bot:h, 0:w] = 0
+			#距離によるマスク
+			#for hM in range(search_top,search_bot):
+			#	for wM in range(0,w):
+			#		distance = depth[hM, wM]
+			#		if distance == 0 or 400 < distance:
+			#			mask[hM, wM] = 0
+			
+			#ノイズ除去
+			kernel = np.ones((5,5),np.uint8)
+			#erosion = cv2.erode(masked,kernel,iterations = 1)
+			#dilation = cv2.dilate(masked,kernel,iterations = 1)
+			#opening = cv2.morphologyEx(masked, cv2.MORPH_OPEN, kernel)
+			closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+			#gradient = cv2.morphologyEx(masked, cv2.MORPH_GRADIENT, kernel)
+			
+			#cv2.imshow('erosion',erosion)
+			#cv2.imshow('dilation',dilation)
+			#cv2.imshow('opening',opening)
+			#cv2.imshow('closing',closing)
+			#cv2.imshow('gradient',gradient)
+			
+			#輪郭検出
+			#ret, binary = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+			contours, hierarchy = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+			img_blank = np.ones_like(frame) * 255
+			# 輪郭だけを描画（黒色で描画）
+			img_contour_only = cv2.drawContours(frame, contours, -1, (0,0,0), 3)
+			# 描画
+			#cv2.imshow('img_contour_only',img_contour_only)
+			
+			whiteLines=[]
+			for i in range(len(contours)):
+				if hierarchy[0][i][3] > 0:        # hierarchyの親がなし(-1)、親parentが０の輪郭のみ抽出
+					continue
+				cnt = contours[i]
+				rect = cv2.minAreaRect(cnt)
+				box = cv2.boxPoints(rect)
+				box = np.int0(box)
+				frame = cv2.drawContours(frame,[box],0,(0,0,255),2)
+				lineStat, (cx, cy), a, b, c, lineLen = self.isThisWhiteLine(cnt, box, rect, LINE_MIN_LEN, LINE_MIN_RATIO, LINE_MAX_RATIO)
+					  # 白線の場合lineStat = True、白線の中心線cy = a * x + b
+				if not lineStat:    # 白線でない場合
+					continue
+				boxNP = np.int0(box)    # 整数に
+				if ( abs(a) > 0.3 ):    # 縦方向の白線
+					direct = 0
+					x0, y0, x1, y1 = int(-b / a), 0, int((c * h - b) / a), h
+				else:        #　横方向の白線
+					direct = 1
+					x0, y0, x1, y1 = 0, int(b), w, int(a * w + b)
+				whiteLines.append(CONT_LINE(i, direct, [cx,cy], boxNP, [[x0,y0],[x1,y1]], lineLen))
+			vLines = []
+			for k in range(len(whiteLines)):
+				if whiteLines[k].direct == 0:# 縦線だけを抽出
+					vLines.append([whiteLines[k].lineLength, k])
+			
+			print("cnt:= ",self.restartCnt)
+			if len(vLines) >= 2:
+				#print("detect_2line")
+				self.agv_status.line_detect = 2
+				if self.restartCnt > 10:
+					self.line_state = "stop"
+					self.start = 0
+					#print("stop")
+				else:
+					if  self.start == 1:
+						self.line_state = "run"
+						#print("run")
+			elif len(vLines) == 1:
+				#print("detect_1line")
+				self.agv_status.line_detect = 1
+				if  self.start == 1:
+					self.line_state = "run"
+			else:
+				#print("non_line")
+				self.agv_status.line_detect = 0
+				self.stopCnt += 1
+				if self.stopCnt > 20:
+					self.line_state = "stop"
+					self.start = 0
+					self.stopCnt = 0
+				
+			if self.io_state == 1 or self.start_trg == 1:
+				self.start = 1
+				self.restartCnt = 0
+				
+			if self.stop_trg == 1:
+				self.line_state = "stop"
+				self.start = 0
+				self.stop_trg = 0
+				self.restartCnt = 0
+						
+			M = cv2.moments(mask) #maskにおける1の部分の重心
+			if M['m00'] > 0: #重心が存在する
+				cx = int(M['m10']/M['m00']) #重心のx座標
+				cy = int(M['m01']/M['m00']) #重心のy座標
+				cv2.circle(frame, (cx, cy), 20, (0, 0, 255), -1)	#赤丸を画像に描画
+				
+	#			for f in range(cy-200, cy+200):#(100,w-100):
+	#				distance = depth[h//4, f]
+	#				print('distance: ',distance)
+	#				if 0 < distance < 450:
+	#					mode = "run"#"stop"
+	#					cv2.circle(frame, (f, h//4), 20, (0, 255, 0), -1) #緑丸を画像に描画
+	#					break
+	#				else:
+	#					mode = "run"
+	#			mode = "run"
+				if self.line_state == "stop":
+					self.twist.linear.x = 0.0
+					self.twist.angular.z = 0.0
+					self.agv_status.status = 0 #stop
+					#テキスト描画
+					#cv2.putText(frame, "STOP", (100,300), fontFace = cv2.FONT_HERSHEY_SIMPLEX, fontScale = 10.0, color = (0, 0, 255), thickness=5)
+				else:
+					if self.restartCnt < 100:
+						self.restartCnt += 1
+					#P制御
+					err = cx - w//2
+					if err == 0:
+						self.twist.linear.x = 0.667
+					else:
+						self.twist.linear.x = 0.667 - float(abs(err) )/600.0 #0.667 - (abs(float(err))/1000)
+					#self.twist.linear.x = 0.1
+					self.twist.angular.z = -float(err)/400
+					self.agv_status.status = 1 #run
+				#distance = depth[cy, cx]
+				#self.get_logger().info("vel:=%f" % (self.vel.Linear.x))
+				#print('cx: ',cx)
+				#print('cy: ',cy)
+				#print('distance: ',distance)
+			
+			else:
+				self.twist.linear.x = 0.0
+				self.twist.angular.z = 0.0
+				self.agv_status.status = 0 #stop
+				self.start = 0
+				
+			self.cmd_vel_pub.publish(self.twist)
+			self.agv_status_pub.publish(self.agv_status)
+				
+
+			#大きすぎるため，サイズ調整
+			display_mask = cv2.resize(mask, RESIZE)
+			display_masked = cv2.resize(masked, RESIZE)
+			display_image = cv2.resize(frame, RESIZE)
+			display_closing = cv2.resize(closing, RESIZE)
+			
+			#display_v1 = cv2.vconcat([display_image, display_closing])
+			#display_v2 = cv2.vconcat([display_mask, display_masked])
+			#display_h = cv2.hconcat([display_v1,display_v2])
+			
+			#cv2.imshow('CLOSING',display_closing)
+			#cv2.imshow('ORIGINAL',frame)
+			#cv2.imshow('MASK',display_mask)
+			#cv2.imshow('MASKED',display_masked)
+			#cv2.imshow('SUM',display_h)
+			#cv2.waitKey(3)
+			#self.get_logger().info('get image!')
+		pass
+
+def main():
+	rclpy.init()
+	image_sub = ImgReceiver()
+	try:
+		rclpy.spin(image_sub)
+	except KeyboardInterrupt:
+		pass
+	rclpy.shutdown()

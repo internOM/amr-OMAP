@@ -1,0 +1,28 @@
+running egg_info
+writing ../../build/education_material/education_material.egg-info/PKG-INFO
+writing dependency_links to ../../build/education_material/education_material.egg-info/dependency_links.txt
+writing entry points to ../../build/education_material/education_material.egg-info/entry_points.txt
+writing requirements to ../../build/education_material/education_material.egg-info/requires.txt
+writing top-level names to ../../build/education_material/education_material.egg-info/top_level.txt
+reading manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+running build
+running build_py
+copying education_material/int_pub.py -> /home/intern1/ros2_ws/build/education_material/build/lib/education_material
+copying education_material/int_sub.py -> /home/intern1/ros2_ws/build/education_material/build/lib/education_material
+running install
+running install_lib
+copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/int_pub.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/int_sub.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/int_pub.py to int_pub.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/int_sub.py to int_sub.cpython-312.pyc
+running install_data
+copying package.xml -> /home/intern1/ros2_ws/install/education_material/share/education_material
+running install_egg_info
+removing '/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material-0.0.0-py3.12.egg-info' (and everything under it)
+Copying ../../build/education_material/education_material.egg-info to /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material-0.0.0-py3.12.egg-info
+running install_scripts
+Installing int_pub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+Installing int_sub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+writing list of installed files to '/home/intern1/ros2_ws/build/education_material/install.log'

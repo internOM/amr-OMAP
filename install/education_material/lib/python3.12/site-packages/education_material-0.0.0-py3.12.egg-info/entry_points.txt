@@ -1,0 +1,9 @@
+[console_scripts]
+evenodd_checker = education_material.evenodd_checker:main
+int_pub = education_material.int_pub:main
+int_sub = education_material.int_sub:main
+keypressed_calculator = education_material.keypressed_calculator:main
+keypressed_talker = education_material.keypressed_talker:main
+keypressed_to_cmdvel = education_material.keypressed_to_cmdvel:main
+string_pub = education_material.string_pub:main
+string_sub = education_material.string_sub:main

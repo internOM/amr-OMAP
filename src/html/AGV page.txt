@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AGV Test</title>
+
+    <!-- ROSLIB -->
+    <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        /* Top right status container */
+        #status-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 18px;
+        }
+
+        /* ROS status */
+        #ros-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #ros-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: red;
+        }
+
+        /* Battery */
+        #battery {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #battery-icon {
+            font-size: 24px;
+        }
+
+        .btn-container {
+            display: inline-flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        button {
+            font-size: 24px;
+            padding: 15px 40px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .auto-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .auto-btn.active {
+            background-color: #2E7D32;
+        }
+
+        .manual-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        #output-container {
+            margin-top: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #auto-light {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #FF073A;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px #FF073A;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Top right corner -->
+<div id="status-container">
+    <div id="ros-status">
+        <div id="ros-dot"></div>
+        <span id="ros-text">ROS: Disconnected</span>
+    </div>
+
+    <div id="time"></div>
+
+    <div id="battery">
+        <span id="battery-icon">🔋</span>
+        <span id="battery-level">68%</span>
+    </div>
+</div>
+
+<h1>AGV Test</h1>
+
+<div class="btn-container">
+    <button id="auto-btn" class="auto-btn" onclick="toggleAuto()">Auto</button>
+
+    <a href="Manual.html">
+        <button class="manual-btn">Manual</button>
+    </a>
+</div>
+
+<div id="output-container">
+    <div id="auto-light"></div>
+    <div id="output">Auto mode off</div>
+</div>
+
+<script>
+    /* =========================
+       ROS CONNECTION
+       ========================= */
+    const ros = new ROSLIB.Ros({
+        url: 'ws://localhost:9090'   // change IP when serving from phone
+    });
+
+    const rosDot  = document.getElementById("ros-dot");
+    const rosText = document.getElementById("ros-text");
+
+    ros.on('connection', () => {
+        rosDot.style.background = "green";
+        rosText.textContent = "ROS: Connected";
+    });
+
+    ros.on('error', () => {
+        rosDot.style.background = "red";
+        rosText.textContent = "ROS: Error";
+    });
+
+    ros.on('close', () => {
+        rosDot.style.background = "red";
+        rosText.textContent = "ROS: Disconnected";
+    });
+
+    const autoModeTopic = new ROSLIB.Topic({
+        ros: ros,
+        name: '/auto_mode',
+        messageType: 'std_msgs/Bool'
+    });
+
+    /* =========================
+       AUTO MODE LOGIC
+       ========================= */
+    let isAuto = false;
+
+    function toggleAuto() {
+        isAuto = !isAuto;
+
+        document.getElementById("output").innerText =
+            isAuto ? "In auto mode" : "Auto mode off";
+
+        const light = document.getElementById("auto-light");
+        const btn   = document.getElementById("auto-btn");
+
+        if (isAuto) {
+            light.style.backgroundColor = "#39FF14";
+            light.style.boxShadow = "0 0 15px #39FF14";
+            btn.classList.add("active");
+        } else {
+            light.style.backgroundColor = "#FF073A";
+            light.style.boxShadow = "0 0 15px #FF073A";
+            btn.classList.remove("active");
+        }
+
+        autoModeTopic.publish(
+            new ROSLIB.Message({ data: isAuto })
+        );
+    }
+
+    /* =========================
+       TIME + BATTERY (unchanged)
+       ========================= */
+    function updateTime() {
+        document.getElementById("time").innerText =
+            new Date().toLocaleTimeString();
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    let batteryLevel = 100;
+    function updateBattery() {
+        batteryLevel -= 5;
+        if (batteryLevel < 0) batteryLevel = 100;
+        document.getElementById("battery-level").innerText = batteryLevel + "%";
+    }
+    setInterval(updateBattery, 2500);
+    updateBattery();
+</script>
+
+</body>
+</html>

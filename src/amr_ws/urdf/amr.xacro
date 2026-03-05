@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<robot name="amr_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ===================================================== -->
+  <!-- Material Definitions -->
+  <!-- ===================================================== -->
+  <material name="blue">
+    <color rgba="0 0 1 1"/>
+  </material>
+  <material name="green">
+    <color rgba="0 1 0 1"/>
+  </material>
+  <material name="red">
+    <color rgba="1 0 0 1"/>
+  </material>
+
+  <!-- ===================================================== -->
+  <!-- Base Link -->
+  <!-- ===================================================== -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.435 0.35 0.148"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.435 0.35 0.148"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ===================================================== -->
+  <!-- Wheels -->
+  <!-- ===================================================== -->
+  <!-- Left Wheel -->
+  <link name="left_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.075" length="0.04"/>
+      </geometry>
+      <!-- Rotate cylinder to stand upright along Y-axis -->
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.075" length="0.04"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="left_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <!-- centered in X, left side in Y, wheel radius in Z -->
+    <origin xyz="0 0.175 0.075" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Right Wheel -->
+  <link name="right_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.075" length="0.04"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.075" length="0.04"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="right_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0 -0.175 0.075" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ===================================================== -->
+  <!-- Laser -->
+  <!-- ===================================================== -->
+  <link name="laser">
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.02"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.05" length="0.02"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <origin xyz="0.185 0 0.085" rpy="0 0 3.1416"/>
+  </joint>
+
+</robot>
+

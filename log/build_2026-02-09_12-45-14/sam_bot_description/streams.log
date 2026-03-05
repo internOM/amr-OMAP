@@ -1,0 +1,52 @@
+[2.470s] Invoking command in '/home/intern1/ros2_ws/build/sam_bot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/sam_bot_description -- -j14 -l14
+[2.589s] Invoked command in '/home/intern1/ros2_ws/build/sam_bot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/sam_bot_description -- -j14 -l14
+[2.590s] Invoking command in '/home/intern1/ros2_ws/build/sam_bot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/sam_bot_description
+[2.642s] -- Install configuration: ""
+[2.642s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/src/description
+[2.643s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/src/description/sam_bot_description.urdf.xacro
+[2.643s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/src
+[2.643s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/src/description
+[2.643s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/src/description/sam_bot_description.urdf.xacro
+[2.657s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/launch
+[2.657s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/launch/display.launch.py
+[2.657s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz
+[2.657s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/log
+[2.657s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/log/latest_build
+[2.658s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/log/latest
+[2.658s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/log/build_2026-01-20_17-05-03
+[2.658s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/log/build_2026-01-20_17-05-03/events.log
+[2.658s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/log/build_2026-01-20_17-05-03/logger_all.log
+[2.658s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/log/COLCON_IGNORE
+[2.658s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/build
+[2.659s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/build/.built_by
+[2.659s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/build/COLCON_IGNORE
+[2.659s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install
+[2.659s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/local_setup.bash
+[2.659s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/local_setup.sh
+[2.659s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/_local_setup_util_sh.py
+[2.660s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/.colcon_install_layout
+[2.660s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/local_setup.zsh
+[2.660s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/setup.ps1
+[2.660s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/setup.zsh
+[2.660s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/_local_setup_util_ps1.py
+[2.663s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/local_setup.ps1
+[2.663s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/setup.sh
+[2.663s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/setup.bash
+[2.664s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/install/COLCON_IGNORE
+[2.664s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/rviz/config.rviz
+[2.664s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/ament_index/resource_index/package_run_dependencies/sam_bot_description
+[2.664s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/ament_index/resource_index/parent_prefix_path/sam_bot_description
+[2.664s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/environment/ament_prefix_path.sh
+[2.664s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/environment/ament_prefix_path.dsv
+[2.665s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/environment/path.sh
+[2.665s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/environment/path.dsv
+[2.665s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/local_setup.bash
+[2.665s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/local_setup.sh
+[2.665s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/local_setup.zsh
+[2.665s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/local_setup.dsv
+[2.666s] -- Installing: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/package.dsv
+[2.666s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/ament_index/resource_index/packages/sam_bot_description
+[2.666s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/cmake/sam_bot_descriptionConfig.cmake
+[2.666s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/cmake/sam_bot_descriptionConfig-version.cmake
+[2.666s] -- Up-to-date: /home/intern1/ros2_ws/install/sam_bot_description/share/sam_bot_description/package.xml
+[2.749s] Invoked command in '/home/intern1/ros2_ws/build/sam_bot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/sam_bot_description

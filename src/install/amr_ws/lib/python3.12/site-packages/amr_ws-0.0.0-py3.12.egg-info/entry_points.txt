@@ -1,0 +1,3 @@
+[console_scripts]
+compass = amr_ws.compass:main
+joystick_to_motor = amr_ws.joystick_to_motor:main

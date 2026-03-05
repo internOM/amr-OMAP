@@ -1,0 +1,9 @@
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: false        # Set true if running in simulation
+    base_frame: base_link      # Your robot base frame
+    odom_frame: odom           # Odometry frame
+    map_frame: map             # Map frame
+    scan_topic: /scan          # Lidar topic
+    mode: mapping              # Run in mapping mode
+    publish_period_sec: 1.0    # Map publish rate

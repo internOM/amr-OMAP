@@ -1,0 +1,87 @@
+running egg_info
+creating ../../build/camera_follow/camera_follow.egg-info
+writing ../../build/camera_follow/camera_follow.egg-info/PKG-INFO
+writing dependency_links to ../../build/camera_follow/camera_follow.egg-info/dependency_links.txt
+writing entry points to ../../build/camera_follow/camera_follow.egg-info/entry_points.txt
+writing requirements to ../../build/camera_follow/camera_follow.egg-info/requires.txt
+writing top-level names to ../../build/camera_follow/camera_follow.egg-info/top_level.txt
+writing manifest file '../../build/camera_follow/camera_follow.egg-info/SOURCES.txt'
+reading manifest file '../../build/camera_follow/camera_follow.egg-info/SOURCES.txt'
+writing manifest file '../../build/camera_follow/camera_follow.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/intern1/ros2_ws/build/camera_follow/build
+creating /home/intern1/ros2_ws/build/camera_follow/build/lib
+creating /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow_stop_edge.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow_stop_early.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_search.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow_stop_black.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/__init__.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/hand_eye_petbottle.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow_stop.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow_stop_grayscale.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/webcam_line_follow.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/hand_eye_mrc01.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow_d435if_nonshow.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/image_sub.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+copying camera_follow/cam_line_follow_stop_early_2line.py -> /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow
+running install
+running install_lib
+creating /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow_stop_edge.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow_stop_early.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_search.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow_stop_black.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/__init__.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/hand_eye_petbottle.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow_stop.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow_stop_grayscale.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/webcam_line_follow.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/hand_eye_mrc01.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow_d435if_nonshow.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/image_sub.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+copying /home/intern1/ros2_ws/build/camera_follow/build/lib/camera_follow/cam_line_follow_stop_early_2line.py -> /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow_stop_edge.py to cam_line_follow_stop_edge.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow_stop_early.py to cam_line_follow_stop_early.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_search.py to cam_line_search.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow.py to cam_line_follow.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow_stop_black.py to cam_line_follow_stop_black.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/hand_eye_petbottle.py to hand_eye_petbottle.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow_stop.py to cam_line_follow_stop.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow_stop_grayscale.py to cam_line_follow_stop_grayscale.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/webcam_line_follow.py to webcam_line_follow.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/hand_eye_mrc01.py to hand_eye_mrc01.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow_d435if_nonshow.py to cam_line_follow_d435if_nonshow.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/image_sub.py to image_sub.cpython-312.pyc
+byte-compiling /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow/cam_line_follow_stop_early_2line.py to cam_line_follow_stop_early_2line.cpython-312.pyc
+running install_data
+creating /home/intern1/ros2_ws/install/camera_follow/share/ament_index
+creating /home/intern1/ros2_ws/install/camera_follow/share/ament_index/resource_index
+creating /home/intern1/ros2_ws/install/camera_follow/share/ament_index/resource_index/packages
+copying resource/camera_follow -> /home/intern1/ros2_ws/install/camera_follow/share/ament_index/resource_index/packages
+copying package.xml -> /home/intern1/ros2_ws/install/camera_follow/share/camera_follow
+creating /home/intern1/ros2_ws/install/camera_follow/share/camera_follow/config
+copying config/mcm303_info.yaml -> /home/intern1/ros2_ws/install/camera_follow/share/camera_follow/config
+creating /home/intern1/ros2_ws/install/camera_follow/share/camera_follow/launch
+copying launch/linetrace_launch.py -> /home/intern1/ros2_ws/install/camera_follow/share/camera_follow/launch
+running install_egg_info
+Copying ../../build/camera_follow/camera_follow.egg-info to /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera_follow-0.0.0-py3.12.egg-info
+running install_scripts
+Installing cam_line_follow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_d435if_nonshow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_black script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_early script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_early_2line script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_edge script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_grayscale script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_search script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing hand_eye_mrc01 script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing hand_eye_petbottle script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing image_sub script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing webcam_line_follow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+writing list of installed files to '/home/intern1/ros2_ws/build/camera_follow/install.log'

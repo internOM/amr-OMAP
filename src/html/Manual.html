@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manual Control</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 20px;
+            margin: 0;
+            background: #f4f4f4;
+        }
+
+        h1 { font-size: 26px; }
+
+        #status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: red;
+            box-shadow: 0 0 8px red;
+        }
+
+        #status-text { font-size: 16px; }
+
+        #joystick-area {
+            width: min(80vw, 320px);
+            height: min(80vw, 320px);
+            background: #ddd;
+            border-radius: 50%;
+            margin: 25px auto;
+            position: relative;
+            touch-action: none;
+        }
+
+        #knob {
+            width: min(30vw, 110px);
+            height: min(30vw, 110px);
+            background: #555;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            touch-action: none;
+        }
+
+        #output {
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            padding: 14px 36px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Manual Control</h1>
+
+<div id="status">
+    <div id="dot"></div>
+    <div id="status-text">Disconnected</div>
+</div>
+
+<div id="joystick-area">
+    <div id="knob"></div>
+</div>
+
+<div id="output">v: 0.00  w: 0.00</div>
+
+<button class="back-btn" onclick="window.location.href='AGV page.html'">
+    ⬅ Back
+</button>
+
+<script>
+/* ---------------- ROS SETUP ---------------- */
+
+const ROS_IP = "192.168.251.47";
+const ros = new ROSLIB.Ros({
+    url: `ws://${ROS_IP}:9090`
+});
+
+const dot = document.getElementById("dot");
+const statusText = document.getElementById("status-text");
+
+ros.on("connection", () => {
+    dot.style.background = "#39FF14";
+    dot.style.boxShadow = "0 0 10px #39FF14";
+    statusText.textContent = "Connected";
+});
+
+ros.on("close", () => {
+    dot.style.background = "red";
+    dot.style.boxShadow = "0 0 10px red";
+    statusText.textContent = "Disconnected";
+    publishCmdVel(0, 0);
+});
+
+const cmdVel = new ROSLIB.Topic({
+    ros: ros,
+    name: "/cmd_vel",
+    messageType: "geometry_msgs/Twist"
+});
+
+function publishCmdVel(linear, angular) {
+    cmdVel.publish(new ROSLIB.Message({
+        linear:  { x: linear, y: 0, z: 0 },
+        angular: { x: 0, y: 0, z: angular }
+    }));
+}
+
+/* ---------------- JOYSTICK LOGIC ---------------- */
+
+const knob = document.getElementById("knob");
+const area = document.getElementById("joystick-area");
+const output = document.getElementById("output");
+
+const MAX_LINEAR = 0.50;
+const MAX_ANGULAR = 0.75;
+const TURN_START_ANGLE = Math.PI / 4;
+
+let dragging = false;
+let lastLinear = 0;
+let lastAngular = 0;
+
+function centerJoystick() {
+    knob.style.left = "50%";
+    knob.style.top = "50%";
+    knob.style.transform = "translate(-50%, -50%)";
+
+    lastLinear = 0;
+    lastAngular = 0;
+    publishCmdVel(0, 0);
+
+    output.textContent = "v: 0.00  w: 0.00";
+}
+
+knob.addEventListener("pointerdown", () => dragging = true);
+
+window.addEventListener("pointerup", () => {
+    dragging = false;
+    centerJoystick();
+});
+
+    area.addEventListener("pointermove", (event) => {
+    if (!dragging) return;
+
+    const rect = area.getBoundingClientRect();
+    const radius = rect.width / 2;
+    const knobRadius = knob.offsetWidth / 2;
+
+    const x = event.clientX - rect.left - radius;
+    const y = event.clientY - rect.top - radius;
+
+    const dist = Math.sqrt(x*x + y*y);
+    const maxDist = radius - knobRadius;
+
+    let nx = x;
+    let ny = y;
+
+    if (dist > maxDist) {
+        nx = (x / dist) * maxDist;
+        ny = (y / dist) * maxDist;
+    }
+
+    knob.style.left = (radius + nx) + "px";
+    knob.style.top  = (radius + ny) + "px";
+    knob.style.transform = "translate(-50%, -50%)";
+
+    nx /= maxDist;
+    ny /= maxDist;
+
+    /* linear */
+    const linear = -ny * MAX_LINEAR;
+
+    /* angular gating */
+    const forwardAngle  = Math.abs(Math.atan2(nx, -ny));
+    const backwardAngle = Math.abs(Math.atan2(nx,  ny));
+    const angleFromAxis = Math.min(forwardAngle, backwardAngle);
+
+    let angular = 0;
+    if (angleFromAxis > TURN_START_ANGLE) {
+        const scale =
+            (angleFromAxis - TURN_START_ANGLE) /
+            (Math.PI / 2 - TURN_START_ANGLE);
+
+        // invert left/right direction
+        angular = -Math.sign(nx) *
+                Math.min(1, scale) *
+                MAX_ANGULAR;
+    }
+
+    lastLinear = linear;
+    lastAngular = angular;
+
+    output.textContent =
+        `v: ${linear.toFixed(2)}  w: ${angular.toFixed(2)}`;
+});
+
+/* -------- CONTINUOUS PUBLISH (Fix A) -------- */
+
+setInterval(() => {
+    if (dragging) {
+        publishCmdVel(lastLinear, lastAngular);
+    }
+}, 100);   // 10 Hz
+
+</script>
+
+</body>
+</html>
