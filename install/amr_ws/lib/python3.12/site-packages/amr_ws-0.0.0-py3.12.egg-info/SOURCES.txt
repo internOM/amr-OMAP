@@ -15,10 +15,15 @@ amr_ws/Demo_Automation.py
 amr_ws/__init__.py
 amr_ws/baselink_laser_tf.py
 amr_ws/camera_follow.py
+amr_ws/cmdvelsmoothed_to_cmdvel.py
 amr_ws/compass.py
 amr_ws/joystick_to_motor.py
 amr_ws/keyboard_listener.py
+amr_ws/localization_node.py
 amr_ws/mvc01_node.py
+amr_ws/path_logger.py
+amr_ws/path_publisher.py
+amr_ws/return_home_node.py
 amr_ws/webcam_line_follow.py
 launch/slam_toolbox_launch.py
 params/slam_param.yaml

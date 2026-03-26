@@ -36,6 +36,11 @@ setup(
             'Automation_and_Lidar2 = amr_ws.Automation_and_Lidar2:main',
             'camera_follow = amr_ws.camera_follow:main',
             'webcam_line_follow = amr_ws.webcam_line_follow:main',
+            'cmdvelsmoothed_to_cmdvel=amr_ws.cmdvelsmoothed_to_cmdvel:main',
+            'path_logger=amr_ws.path_logger:main',
+            'path_publisher=amr_ws.path_publisher:main',
+            'localization_node = amr_ws.localization_node:main',
+            'return_home_node = amr_ws.return_home_node:main',
         ],
     },
 )

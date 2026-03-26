@@ -1,0 +1,24 @@
+[4.719s] Invoking command in '/home/intern1/ros2_ws/src/examples/rclpy/topics/minimal_publisher': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../../../build/examples_rclpy_minimal_publisher build --build-base /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/build install --record /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/install.log --single-version-externally-managed install_data
+[5.553s] running egg_info
+[5.593s] writing ../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info/PKG-INFO
+[5.594s] writing dependency_links to ../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info/dependency_links.txt
+[5.596s] writing entry points to ../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info/entry_points.txt
+[5.597s] writing requirements to ../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info/requires.txt
+[5.598s] writing top-level names to ../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info/top_level.txt
+[5.689s] reading manifest file '../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info/SOURCES.txt'
+[5.695s] writing manifest file '../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info/SOURCES.txt'
+[5.703s] running build
+[5.703s] running build_py
+[5.705s] running install
+[5.714s] running install_lib
+[5.772s] running install_data
+[5.773s] running install_egg_info
+[5.828s] removing '/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages/examples_rclpy_minimal_publisher-0.19.7-py3.12.egg-info' (and everything under it)
+[5.829s] Copying ../../../../../build/examples_rclpy_minimal_publisher/examples_rclpy_minimal_publisher.egg-info to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages/examples_rclpy_minimal_publisher-0.19.7-py3.12.egg-info
+[5.829s] running install_scripts
+[6.124s] Installing publisher_local_function script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.126s] Installing publisher_member_function script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.127s] Installing publisher_member_function_with_wait_for_all_acked script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.131s] Installing publisher_old_school script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.132s] writing list of installed files to '/home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/install.log'
+[6.217s] Invoked command in '/home/intern1/ros2_ws/src/examples/rclpy/topics/minimal_publisher' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../../../build/examples_rclpy_minimal_publisher build --build-base /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/build install --record /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/install.log --single-version-externally-managed install_data
