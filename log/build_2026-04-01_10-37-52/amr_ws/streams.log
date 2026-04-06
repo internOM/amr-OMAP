@@ -1,0 +1,36 @@
+[5.501s] Invoking command in '/home/intern1/ros2_ws/src/amr_ws': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/amr_ws build --build-base /home/intern1/ros2_ws/build/amr_ws/build install --record /home/intern1/ros2_ws/build/amr_ws/install.log --single-version-externally-managed install_data
+[6.057s] running egg_info
+[6.093s] writing ../../build/amr_ws/amr_ws.egg-info/PKG-INFO
+[6.093s] writing dependency_links to ../../build/amr_ws/amr_ws.egg-info/dependency_links.txt
+[6.094s] writing entry points to ../../build/amr_ws/amr_ws.egg-info/entry_points.txt
+[6.094s] writing requirements to ../../build/amr_ws/amr_ws.egg-info/requires.txt
+[6.094s] writing top-level names to ../../build/amr_ws/amr_ws.egg-info/top_level.txt
+[6.181s] reading manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+[6.181s] adding license file 'LICENSE'
+[6.182s] writing manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+[6.182s] running build
+[6.182s] running build_py
+[6.182s] running install
+[6.192s] running install_lib
+[6.227s] running install_data
+[6.231s] running install_egg_info
+[6.303s] removing '/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info' (and everything under it)
+[6.303s] Copying ../../build/amr_ws/amr_ws.egg-info to /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info
+[6.313s] running install_scripts
+[6.694s] Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.695s] Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.695s] Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.698s] Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.699s] Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.699s] Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.699s] Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.700s] Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.701s] Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.701s] Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.701s] Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.702s] Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.702s] Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.702s] Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.702s] Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.702s] writing list of installed files to '/home/intern1/ros2_ws/build/amr_ws/install.log'
+[6.794s] Invoked command in '/home/intern1/ros2_ws/src/amr_ws' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/amr_ws build --build-base /home/intern1/ros2_ws/build/amr_ws/build install --record /home/intern1/ros2_ws/build/amr_ws/install.log --single-version-externally-managed install_data

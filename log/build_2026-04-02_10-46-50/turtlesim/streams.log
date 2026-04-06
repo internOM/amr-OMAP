@@ -1,0 +1,56 @@
+[0.117s] Invoking command in '/home/intern1/ros2_ws/build/turtlesim': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/turtlesim -- -j14 -l14
+[0.392s] [  0%] Built target turtlesim__rosidl_generator_type_description
+[0.528s] [  0%] Built target ament_cmake_python_copy_turtlesim
+[0.662s] [ 23%] Built target turtlesim__rosidl_generator_c
+[1.357s] running egg_info
+[1.451s] writing turtlesim.egg-info/PKG-INFO
+[1.452s] writing dependency_links to turtlesim.egg-info/dependency_links.txt
+[1.452s] writing top-level names to turtlesim.egg-info/top_level.txt
+[1.641s] reading manifest file 'turtlesim.egg-info/SOURCES.txt'
+[1.645s] writing manifest file 'turtlesim.egg-info/SOURCES.txt'
+[1.745s] [ 23%] Built target ament_cmake_python_build_turtlesim_egg
+[1.821s] [ 32%] Built target turtlesim__rosidl_typesupport_c
+[1.859s] [ 41%] Built target turtlesim__rosidl_typesupport_introspection_c
+[1.923s] [ 49%] Built target turtlesim__rosidl_typesupport_fastrtps_c
+[1.964s] [ 50%] Built target turtlesim__cpp
+[2.027s] [ 59%] Built target turtlesim__rosidl_typesupport_cpp
+[2.079s] [ 67%] Built target turtlesim__rosidl_typesupport_introspection_cpp
+[2.126s] [ 69%] Built target mimic
+[2.187s] [ 69%] [32mBuilding CXX object CMakeFiles/draw_square.dir/tutorials/draw_square.cpp.o[0m
+[23.093s] [ 71%] [32m[1mLinking CXX executable draw_square[0m
+[23.666s] [ 71%] Built target draw_square
+[23.719s] [ 71%] [32mBuilding CXX object CMakeFiles/turtle_teleop_key.dir/tutorials/teleop_turtle_key.cpp.o[0m
+[38.188s] [ 74%] [32m[1mLinking CXX executable turtle_teleop_key[0m
+[38.656s] [ 74%] Built target turtle_teleop_key
+[38.727s] [ 75%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/action/detail/dds_fastrtps/rotate_absolute__type_support.cpp.o[0m
+[38.728s] [ 76%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/msg/detail/dds_fastrtps/color__type_support.cpp.o[0m
+[38.761s] [ 77%] [32mBuilding CXX object CMakeFiles/turtlesim_node.dir/src/turtle.cpp.o[0m
+[38.763s] [ 77%] [32mBuilding CXX object CMakeFiles/turtlesim_node.dir/src/turtle_frame.cpp.o[0m
+[39.856s] [ 78%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/srv/detail/dds_fastrtps/teleport_relative__type_support.cpp.o[0m
+[39.856s] [ 79%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/srv/detail/dds_fastrtps/teleport_absolute__type_support.cpp.o[0m
+[40.508s] [ 79%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/srv/detail/dds_fastrtps/set_pen__type_support.cpp.o[0m
+[40.518s] [ 80%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/srv/detail/dds_fastrtps/spawn__type_support.cpp.o[0m
+[41.266s] [ 81%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/srv/detail/dds_fastrtps/kill__type_support.cpp.o[0m
+[41.270s] [ 82%] [32mBuilding CXX object CMakeFiles/turtlesim__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/turtlesim/msg/detail/dds_fastrtps/pose__type_support.cpp.o[0m
+[42.728s] [ 83%] [32m[1mLinking CXX shared library libturtlesim__rosidl_typesupport_fastrtps_cpp.so[0m
+[42.862s] [ 84%] Built target turtlesim__rosidl_typesupport_fastrtps_cpp
+[42.893s] [ 84%] Built target turtlesim
+[42.929s] [ 84%] Built target turtlesim__py
+[42.983s] [ 92%] Built target turtlesim__rosidl_generator_py
+[43.049s] [ 94%] Built target turtlesim_s__rosidl_typesupport_introspection_c
+[43.061s] [ 95%] [32m[1mLinking C shared module rosidl_generator_py/turtlesim/turtlesim_s__rosidl_typesupport_fastrtps_c.so[0m
+[43.121s] [ 97%] Built target turtlesim_s__rosidl_typesupport_c
+[43.174s] [ 98%] Built target turtlesim_s__rosidl_typesupport_fastrtps_c
+[62.005s] [ 98%] [32mBuilding CXX object CMakeFiles/turtlesim_node.dir/include/turtlesim/moc_turtle_frame.cpp.o[0m
+[72.264s] [ 99%] [32m[1mLinking CXX executable turtlesim_node[0m
+[74.582s] /usr/bin/ld: CMakeFiles/turtlesim_node.dir/src/turtle_frame.cpp.o: in function `turtlesim::TurtleFrame::paintEvent(QPaintEvent*)':
+[74.583s] turtle_frame.cpp:(.text+0x322f): undefined reference to `turtlesim::Turtle::paint(QPainter&)'
+[74.584s] /usr/bin/ld: CMakeFiles/turtlesim_node.dir/src/turtle_frame.cpp.o: in function `turtlesim::TurtleFrame::updateTurtles()':
+[74.584s] turtle_frame.cpp:(.text+0x3498): undefined reference to `turtlesim::Turtle::update(double, QPainter&, QImage const&, double, double)'
+[74.595s] /usr/bin/ld: CMakeFiles/turtlesim_node.dir/src/turtle_frame.cpp.o: in function `void std::_Construct<turtlesim::Turtle, std::shared_ptr<rclcpp::Node>&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, QImage&, QPointF, float&>(turtlesim::Turtle*, std::shared_ptr<rclcpp::Node>&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, QImage&, QPointF&&, float&)':
+[74.596s] turtle_frame.cpp:(.text._ZSt10_ConstructIN9turtlesim6TurtleEJRSt10shared_ptrIN6rclcpp4NodeEERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEER6QImage7QPointFRfEEvPT_DpOT0_[_ZSt10_ConstructIN9turtlesim6TurtleEJRSt10shared_ptrIN6rclcpp4NodeEERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEER6QImage7QPointFRfEEvPT_DpOT0_]+0xa4): undefined reference to `turtlesim::Turtle::Turtle(std::shared_ptr<rclcpp::Node>&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, QImage const&, QPointF const&, float)'
+[74.726s] collect2: error: ld returned 1 exit status
+[74.730s] gmake[2]: *** [CMakeFiles/turtlesim_node.dir/build.make:261: turtlesim_node] Error 1
+[74.730s] gmake[1]: *** [CMakeFiles/Makefile2:631: CMakeFiles/turtlesim_node.dir/all] Error 2
+[74.731s] gmake: *** [Makefile:146: all] Error 2
+[74.735s] Invoked command in '/home/intern1/ros2_ws/build/turtlesim' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/turtlesim -- -j14 -l14

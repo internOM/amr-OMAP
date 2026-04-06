@@ -11,6 +11,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/localization_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/joystick_to_motor.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__init__.py
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/orchestrator_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/return_home_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/webcam_line_follow.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/path_publisher.py
@@ -27,6 +28,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/localization_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/joystick_to_motor.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/__init__.cpython-312.pyc
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/orchestrator_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/return_home_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/webcam_line_follow.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/path_publisher.cpython-312.pyc
@@ -34,6 +36,8 @@
 /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/package.xml
 /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/launch/slam_toolbox_launch.py
 /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/params/slam_param.yaml
+/home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints/waypoints.yaml
+/home/intern1/ros2_ws/install/amr_ws/share/amr_ws/nav2_params/twist_mux.yaml
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info/top_level.txt
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info/zip-safe
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info/entry_points.txt
@@ -51,6 +55,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/joystick_to_motor
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/keyboard_listener
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/localization_node
+/home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/orchestrator_node
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/path_logger
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/path_publisher
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/return_home_node

@@ -1,0 +1,37 @@
+[1.835s] Invoking command in '/home/intern1/ros2_ws/build/amr_ws': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/amr_ws/build --no-deps symlink_data --force
+[2.493s] running develop
+[2.884s] running egg_info
+[2.913s] writing amr_ws.egg-info/PKG-INFO
+[2.914s] writing dependency_links to amr_ws.egg-info/dependency_links.txt
+[2.914s] writing entry points to amr_ws.egg-info/entry_points.txt
+[2.914s] writing requirements to amr_ws.egg-info/requires.txt
+[2.914s] writing top-level names to amr_ws.egg-info/top_level.txt
+[2.977s] reading manifest file 'amr_ws.egg-info/SOURCES.txt'
+[2.980s] writing manifest file 'amr_ws.egg-info/SOURCES.txt'
+[3.011s] running build_ext
+[3.012s] Creating /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr-ws.egg-link (link to .)
+[3.013s] Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.013s] Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.013s] Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.014s] Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.014s] Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.014s] Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.014s] Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.015s] Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.015s] Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.015s] Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.016s] Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.016s] Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.016s] Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.017s] Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.017s] Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[3.017s] 
+[3.017s] Installed /home/intern1/ros2_ws/build/amr_ws
+[3.018s] running symlink_data
+[3.018s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/resource/amr_ws -> /home/intern1/ros2_ws/install/amr_ws/share/ament_index/resource_index/packages
+[3.018s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/package.xml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws
+[3.018s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/launch/slam_toolbox_launch.py -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/launch
+[3.018s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/params/slam_param.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/params
+[3.018s] creating /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints
+[3.018s] error: [Errno 2] No such file or directory: '/home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints/waypoints.yaml'
+[3.078s] Invoked command in '/home/intern1/ros2_ws/build/amr_ws' returned '1': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/amr_ws/build --no-deps symlink_data --force

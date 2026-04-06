@@ -11,9 +11,9 @@ import math
 # ─── Configuration ────────────────────────────────────────────────────────────
 
 # Home position — same as your known starting coordinates
-HOME_X   = -0.427
-HOME_Y   =  0.025
-HOME_YAW = -0.483
+HOME_X   = 12.377
+HOME_Y   =  13.103
+HOME_YAW = -0.1465
 
 # ──────────────────────────────────────────────────────────────────────────────
 

@@ -21,13 +21,16 @@ amr_ws/joystick_to_motor.py
 amr_ws/keyboard_listener.py
 amr_ws/localization_node.py
 amr_ws/mvc01_node.py
+amr_ws/orchestrator_node.py
 amr_ws/path_logger.py
 amr_ws/path_publisher.py
 amr_ws/return_home_node.py
 amr_ws/webcam_line_follow.py
 launch/slam_toolbox_launch.py
+nav2_params/twist_mux.yaml
 params/slam_param.yaml
 resource/amr_ws
 test/test_copyright.py
 test/test_flake8.py
 test/test_pep257.py
+waypoints/waypoints.yaml

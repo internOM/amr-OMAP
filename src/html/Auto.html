@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Auto Navigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --primary: #1e88e5;
+            --success: #43a047;
+            --warning: #fb8c00;
+            --danger: #e53935;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: var(--surface);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+            padding: 5px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--danger);
+            box-shadow: 0 0 6px var(--danger);
+        }
+
+        .connected .dot {
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        .content {
+            flex: 1;
+            padding: 15px 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        @media (max-width: 650px) {
+            .content {
+                flex-direction: column;
+            }
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .right-panel {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .state-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .state-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .state-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 12px;
+            min-height: 28px;
+        }
+
+        .msg-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .msg-value {
+            font-size: 15px;
+            font-weight: 600;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #334155;
+        }
+
+        .mini-display {
+            display: none;
+            background: #1e1e1e;
+            color: #bbb;
+            font-family: monospace;
+            font-size: 11px;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            height: 110px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            line-height: 1.4;
+        }
+
+        .action-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 15px 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: opacity 0.3s, filter 0.2s, transform 0.1s;
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.97);
+            filter: brightness(1.1);
+        }
+
+        button:disabled {
+            opacity: 0.4;
+            filter: grayscale(100%);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn-localize {
+            background: var(--warning);
+            grid-column: span 2;
+        }
+
+        .btn-navigate {
+            background: var(--success);
+        }
+
+        .btn-home {
+            background: var(--danger);
+        }
+
+        .bottom-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .btn-circular {
+            width: 100px;
+            height: 100px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 900;
+            color: #fff;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3), inset 0 4px 6px rgba(255, 255, 255, 0.15);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid;
+            transition: transform 0.1s, background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            line-height: 1.3;
+        }
+
+        .btn-circular:active {
+            transform: scale(0.92) !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 8px 12px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .btn-manual {
+            background: linear-gradient(145deg, #424242, #212121);
+            border-color: #111;
+        }
+
+        .btn-manual span {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .btn-estop {
+            background: linear-gradient(145deg, #e53935, #b71c1c);
+            border-color: #c62828;
+            font-size: 22px;
+        }
+
+        .btn-recover {
+            background: linear-gradient(145deg, #43a047, #2e7d32);
+            border-color: #1b5e20;
+        }
+
+        .btn-recover span {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: #1e1e1e;
+            color: #00ff00;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            padding: 16px;
+            background: #2d2d2d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .close-btn {
+            color: #fff;
+            background: none;
+            border: none;
+            font-size: 24px;
+            box-shadow: none;
+            padding: 0;
+            margin-left: auto;
+            width: auto;
+            font-weight: normal;
+        }
+
+        .mini-btn {
+            width: 100%;
+            padding: 12px;
+            background: #3a3a3a;
+            color: white;
+            border: none;
+            border-radius: 0;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            height: auto;
+        }
+
+        .debug-logs {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .log-error {
+            color: #ff5252;
+        }
+
+        .log-warn {
+            color: #ffd740;
+        }
+
+        .log-info {
+            color: #bbb;
+        }
+
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .backdrop.open {
+            display: block;
+            opacity: 1;
+        }
+
+        /* ── Security Keypad Modal ── */
+        .keypad-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 300;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            backdrop-filter: blur(3px);
+        }
+
+        .keypad-backdrop.open {
+            display: block;
+            opacity: 1;
+        }
+
+        .keypad-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 280px;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 350;
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .keypad-modal.open {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .keypad-modal h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .pin-display {
+            background: #f1f3f5;
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 12px;
+            line-height: 50px;
+            color: var(--text-dark);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: color 0.3s;
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .key-btn {
+            background: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #343a40;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .key-btn:active {
+            background: #e9ecef;
+            transform: scale(0.95);
+        }
+
+        .key-clear {
+            color: var(--danger);
+        }
+
+        .key-enter {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+        }
+
+        .key-enter:active {
+            background: var(--primary-dark);
+        }
+
+        /* ── Phone Landscape Optimizations ── */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 8px 15px;
+            }
+
+            h1 {
+                font-size: 16px;
+            }
+
+            .content {
+                padding: 10px 15px;
+                gap: 15px;
+            }
+
+            .state-card {
+                padding: 10px;
+            }
+
+            .state-title {
+                font-size: 11px;
+                margin-bottom: 4px;
+            }
+
+            .state-value {
+                font-size: 18px;
+                margin-bottom: 5px;
+                min-height: 22px;
+            }
+
+            .msg-title {
+                font-size: 11px;
+                margin-bottom: 2px;
+            }
+
+            .msg-value {
+                font-size: 13px;
+                min-height: 25px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .btn-circular {
+                width: 70px;
+                height: 70px;
+                font-size: 12px;
+                border-width: 2px;
+            }
+
+            .btn-manual span,
+            .btn-estop span,
+            .btn-recover span {
+                font-size: 16px;
+                margin-bottom: 2px;
+            }
+
+            .btn-estop {
+                font-size: 16px;
+            }
+
+            .bottom-actions {
+                margin-top: 10px;
+                gap: 20px;
+            }
+
+            .action-group {
+                gap: 8px;
+            }
+
+            .mini-display {
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div id="connection-status" class="status-badge">
+            <div class="dot"></div> <span id="status-text">Disconnected</span>
+        </div>
+        <h1>AMR Controls</h1>
+        <button class="menu-btn" onclick="toggleDrawer()">☰</button>
+    </header>
+
+    <div class="content">
+        <!-- Dashboard Display Left -->
+        <div class="left-panel">
+            <div class="state-card">
+                <div class="state-title">Current State</div>
+                <div id="state-line" class="state-value">WAITING...</div>
+
+                <div class="msg-title">Latest Message</div>
+                <div id="status-line" class="msg-value">Booting up...</div>
+            </div>
+
+            <div id="mini-display" class="mini-display"></div>
+        </div>
+
+        <!-- Action Buttons Right -->
+        <div class="right-panel">
+            <div class="action-group">
+                <button id="btn-localize" class="btn-localize" onclick="publishTopic('/amr/cmd_localize')">📍 Auto
+                    Localize</button>
+                <button id="btn-navigate" class="btn-navigate" onclick="publishTopic('/amr/cmd_navigate')">▶️ Start
+                    Navigation</button>
+                <button id="btn-home" class="btn-home" onclick="publishTopic('/amr/cmd_return_home')">🏠 Return
+                    Home</button>
+            </div>
+
+            <div class="bottom-actions">
+                <!-- Secured Manual Button -->
+                <button class="btn-circular btn-manual" onclick="openKeypad('manual')">
+                    <span>🕹️</span>Manual
+                </button>
+                <!-- Stop / Secured Recover Button -->
+                <button id="btn-estop" class="btn-circular btn-estop" onclick="publishTopic('/amr/cmd_estop')">
+                    STOP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Menu Drawer -->
+    <div class="backdrop" id="backdrop" onclick="toggleDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <h2>Debug Console</h2>
+            <button class="close-btn" onclick="toggleDrawer()">&times;</button>
+        </div>
+        <button class="mini-btn" onclick="toggleMiniDisplay()">🖥️ Toggle Mini Display</button>
+        <div class="debug-logs" id="debug-logs"></div>
+    </div>
+
+    <!-- 4-Pin Security Keypad -->
+    <div class="keypad-backdrop" id="keypad-backdrop" onclick="closeKeypad()"></div>
+    <div class="keypad-modal" id="keypad-modal">
+        <h3>Security PIN Required</h3>
+        <div class="pin-display" id="pin-display"></div>
+        <div class="keypad-grid">
+            <button class="key-btn" onclick="appendPin(1)">1</button>
+            <button class="key-btn" onclick="appendPin(2)">2</button>
+            <button class="key-btn" onclick="appendPin(3)">3</button>
+            <button class="key-btn" onclick="appendPin(4)">4</button>
+            <button class="key-btn" onclick="appendPin(5)">5</button>
+            <button class="key-btn" onclick="appendPin(6)">6</button>
+            <button class="key-btn" onclick="appendPin(7)">7</button>
+            <button class="key-btn" onclick="appendPin(8)">8</button>
+            <button class="key-btn" onclick="appendPin(9)">9</button>
+            <button class="key-btn key-clear" onclick="clearPin()">C</button>
+            <button class="key-btn" onclick="appendPin(0)">0</button>
+            <button class="key-btn key-enter" onclick="submitPin()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        /* ---------------- SECURE KEYPAD LOGIC ---------------- */
+        const keypadBackdrop = document.getElementById("keypad-backdrop");
+        const keypadModal = document.getElementById("keypad-modal");
+        const pinDisplay = document.getElementById("pin-display");
+
+        let currentPin = "";
+        let targetAction = null; // 'manual' or 'recover'
+
+        function openKeypad(action) {
+            currentPin = "";
+            pinDisplay.textContent = "";
+            pinDisplay.style.color = "var(--text-dark)";
+            targetAction = action;
+
+            keypadBackdrop.classList.add("open");
+            keypadModal.classList.add("open");
+        }
+
+        function closeKeypad() {
+            keypadBackdrop.classList.remove("open");
+            keypadModal.classList.remove("open");
+            currentPin = "";
+            targetAction = null;
+        }
+
+        function appendPin(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                pinDisplay.textContent = "•".repeat(currentPin.length);
+            }
+        }
+
+        function clearPin() {
+            currentPin = "";
+            pinDisplay.textContent = "";
+        }
+
+        function submitPin() {
+            if (currentPin === "8888") { // HARDCODED PASSWORD
+                const actionToBypass = targetAction;
+                closeKeypad();
+
+                if (actionToBypass === 'manual') {
+                    window.location.href = "Manual.html";
+                } else if (actionToBypass === 'recover') {
+                    publishTopic('/amr/cmd_recover');
+                }
+            } else {
+                pinDisplay.textContent = "ERR";
+                pinDisplay.style.color = "var(--danger)";
+                setTimeout(() => {
+                    clearPin();
+                    pinDisplay.style.color = "var(--text-dark)";
+                }, 800);
+            }
+        }
+
+        /* ---------------- UI LOGIC ---------------- */
+        const drawer = document.getElementById("drawer");
+        const backdrop = document.getElementById("backdrop");
+        const debugLogs = document.getElementById("debug-logs");
+        const stateLine = document.getElementById("state-line");
+        const statusLine = document.getElementById("status-line");
+        const miniDisplay = document.getElementById("mini-display");
+        const btnEstop = document.getElementById("btn-estop");
+
+        let isMiniDisplayVisible = false;
+        let recentLogs = [];
+        let isFaultState = false;
+
+        function toggleDrawer() {
+            if (drawer.classList.contains("open")) {
+                drawer.classList.remove("open");
+                setTimeout(() => backdrop.classList.remove("open"), 300);
+                backdrop.style.opacity = "0";
+            } else {
+                backdrop.classList.add("open");
+                setTimeout(() => backdrop.style.opacity = "1", 10);
+                drawer.classList.add("open");
+            }
+        }
+
+        function toggleMiniDisplay() {
+            isMiniDisplayVisible = !isMiniDisplayVisible;
+            miniDisplay.style.display = isMiniDisplayVisible ? "block" : "none";
+            toggleDrawer();
+            if (isMiniDisplayVisible) renderMiniDisplay();
+        }
+
+        function renderMiniDisplay() {
+            miniDisplay.innerHTML = "";
+            recentLogs.forEach(log => {
+                const div = document.createElement("div");
+                div.textContent = log.text;
+                if (log.level >= 40 || log.text.includes('FAULT')) div.style.color = "#ff5252";
+                else if (log.level === 30) div.style.color = "#ffd740";
+                else div.style.color = "#bbb";
+                miniDisplay.appendChild(div);
+            });
+            miniDisplay.scrollTop = miniDisplay.scrollHeight;
+        }
+
+        function addLogLine(level, text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+
+            if (level >= 40 || text.includes('FAULT')) div.className = "log-error";
+            else if (level === 30) div.className = "log-warn";
+            else div.className = "log-info";
+
+            debugLogs.appendChild(div);
+            debugLogs.scrollTop = debugLogs.scrollHeight;
+
+            recentLogs.push({ level, text });
+            if (recentLogs.length > 5) recentLogs.shift();
+
+            if (isMiniDisplayVisible) {
+                renderMiniDisplay();
+            }
+        }
+
+        /* ---------------- SINGLE CLIENT ENFORCEMENT ---------------- */
+        const sessionStartTime = Date.now();
+        const clientId = "client_" + sessionStartTime + "_" + Math.floor(Math.random() * 1000);
+
+        /* ---------------- ROS SETUP ---------------- */
+        const ROS_IP = "192.168.251.47";
+        const ros = new ROSLIB.Ros({ url: `ws://${ROS_IP}:9090` });
+
+        const activeClientTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: '/ui_active_client',
+            messageType: 'std_msgs/String'
+        });
+
+        activeClientTopic.subscribe(function (message) {
+            try {
+                const data = JSON.parse(message.data);
+                if (data.id !== clientId) {
+                    if (data.time > sessionStartTime) {
+                        terminateSession();
+                    } else if (data.time < sessionStartTime) {
+                        broadcastPresence();
+                    } else {
+                        if (data.id > clientId) terminateSession();
+                        else broadcastPresence();
+                    }
+                }
+            } catch (e) { }
+        });
+
+        function terminateSession() {
+            activeClientTopic.unsubscribe();
+            ros.close();
+            document.body.innerHTML = `
+            <div style="display:flex; height:100vh; width:100vw; background:var(--bg); color:var(--text-dark); 
+                        align-items:center; justify-content:center; text-align:center; padding:20px; flex-direction:column; font-family:'Inter',sans-serif;">
+                <h1 style="color:var(--danger); font-size: 32px; margin-bottom: 15px;">Session Terminated</h1>
+                <p style="font-size: 18px; margin-bottom: 25px;">A new user has logged in elsewhere.<br>You have been disconnected to prevent conflicts.</p>
+                <button onclick="location.reload()" style="background:var(--primary); color:#fff; padding:12px 24px; border:none; border-radius:10px; font-size:16px; font-weight:600; cursor:pointer;">Reconnect / Steal Session</button>
+            </div>
+        `;
+        }
+
+        function broadcastPresence() {
+            if (ros.isConnected) {
+                activeClientTopic.publish(new ROSLIB.Message({
+                    data: JSON.stringify({ id: clientId, time: sessionStartTime })
+                }));
+            }
+        }
+
+        setInterval(broadcastPresence, 2000);
+
+        ros.on("connection", () => {
+            document.getElementById("connection-status").classList.add("connected");
+            document.getElementById("status-text").textContent = "Connected";
+            addLogLine(20, "[SYSTEM] Connected to rosbridge via websocket.");
+            broadcastPresence();
+        });
+
+        ros.on("error", (error) => {
+            addLogLine(40, `[SYSTEM ERROR] Websocket connection error.`);
+        });
+
+        ros.on("close", () => {
+            document.getElementById("connection-status").classList.remove("connected");
+            document.getElementById("status-text").textContent = "Disconnected";
+            addLogLine(30, "[SYSTEM] Websocket connection closed.");
+        });
+
+        /* ---------------- PUBLISHERS ---------------- */
+        function publishTopic(topicName) {
+            if (!ros.isConnected) {
+                alert("Not connected to ROS!");
+                return;
+            }
+            const topic = new ROSLIB.Topic({ ros: ros, name: topicName, messageType: "std_msgs/Bool" });
+            topic.publish(new ROSLIB.Message({ data: true }));
+            addLogLine(20, `[UI] Published command to ${topicName}`);
+        }
+
+        /* ---------------- /amr/state SUBSCRIPTION (real-time, 10 Hz) ---------------- */
+        // State comes directly from orchestrator's dedicated publisher — no /rosout lag.
+        const amrStateTopic = new ROSLIB.Topic({
+            ros: ros, name: '/amr/state', messageType: 'std_msgs/String'
+        });
+
+        amrStateTopic.subscribe((msg) => {
+            const state = msg.data;
+
+            // Update state display
+            const stateMap = {
+                'WAITING_FOR_LOCALIZATION': { label: 'WAITING', color: 'var(--warning)' },
+                'LOCALIZING': { label: 'LOCALIZING', color: 'var(--primary)' },
+                'IDLE': { label: 'IDLE', color: 'var(--text-dark)' },
+                'NAVIGATING': { label: 'NAVIGATING', color: 'var(--success)' },
+                'RETURNING_HOME': { label: 'RETURNING HOME', color: 'var(--primary)' },
+                'FAULT': { label: 'FAULT', color: 'var(--danger)' },
+            };
+            const mapped = stateMap[state];
+            if (mapped) {
+                stateLine.textContent = mapped.label;
+                stateLine.style.color = mapped.color;
+            }
+
+            // Update isFaultState flag
+            const nowFault = (state === 'FAULT');
+            if (nowFault === isFaultState) return; // no button change needed
+            isFaultState = nowFault;
+
+            // Update buttons based on fault state
+            if (isFaultState) {
+                document.getElementById('btn-localize').disabled = true;
+                document.getElementById('btn-navigate').disabled = true;
+                document.getElementById('btn-home').disabled = true;
+                btnEstop.className = 'btn-circular btn-recover';
+                btnEstop.innerHTML = '<span>♻️</span>Recover';
+                btnEstop.onclick = () => openKeypad('recover');
+            } else {
+                document.getElementById('btn-localize').disabled = false;
+                document.getElementById('btn-navigate').disabled = false;
+                document.getElementById('btn-home').disabled = false;
+                btnEstop.className = 'btn-circular btn-estop';
+                btnEstop.innerHTML = 'STOP';
+                btnEstop.onclick = () => publishTopic('/amr/cmd_estop');
+            }
+        });
+
+        /* ---------------- /rosout SUBSCRIPTION (debug log + status line only) ---------------- */
+        // /rosout is now ONLY used for the debug console and Latest Message panel.
+        // All state/button logic has moved to /amr/state above.
+        const rosout = new ROSLIB.Topic({
+            ros: ros, name: '/rosout', messageType: 'rcl_interfaces/msg/Log'
+        });
+
+        rosout.subscribe((msg) => {
+            if (msg.name !== 'orchestrator_node') return;
+
+            const text = msg.msg;
+            const level = msg.level;
+
+            addLogLine(level, text);
+
+            // Update the status line with meaningful progress messages
+            if (level >= 40 || text.includes('FAULT')) {
+                statusLine.textContent = text.replace('FAULT — ', '');
+                statusLine.style.color = 'var(--danger)';
+            } else if (text.includes('✓') || text.includes('success') ||
+                text.includes('Navigating to') || text.includes('distance remaining') ||
+                text.includes('Returning home') || text.includes('Orchestrator idle') ||
+                text.includes('localized') || text.includes('converged')) {
+                statusLine.textContent = text;
+                statusLine.style.color = 'var(--success)';
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

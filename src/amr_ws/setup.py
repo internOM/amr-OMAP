@@ -13,6 +13,8 @@ setup(
         # Add these two lines to install launch files and params
         ('share/' + package_name + '/launch', ['launch/slam_toolbox_launch.py']),
         ('share/' + package_name + '/params', ['params/slam_param.yaml']),
+        ('share/' + package_name + '/waypoints', ['waypoints/waypoints.yaml']),
+        ('share/' + package_name + '/nav2_params', ['nav2_params/twist_mux.yaml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -41,6 +43,7 @@ setup(
             'path_publisher=amr_ws.path_publisher:main',
             'localization_node = amr_ws.localization_node:main',
             'return_home_node = amr_ws.return_home_node:main',
+            'orchestrator_node = amr_ws.orchestrator_node:main',
         ],
     },
 )

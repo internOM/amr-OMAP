@@ -11,9 +11,9 @@ import math
 # ─── Configuration ────────────────────────────────────────────────────────────
 
 # Approximate starting position (from your AMCL pose reading)
-INITIAL_X   = -0.427
-INITIAL_Y   =  0.025
-INITIAL_YAW = -0.483
+INITIAL_X   = 12.377
+INITIAL_Y   =  13.104
+INITIAL_YAW = -0.1465
 
 # Large covariance — tells AMCL "I'm roughly here but not exact"
 # Only the diagonal values matter:
@@ -49,16 +49,37 @@ class LocalizationNode(Node):
     def __init__(self):
         super().__init__('localization_node')
 
+        # Load initial pose dynamically from first waypoint in waypoints.yaml
+        self.initial_x = INITIAL_X
+        self.initial_y = INITIAL_Y
+        self.initial_yaw = INITIAL_YAW
+        
+        try:
+            from ament_index_python.packages import get_package_share_directory
+            import os, yaml
+            wp_path = os.path.join(get_package_share_directory('amr_ws'), 'waypoints', 'waypoints.yaml')
+            with open(wp_path, 'r') as f:
+                data = yaml.safe_load(f)
+                fw = data['waypoints'][0]
+                self.initial_x = float(fw['x'])
+                self.initial_y = float(fw['y'])
+                self.initial_yaw = float(fw['yaw'])
+            self.get_logger().info(f"Loaded starting pose from waypoint A: x={self.initial_x:.2f}, y={self.initial_y:.2f}")
+        except Exception as e:
+            self.get_logger().warn(f"Failed to load first waypoint for localization, using defaults. Error: {e}")
+
         # Service client for setting initial pose — bypasses QoS topic issues
         self.set_pose_client = self.create_client(
             SetInitialPose,
             '/set_initial_pose'
         )
 
-        # Publisher for velocity commands (spinning)
+        # Publisher for velocity commands (spinning during localization).
+        # Uses /cmd_vel_estop (priority 255 in twist_mux) — highest priority channel,
+        # ensuring spin commands are never blocked by Nav2 during localization.
         self.cmd_vel_pub = self.create_publisher(
             Twist,
-            '/cmd_vel',
+            '/cmd_vel_estop',
             10
         )
 
@@ -105,15 +126,15 @@ class LocalizationNode(Node):
         request.pose.header.stamp = self.get_clock().now().to_msg()
 
         # Position
-        request.pose.pose.pose.position.x = INITIAL_X
-        request.pose.pose.pose.position.y = INITIAL_Y
+        request.pose.pose.pose.position.x = self.initial_x
+        request.pose.pose.pose.position.y = self.initial_y
         request.pose.pose.pose.position.z = 0.0
 
         # Orientation — convert yaw to quaternion
         request.pose.pose.pose.orientation.x = 0.0
         request.pose.pose.pose.orientation.y = 0.0
-        request.pose.pose.pose.orientation.z = math.sin(INITIAL_YAW / 2.0)
-        request.pose.pose.pose.orientation.w = math.cos(INITIAL_YAW / 2.0)
+        request.pose.pose.pose.orientation.z = math.sin(self.initial_yaw / 2.0)
+        request.pose.pose.pose.orientation.w = math.cos(self.initial_yaw / 2.0)
 
         # Large covariance
         request.pose.pose.covariance = INITIAL_COVARIANCE
@@ -124,7 +145,7 @@ class LocalizationNode(Node):
 
         if future.result() is not None:
             self.get_logger().info(
-                f'Initial pose set via service: x={INITIAL_X}, y={INITIAL_Y}, yaw={INITIAL_YAW}'
+                f'Initial pose set via service: x={self.initial_x}, y={self.initial_y}, yaw={self.initial_yaw}'
             )
         else:
             self.get_logger().error('Failed to call /set_initial_pose service.')

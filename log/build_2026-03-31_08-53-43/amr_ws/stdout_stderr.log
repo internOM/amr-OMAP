@@ -1,0 +1,35 @@
+running develop
+running egg_info
+writing amr_ws.egg-info/PKG-INFO
+writing dependency_links to amr_ws.egg-info/dependency_links.txt
+writing entry points to amr_ws.egg-info/entry_points.txt
+writing requirements to amr_ws.egg-info/requires.txt
+writing top-level names to amr_ws.egg-info/top_level.txt
+reading manifest file 'amr_ws.egg-info/SOURCES.txt'
+writing manifest file 'amr_ws.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr-ws.egg-link (link to .)
+Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+
+Installed /home/intern1/ros2_ws/build/amr_ws
+running symlink_data
+symbolically linking /home/intern1/ros2_ws/build/amr_ws/resource/amr_ws -> /home/intern1/ros2_ws/install/amr_ws/share/ament_index/resource_index/packages
+symbolically linking /home/intern1/ros2_ws/build/amr_ws/package.xml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws
+symbolically linking /home/intern1/ros2_ws/build/amr_ws/launch/slam_toolbox_launch.py -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/launch
+symbolically linking /home/intern1/ros2_ws/build/amr_ws/params/slam_param.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/params
+creating /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints
+error: [Errno 2] No such file or directory: '/home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints/waypoints.yaml'

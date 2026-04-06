@@ -1,0 +1,10 @@
+/usr/bin/ld: CMakeFiles/turtlesim_node.dir/src/turtle_frame.cpp.o: in function `turtlesim::TurtleFrame::paintEvent(QPaintEvent*)':
+turtle_frame.cpp:(.text+0x322f): undefined reference to `turtlesim::Turtle::paint(QPainter&)'
+/usr/bin/ld: CMakeFiles/turtlesim_node.dir/src/turtle_frame.cpp.o: in function `turtlesim::TurtleFrame::updateTurtles()':
+turtle_frame.cpp:(.text+0x3498): undefined reference to `turtlesim::Turtle::update(double, QPainter&, QImage const&, double, double)'
+/usr/bin/ld: CMakeFiles/turtlesim_node.dir/src/turtle_frame.cpp.o: in function `void std::_Construct<turtlesim::Turtle, std::shared_ptr<rclcpp::Node>&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, QImage&, QPointF, float&>(turtlesim::Turtle*, std::shared_ptr<rclcpp::Node>&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, QImage&, QPointF&&, float&)':
+turtle_frame.cpp:(.text._ZSt10_ConstructIN9turtlesim6TurtleEJRSt10shared_ptrIN6rclcpp4NodeEERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEER6QImage7QPointFRfEEvPT_DpOT0_[_ZSt10_ConstructIN9turtlesim6TurtleEJRSt10shared_ptrIN6rclcpp4NodeEERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEER6QImage7QPointFRfEEvPT_DpOT0_]+0xa4): undefined reference to `turtlesim::Turtle::Turtle(std::shared_ptr<rclcpp::Node>&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, QImage const&, QPointF const&, float)'
+collect2: error: ld returned 1 exit status
+gmake[2]: *** [CMakeFiles/turtlesim_node.dir/build.make:261: turtlesim_node] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:631: CMakeFiles/turtlesim_node.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

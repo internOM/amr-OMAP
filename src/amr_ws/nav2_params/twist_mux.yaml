@@ -1,0 +1,23 @@
+twist_mux:
+  ros__parameters:
+    use_stamped: false
+
+    topics:
+      # ── Highest Priority: Manual Teleoperation ─────────────────────────────
+      # Operator joystick always overrides everything.
+      teleop:
+        topic   : /cmd_vel_teleop
+        timeout : 0.5
+        priority: 255
+
+      # ── Mid Priority: E-Stop / Localization Spins ─────────────────────────
+      estop:
+        topic   : /cmd_vel_estop
+        timeout : 0.5
+        priority: 100
+
+      # ── Lowest Priority: Nav2 Autonomous Navigation ────────────────────────
+      navigation:
+        topic   : /cmd_vel_nav
+        timeout : 0.5
+        priority: 10
