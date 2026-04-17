@@ -1,0 +1,4 @@
+source;share/om_msgs/local_setup.bash
+source;share/om_msgs/local_setup.dsv
+source;share/om_msgs/local_setup.sh
+source;share/om_msgs/local_setup.zsh

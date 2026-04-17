@@ -1,0 +1,8 @@
+{
+  "package_name": "om_msgs",
+  "non_idl_tuples": [
+    "/home/intern1/ros2_ws/om_modbus_master/om_msgs:msg/Query.msg",
+    "/home/intern1/ros2_ws/om_modbus_master/om_msgs:msg/Response.msg",
+    "/home/intern1/ros2_ws/om_modbus_master/om_msgs:msg/State.msg"
+  ]
+}

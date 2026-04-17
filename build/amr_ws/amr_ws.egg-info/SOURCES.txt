@@ -20,7 +20,6 @@ amr_ws/compass.py
 amr_ws/joystick_to_motor.py
 amr_ws/keyboard_listener.py
 amr_ws/localization_node.py
-amr_ws/mvc01_node.py
 amr_ws/orchestrator_node.py
 amr_ws/path_logger.py
 amr_ws/path_publisher.py

@@ -1,0 +1,25 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from om_msgs/msg/Query.msg
+// generated code does not contain a copyright notice
+
+
+module om_msgs {
+  module msg {
+    typedef int32 int32__64[64];
+    struct Query {
+      int8 slave_id;
+
+      int8 func_code;
+
+      int32 write_addr;
+
+      int32 read_addr;
+
+      int8 write_num;
+
+      int8 read_num;
+
+      int32__64 data;
+    };
+  };
+};

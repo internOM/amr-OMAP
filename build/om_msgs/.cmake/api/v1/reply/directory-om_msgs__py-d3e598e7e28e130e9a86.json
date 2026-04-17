@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "om_msgs__py",
+		"source" : "/home/intern1/ros2_ws/build/om_msgs/om_msgs__py"
+	}
+}

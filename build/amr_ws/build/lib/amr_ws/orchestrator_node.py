@@ -25,6 +25,7 @@ from nav2_msgs.action import NavigateToPose
 from nav2_msgs.srv import SetInitialPose
 from rclpy.action import ActionClient
 from rclpy.node import Node
+from rcl_interfaces.msg import Log
 from std_msgs.msg import Bool, String
 
 
@@ -65,6 +66,12 @@ STATE_MACHINE_PERIOD = 0.1
 
 # /set_initial_pose service timeout (seconds)
 AMCL_SERVICE_TIMEOUT = 30.0
+
+# TF staleness guard: node name and message fragment to watch for on /rosout
+TF_FAULT_NODE      = 'tf_help'
+TF_FAULT_FRAGMENT  = 'Transform data too old'
+# Number of consecutive ERROR messages required before triggering a FAULT
+TF_FAULT_THRESHOLD = 3
 
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -119,6 +126,19 @@ class OrchestratorNode(Node):
         self._feedback_log_counter = 0
         self._home_feedback_log_counter = 0
 
+        # ── TF staleness debounce ──────────────────────────────────────────
+        # The robot only enters FAULT after TF_FAULT_THRESHOLD consecutive
+        # ERROR messages from tf_help. A single transient error is ignored.
+        self._tf_fault_count = 0
+
+        # ── Halt-burst state ──────────────────────────────────────────────
+        # After a Nav2 goal completes, we fire zero-velocity on /cmd_vel_estop
+        # for a short window to overwrite any residual RPP angular velocity.
+        self._halt_burst_timer   = None
+        self._halt_burst_ticks   = 0
+        HALT_BURST_TICKS         = 20   # 20 × 50 ms = 1 s of E-stop override
+        self._HALT_BURST_TICKS   = HALT_BURST_TICKS
+
         # ── ROS interfaces ────────────────────────────────────────────────
 
         # AMCL service client
@@ -151,6 +171,9 @@ class OrchestratorNode(Node):
         self.create_subscription(Bool, '/amr/cmd_return_home', self._cmd_return_home_cb, 10)
         self.create_subscription(Bool, '/amr/cmd_estop',       self._cmd_estop_cb,       10)
         self.create_subscription(Bool, '/amr/cmd_recover',     self._cmd_recover_cb,     10)
+
+        # /rosout subscriber — monitors for TF staleness faults from tf_help
+        self.create_subscription(Log, '/rosout', self._rosout_cb, 10)
 
         # Nav2 action client (shared for both waypoint and return-home navigation)
         self._nav_action_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
@@ -285,6 +308,66 @@ class OrchestratorNode(Node):
         self.get_logger().info('cmd_return_home received. Transitioning to RETURNING_HOME.')
         self._home_nav_state = 'idle'
         self._state = 'RETURNING_HOME'
+
+    def _rosout_cb(self, msg: Log):
+        """
+        Monitor /rosout for TF staleness errors emitted by tf_help.
+
+        Only triggers a FAULT after TF_FAULT_THRESHOLD (3) consecutive ERROR
+        messages from tf_help so that a single transient stale-transform does
+        not abort an otherwise healthy navigation run.
+        """
+        # Only react when we are actively moving
+        if self._state not in ('NAVIGATING', 'RETURNING_HOME'):
+            # Reset counter whenever we are not navigating
+            self._tf_fault_count = 0
+            return
+
+        # Filter: ERROR level (≥40)
+        if msg.level < 40:
+            return
+
+        msg_lower = msg.msg.lower()
+        name_lower = msg.name.lower()
+
+        # Check if error is related to transforms
+        if 'transform' in msg_lower or 'tf' in msg_lower or 'tf' in name_lower:
+            self._tf_fault_count += 1
+            self.get_logger().warn(
+                f'[TF SAFETY] Transform related error #{self._tf_fault_count}/{TF_FAULT_THRESHOLD} '
+                f'from {msg.name}: "{msg.msg.strip()}"'
+            )
+        else:
+            # Not a transform error, reset consecutive counter
+            self._tf_fault_count = 0
+            return
+
+        if self._tf_fault_count < TF_FAULT_THRESHOLD:
+            return  # not enough consecutive errors yet — keep watching
+
+        # Threshold reached — halt and fault
+        self._tf_fault_count = 0
+        self.get_logger().error(
+            f'[TF SAFETY] {TF_FAULT_THRESHOLD} consecutive transform errors. '
+            'Halting robot and entering FAULT.'
+        )
+
+        # Cancel whichever Nav2 goal is active
+        if self._state == 'NAVIGATING' and self._nav_goal_handle:
+            self.get_logger().warn('[TF SAFETY] Cancelling active waypoint navigation goal.')
+            self._nav_goal_handle.cancel_goal_async()
+
+        if self._state == 'RETURNING_HOME' and self._home_nav_goal_handle:
+            self.get_logger().warn('[TF SAFETY] Cancelling active home navigation goal.')
+            self._home_nav_goal_handle.cancel_goal_async()
+
+        # Publish an immediate halt before entering FAULT (belt-and-suspenders)
+        self._cmd_vel_pub.publish(Twist())
+
+        self._enter_fault(
+            f'TF ERROR — {TF_FAULT_THRESHOLD} consecutive transform errors '
+            f'during {self._state}. Recover when transforms are healthy.'
+        )
 
     def _cmd_estop_cb(self, msg: Bool):
         if not msg.data:
@@ -611,9 +694,9 @@ class OrchestratorNode(Node):
         self._nav_success = (result.status == 4)
         self._nav_error_code = getattr(result.result, 'error_code', result.status)
         self._nav_state = 'done'
-        
-        # Explicit zero-velocity command to halt the robot immediately and prevent spinning
-        self._cmd_vel_nav_pub.publish(Twist())
+
+        # Start halt burst to suppress residual RPP rotate-to-heading spin
+        self._start_halt_burst()
 
     # ── Return-Home Nav2 Callbacks ────────────────────────────────────────────
 
@@ -640,8 +723,47 @@ class OrchestratorNode(Node):
         self._home_nav_error_code = getattr(result.result, 'error_code', result.status)
         self._home_nav_state = 'done'
 
-        # Explicit zero-velocity command to halt the robot immediately and prevent spinning
+        # Start halt burst to suppress residual RPP rotate-to-heading spin
+        self._start_halt_burst()
+
+    # ── Halt-burst helpers ────────────────────────────────────────────────────
+
+    def _start_halt_burst(self):
+        """
+        Fire zero-velocity on BOTH /cmd_vel_nav and /cmd_vel_estop for
+        _HALT_BURST_TICKS × 50 ms after a Nav2 goal completes.
+
+        Why both channels?
+        - /cmd_vel_nav  : directly overrides whatever the controller server
+                          last sent via that same topic chain.
+        - /cmd_vel_estop: sits at twist_mux priority 255, so it wins over
+                          any residual nav/recovery velocity for the burst
+                          window, preventing the RPP rotate-to-heading spin
+                          from bleeding through after goal completion.
+        The E-stop burst is deliberately short (1 s) so that recovery
+        behaviours triggered by the operator afterwards are not blocked.
+        """
+        # Cancel any previous burst that hasn't expired yet
+        if self._halt_burst_timer is not None:
+            self._halt_burst_timer.cancel()
+            self._halt_burst_timer = None
+
+        self._halt_burst_ticks = 0
+        # Publish the first zero immediately
         self._cmd_vel_nav_pub.publish(Twist())
+        self._cmd_vel_pub.publish(Twist())
+        self.get_logger().info('[HALT BURST] Starting 1-second velocity override to stop residual spin.')
+        self._halt_burst_timer = self.create_timer(0.05, self._halt_burst_tick)
+
+    def _halt_burst_tick(self):
+        """Called every 50 ms by the halt-burst timer."""
+        self._cmd_vel_nav_pub.publish(Twist())
+        self._cmd_vel_pub.publish(Twist())
+        self._halt_burst_ticks += 1
+        if self._halt_burst_ticks >= self._HALT_BURST_TICKS:
+            self._halt_burst_timer.cancel()
+            self._halt_burst_timer = None
+            self.get_logger().info('[HALT BURST] Velocity override complete. Robot should be stopped.')
 
     # ── Hooks (placeholders) ──────────────────────────────────────────────────
 

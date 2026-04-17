@@ -1,0 +1,5 @@
+[ 33%] Built target composition_nodes
+[ 55%] Built target composition_subscriber
+gmake[1]: *** [CMakeFiles/Makefile2:169: CMakeFiles/composition_publisher.dir/all] Interrupt
+gmake[1]: *** [CMakeFiles/Makefile2:222: CMakeFiles/composition_composed.dir/all] Interrupt
+gmake: *** [Makefile:146: all] Interrupt

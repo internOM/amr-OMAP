@@ -1,0 +1,21 @@
+[1.126s] Invoking command in '/home/intern1/ros2_ws/src/tb3_multi_robot': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/tb3_multi_robot/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tb3_multi_robot build --build-base /home/intern1/ros2_ws/build/tb3_multi_robot/build install --record /home/intern1/ros2_ws/build/tb3_multi_robot/install.log --single-version-externally-managed install_data
+[1.340s] running egg_info
+[1.360s] writing ../../build/tb3_multi_robot/tb3_multi_robot.egg-info/PKG-INFO
+[1.360s] writing dependency_links to ../../build/tb3_multi_robot/tb3_multi_robot.egg-info/dependency_links.txt
+[1.360s] writing entry points to ../../build/tb3_multi_robot/tb3_multi_robot.egg-info/entry_points.txt
+[1.361s] writing requirements to ../../build/tb3_multi_robot/tb3_multi_robot.egg-info/requires.txt
+[1.361s] writing top-level names to ../../build/tb3_multi_robot/tb3_multi_robot.egg-info/top_level.txt
+[1.404s] reading manifest file '../../build/tb3_multi_robot/tb3_multi_robot.egg-info/SOURCES.txt'
+[1.405s] writing manifest file '../../build/tb3_multi_robot/tb3_multi_robot.egg-info/SOURCES.txt'
+[1.405s] running build
+[1.405s] running build_py
+[1.406s] running install
+[1.411s] running install_lib
+[1.432s] running install_data
+[1.433s] running install_egg_info
+[1.460s] removing '/home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages/tb3_multi_robot-1.0.0-py3.12.egg-info' (and everything under it)
+[1.460s] Copying ../../build/tb3_multi_robot/tb3_multi_robot.egg-info to /home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages/tb3_multi_robot-1.0.0-py3.12.egg-info
+[1.460s] running install_scripts
+[1.577s] Installing turtlebot3_drive script to /home/intern1/ros2_ws/install/tb3_multi_robot/bin
+[1.578s] writing list of installed files to '/home/intern1/ros2_ws/build/tb3_multi_robot/install.log'
+[1.616s] Invoked command in '/home/intern1/ros2_ws/src/tb3_multi_robot' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/tb3_multi_robot/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/tb3_multi_robot build --build-base /home/intern1/ros2_ws/build/tb3_multi_robot/build install --record /home/intern1/ros2_ws/build/tb3_multi_robot/install.log --single-version-externally-managed install_data

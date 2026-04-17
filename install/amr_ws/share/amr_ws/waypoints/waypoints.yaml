@@ -14,25 +14,25 @@ waypoints:
   x: 12.378
   y: 12.909
   yaw: -0.229
-- name: waypoint_2
-  x: 13.453
-  y: 13.619
-  yaw: -0.196
+#- name: waypoint_2
+#  x: 13.453
+#  y: 13.619
+#  yaw: -0.196
 - name: waypoint_3
   x: 15.629
   y: 13.184
   yaw: 1.476
-- name: waypoint_4
-  x: 16.261
-  y: 16.659
-  yaw: -0.233
+#- name: waypoint_4
+#  x: 16.261
+#  y: 16.659
+#  yaw: -0.233
 - name: waypoint_5
   x: 21.137
   y: 15.621
   yaw: -0.208
 - name: waypoint_6
   x: 27.398
-  y: 14.429
+  y: 14.929
   yaw: -1.156
 - name: waypoint_7
   x: 27.182

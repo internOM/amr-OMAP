@@ -1,0 +1,37 @@
+[5.868s] Invoking command in '/home/intern1/ros2_ws/src/amr_ws': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/amr_ws build --build-base /home/intern1/ros2_ws/build/amr_ws/build install --record /home/intern1/ros2_ws/build/amr_ws/install.log --single-version-externally-managed install_data
+[6.599s] running egg_info
+[6.660s] writing ../../build/amr_ws/amr_ws.egg-info/PKG-INFO
+[6.662s] writing dependency_links to ../../build/amr_ws/amr_ws.egg-info/dependency_links.txt
+[6.664s] writing entry points to ../../build/amr_ws/amr_ws.egg-info/entry_points.txt
+[6.665s] writing requirements to ../../build/amr_ws/amr_ws.egg-info/requires.txt
+[6.666s] writing top-level names to ../../build/amr_ws/amr_ws.egg-info/top_level.txt
+[6.763s] reading manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+[6.766s] adding license file 'LICENSE'
+[6.766s] writing manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+[6.766s] running build
+[6.767s] running build_py
+[6.770s] running install
+[6.785s] running install_lib
+[6.839s] running install_data
+[6.840s] copying waypoints/waypoints.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints
+[6.842s] running install_egg_info
+[6.898s] removing '/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info' (and everything under it)
+[6.898s] Copying ../../build/amr_ws/amr_ws.egg-info to /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info
+[6.903s] running install_scripts
+[7.232s] Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.233s] Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.233s] Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.233s] Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.234s] Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.235s] Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.236s] Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.240s] Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.241s] Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.241s] Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.241s] Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.241s] Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.241s] Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.241s] Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.245s] Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[7.246s] writing list of installed files to '/home/intern1/ros2_ws/build/amr_ws/install.log'
+[7.415s] Invoked command in '/home/intern1/ros2_ws/src/amr_ws' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/amr_ws build --build-base /home/intern1/ros2_ws/build/amr_ws/build install --record /home/intern1/ros2_ws/build/amr_ws/install.log --single-version-externally-managed install_data
