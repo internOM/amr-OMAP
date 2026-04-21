@@ -1,0 +1,53 @@
+[2.467s] Invoking command in '/home/intern1/ros2_ws/build/education_material': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/intern1/ros2_ws/build/education_material/build
+[3.496s] running develop
+[3.965s] Removing /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education-material.egg-link (link to .)
+[6.574s] Invoked command in '/home/intern1/ros2_ws/build/education_material' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/intern1/ros2_ws/build/education_material/build
+[6.576s] Invoking command in '/home/intern1/ros2_ws/src/education_material': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/education_material build --build-base /home/intern1/ros2_ws/build/education_material/build install --record /home/intern1/ros2_ws/build/education_material/install.log --single-version-externally-managed install_data --force
+[7.106s] running egg_info
+[7.145s] writing ../../build/education_material/education_material.egg-info/PKG-INFO
+[7.145s] writing dependency_links to ../../build/education_material/education_material.egg-info/dependency_links.txt
+[7.145s] writing entry points to ../../build/education_material/education_material.egg-info/entry_points.txt
+[7.145s] writing requirements to ../../build/education_material/education_material.egg-info/requires.txt
+[7.146s] writing top-level names to ../../build/education_material/education_material.egg-info/top_level.txt
+[7.196s] reading manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+[7.196s] adding license file 'LICENSE'
+[7.197s] writing manifest file '../../build/education_material/education_material.egg-info/SOURCES.txt'
+[7.197s] running build
+[7.198s] running build_py
+[7.198s] running install
+[7.208s] running install_lib
+[7.238s] creating /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.238s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/int_pub.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.241s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/int_sub.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.242s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/string_sub.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.242s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/__init__.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.242s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/string_pub.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.243s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/keypressed_calculator.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.244s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/evenodd_checker.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.245s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/keypressed_talker.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.245s] copying /home/intern1/ros2_ws/build/education_material/build/lib/education_material/keypressed_to_cmdvel.py -> /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material
+[7.245s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/int_pub.py to int_pub.cpython-312.pyc
+[7.246s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/int_sub.py to int_sub.cpython-312.pyc
+[7.247s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/string_sub.py to string_sub.cpython-312.pyc
+[7.247s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/__init__.py to __init__.cpython-312.pyc
+[7.247s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/string_pub.py to string_pub.cpython-312.pyc
+[7.248s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/keypressed_calculator.py to keypressed_calculator.cpython-312.pyc
+[7.249s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/evenodd_checker.py to evenodd_checker.cpython-312.pyc
+[7.250s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/keypressed_talker.py to keypressed_talker.cpython-312.pyc
+[7.255s] byte-compiling /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material/keypressed_to_cmdvel.py to keypressed_to_cmdvel.cpython-312.pyc
+[7.255s] running install_data
+[7.255s] copying resource/education_material -> /home/intern1/ros2_ws/install/education_material/share/ament_index/resource_index/packages
+[7.255s] copying package.xml -> /home/intern1/ros2_ws/install/education_material/share/education_material
+[7.256s] running install_egg_info
+[7.296s] Copying ../../build/education_material/education_material.egg-info to /home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages/education_material-0.0.0-py3.12.egg-info
+[7.296s] running install_scripts
+[7.541s] Installing evenodd_checker script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.541s] Installing int_pub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.542s] Installing int_sub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.542s] Installing keypressed_calculator script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.542s] Installing keypressed_talker script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.542s] Installing keypressed_to_cmdvel script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.542s] Installing string_pub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.543s] Installing string_sub script to /home/intern1/ros2_ws/install/education_material/lib/education_material
+[7.543s] writing list of installed files to '/home/intern1/ros2_ws/build/education_material/install.log'
+[7.746s] Invoked command in '/home/intern1/ros2_ws/src/education_material' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/education_material/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/education_material build --build-base /home/intern1/ros2_ws/build/education_material/build install --record /home/intern1/ros2_ws/build/education_material/install.log --single-version-externally-managed install_data --force

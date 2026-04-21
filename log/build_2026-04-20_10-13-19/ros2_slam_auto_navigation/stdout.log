@@ -1,0 +1,45 @@
+-- Found ament_cmake: 2.5.5 (/opt/ros/jazzy/share/ament_cmake/cmake)
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Found ament_lint_auto: 0.17.4 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+-- Added test 'copyright' to check source files copyright and LICENSE
+-- Added test 'flake8' to check Python code syntax and style conventions
+-- Configured 'flake8' exclude dirs and/or files: 
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done (1.6s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/intern1/ros2_ws/build/ros2_slam_auto_navigation
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/gazebo_params.yaml
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/mapper_params_online_async.yaml
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/my_controller.yaml
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/twist_mux.yaml
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/camera.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/depth_camera.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/gazebo_control.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/inertial_macros.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/lidar.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/robot.urdf.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/robot_base.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/ros2_control.xacro
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/launch/launch_sim.launch.py
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/launch/rsp.launch.py
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/launch/slam_navigation.launch.py
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/worlds/simple.world
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ament_index/resource_index/package_run_dependencies/ros2_slam_auto_navigation
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ament_index/resource_index/parent_prefix_path/ros2_slam_auto_navigation
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/ament_prefix_path.sh
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/ament_prefix_path.dsv
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/path.sh
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/path.dsv
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.bash
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.sh
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.zsh
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.dsv
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/package.dsv
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ament_index/resource_index/packages/ros2_slam_auto_navigation
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/cmake/ros2_slam_auto_navigationConfig.cmake
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/cmake/ros2_slam_auto_navigationConfig-version.cmake
+-- Symlinking: /home/intern1/ros2_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/package.xml

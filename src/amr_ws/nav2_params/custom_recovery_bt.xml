@@ -1,0 +1,29 @@
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+      
+      <!-- Primary Navigation Logic -->
+      <PipelineSequence name="NavigateWithReplanning">
+        
+        <RateController hz="1.0">
+          <RecoveryNode number_of_retries="1" name="ComputePathToPose">
+            <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+            <!-- Wait briefly if planner fails before retrying -->
+            <Wait wait_duration="1.0"/>
+          </RecoveryNode>
+        </RateController>
+        
+        <RecoveryNode number_of_retries="1" name="FollowPath">
+          <FollowPath path="{path}" controller_id="FollowPath"/>
+          <!-- Wait broadly if path following fails, e.g. obstacle in way -->
+          <Wait wait_duration="10.0"/>
+        </RecoveryNode>
+        
+      </PipelineSequence>
+
+      <!-- Global Recovery Logic - fallback if Pipeline fails completely -->
+      <Wait wait_duration="15.0"/>
+      
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

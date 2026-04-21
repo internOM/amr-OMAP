@@ -1,0 +1,22 @@
+running develop
+running egg_info
+writing om_mvc01.egg-info/PKG-INFO
+writing dependency_links to om_mvc01.egg-info/dependency_links.txt
+writing entry points to om_mvc01.egg-info/entry_points.txt
+writing requirements to om_mvc01.egg-info/requires.txt
+writing top-level names to om_mvc01.egg-info/top_level.txt
+reading manifest file 'om_mvc01.egg-info/SOURCES.txt'
+writing manifest file 'om_mvc01.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages/om-mvc01.egg-link (link to .)
+Installing om_mvc01_node script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+Installing om_mvc01_node2 script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+Installing om_mvc01_node3 script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+
+Installed /home/intern1/ros2_ws/build/om_mvc01
+running symlink_data
+symbolically linking /home/intern1/ros2_ws/build/om_mvc01/resource/om_mvc01 -> /home/intern1/ros2_ws/install/om_mvc01/share/ament_index/resource_index/packages
+symbolically linking /home/intern1/ros2_ws/build/om_mvc01/package.xml -> /home/intern1/ros2_ws/install/om_mvc01/share/om_mvc01
+symbolically linking /home/intern1/ros2_ws/build/om_mvc01/launch/om_MVC01_launch.py -> /home/intern1/ros2_ws/install/om_mvc01/share/om_mvc01/launch
+symbolically linking /home/intern1/ros2_ws/build/om_mvc01/launch/om_MVC01_bringup_launch.py -> /home/intern1/ros2_ws/install/om_mvc01/share/om_mvc01/launch
+symbolically linking /home/intern1/ros2_ws/build/om_mvc01/launch/om_MVC01_follow_launch.py -> /home/intern1/ros2_ws/install/om_mvc01/share/om_mvc01/launch

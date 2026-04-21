@@ -1,0 +1,19 @@
+[3.554s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclpy_guard_conditions': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_guard_conditions/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/examples_rclpy_guard_conditions/build --no-deps symlink_data --force
+[4.610s] running develop
+[5.160s] running egg_info
+[5.253s] writing examples_rclpy_guard_conditions.egg-info/PKG-INFO
+[5.254s] writing dependency_links to examples_rclpy_guard_conditions.egg-info/dependency_links.txt
+[5.254s] writing entry points to examples_rclpy_guard_conditions.egg-info/entry_points.txt
+[5.254s] writing requirements to examples_rclpy_guard_conditions.egg-info/requires.txt
+[5.254s] writing top-level names to examples_rclpy_guard_conditions.egg-info/top_level.txt
+[5.382s] reading manifest file 'examples_rclpy_guard_conditions.egg-info/SOURCES.txt'
+[5.383s] writing manifest file 'examples_rclpy_guard_conditions.egg-info/SOURCES.txt'
+[5.458s] running build_ext
+[5.459s] Creating /home/intern1/ros2_ws/install/examples_rclpy_guard_conditions/lib/python3.12/site-packages/examples-rclpy-guard-conditions.egg-link (link to .)
+[5.460s] Installing trigger_guard_condition script to /home/intern1/ros2_ws/install/examples_rclpy_guard_conditions/lib/examples_rclpy_guard_conditions
+[5.461s] 
+[5.461s] Installed /home/intern1/ros2_ws/build/examples_rclpy_guard_conditions
+[5.464s] running symlink_data
+[5.464s] symbolically linking /home/intern1/ros2_ws/build/examples_rclpy_guard_conditions/resource/examples_rclpy_guard_conditions -> /home/intern1/ros2_ws/install/examples_rclpy_guard_conditions/share/ament_index/resource_index/packages
+[5.464s] symbolically linking /home/intern1/ros2_ws/build/examples_rclpy_guard_conditions/package.xml -> /home/intern1/ros2_ws/install/examples_rclpy_guard_conditions/share/examples_rclpy_guard_conditions
+[6.176s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclpy_guard_conditions' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_guard_conditions/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/examples_rclpy_guard_conditions/build --no-deps symlink_data --force

@@ -1,0 +1,46 @@
+[2.484s] Invoking command in '/home/intern1/ros2_ws/build/tb3_multi_robot': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/tb3_multi_robot/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/tb3_multi_robot/build --no-deps symlink_data --force
+[3.711s] running develop
+[4.175s] running egg_info
+[4.210s] writing tb3_multi_robot.egg-info/PKG-INFO
+[4.211s] writing dependency_links to tb3_multi_robot.egg-info/dependency_links.txt
+[4.211s] writing entry points to tb3_multi_robot.egg-info/entry_points.txt
+[4.211s] writing requirements to tb3_multi_robot.egg-info/requires.txt
+[4.211s] writing top-level names to tb3_multi_robot.egg-info/top_level.txt
+[4.283s] reading manifest file 'tb3_multi_robot.egg-info/SOURCES.txt'
+[4.284s] writing manifest file 'tb3_multi_robot.egg-info/SOURCES.txt'
+[4.322s] running build_ext
+[4.322s] Creating /home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages/tb3-multi-robot.egg-link (link to .)
+[4.323s] Installing turtlebot3_drive script to /home/intern1/ros2_ws/install/tb3_multi_robot/bin
+[4.324s] 
+[4.324s] Installed /home/intern1/ros2_ws/build/tb3_multi_robot
+[4.324s] running symlink_data
+[4.324s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/package.xml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot
+[4.324s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/resource/tb3_multi_robot -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/ament_index/resource_index/packages
+[4.325s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/launch/tb3_world.launch.py -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/launch
+[4.325s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/launch/tb3_nav2.launch.py -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/launch
+[4.325s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/launch/drive.launch.py -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/launch
+[4.325s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/waffle_bridge.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.325s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/burger_cam_bridge.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.325s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/waffle_pi.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.326s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/waffle_pi_bridge.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.326s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/burger_bridge.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.326s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/burger_nav2_params.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.326s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/burger_cam_nav2_params.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.326s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/params/waffle_nav2_params.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/params
+[4.326s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/rviz/tb3_navigation2.rviz -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/rviz
+[4.326s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/worlds/tb3_world.world -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/worlds
+[4.327s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/models/turtlebot3_burger/model-1_4.sdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/models/turtlebot3_burger
+[4.327s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/models/turtlebot3_burger/model.config -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/models/turtlebot3_burger
+[4.328s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/models/turtlebot3_burger/model.sdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/models/turtlebot3_burger
+[4.328s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/models/turtlebot3_waffle/model-1_4.sdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/models/turtlebot3_waffle
+[4.328s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/models/turtlebot3_waffle/model.config -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/models/turtlebot3_waffle
+[4.328s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/models/turtlebot3_waffle/model.sdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/models/turtlebot3_waffle
+[4.329s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/config/robots.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/config
+[4.329s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/urdf/turtlebot3_burger_cam.urdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/urdf
+[4.329s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/urdf/turtlebot3_burger.urdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/urdf
+[4.329s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/urdf/turtlebot3_waffle.urdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/urdf
+[4.329s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/urdf/turtlebot3_waffle_pi.urdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/urdf
+[4.330s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/urdf/common_properties.urdf -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/urdf
+[4.330s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/map/map.pgm -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/map
+[4.330s] symbolically linking /home/intern1/ros2_ws/build/tb3_multi_robot/map/map.yaml -> /home/intern1/ros2_ws/install/tb3_multi_robot/share/tb3_multi_robot/map
+[4.435s] Invoked command in '/home/intern1/ros2_ws/build/tb3_multi_robot' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/tb3_multi_robot/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/tb3_multi_robot/build --no-deps symlink_data --force

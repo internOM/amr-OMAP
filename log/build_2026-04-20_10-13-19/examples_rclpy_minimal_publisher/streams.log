@@ -1,0 +1,22 @@
+[5.067s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/build --no-deps symlink_data --force
+[5.905s] running develop
+[6.524s] running egg_info
+[6.578s] writing examples_rclpy_minimal_publisher.egg-info/PKG-INFO
+[6.580s] writing dependency_links to examples_rclpy_minimal_publisher.egg-info/dependency_links.txt
+[6.581s] writing entry points to examples_rclpy_minimal_publisher.egg-info/entry_points.txt
+[6.581s] writing requirements to examples_rclpy_minimal_publisher.egg-info/requires.txt
+[6.582s] writing top-level names to examples_rclpy_minimal_publisher.egg-info/top_level.txt
+[6.745s] reading manifest file 'examples_rclpy_minimal_publisher.egg-info/SOURCES.txt'
+[6.748s] writing manifest file 'examples_rclpy_minimal_publisher.egg-info/SOURCES.txt'
+[6.808s] running build_ext
+[6.808s] Creating /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages/examples-rclpy-minimal-publisher.egg-link (link to .)
+[6.809s] Installing publisher_local_function script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.809s] Installing publisher_member_function script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.810s] Installing publisher_member_function_with_wait_for_all_acked script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.810s] Installing publisher_old_school script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/examples_rclpy_minimal_publisher
+[6.810s] 
+[6.810s] Installed /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher
+[6.810s] running symlink_data
+[6.810s] symbolically linking /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/resource/examples_rclpy_minimal_publisher -> /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/share/ament_index/resource_index/packages
+[6.810s] symbolically linking /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/package.xml -> /home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/share/examples_rclpy_minimal_publisher
+[7.476s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/examples_rclpy_minimal_publisher/build --no-deps symlink_data --force

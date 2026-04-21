@@ -1,0 +1,27 @@
+running develop
+running egg_info
+writing camera_follow.egg-info/PKG-INFO
+writing dependency_links to camera_follow.egg-info/dependency_links.txt
+writing entry points to camera_follow.egg-info/entry_points.txt
+writing requirements to camera_follow.egg-info/requires.txt
+writing top-level names to camera_follow.egg-info/top_level.txt
+reading manifest file 'camera_follow.egg-info/SOURCES.txt'
+writing manifest file 'camera_follow.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages/camera-follow.egg-link (link to .)
+Installing cam_line_follow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_d435if_nonshow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_black script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_early script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_early_2line script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_edge script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_follow_stop_grayscale script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing cam_line_search script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing hand_eye_mrc01 script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing hand_eye_petbottle script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing image_sub script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+Installing webcam_line_follow script to /home/intern1/ros2_ws/install/camera_follow/lib/camera_follow
+
+Installed /home/intern1/ros2_ws/build/camera_follow
+running symlink_data

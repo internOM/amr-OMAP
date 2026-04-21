@@ -12,5 +12,6 @@ localization_node = amr_ws.localization_node:main
 orchestrator_node = amr_ws.orchestrator_node:main
 path_logger = amr_ws.path_logger:main
 path_publisher = amr_ws.path_publisher:main
+pose_persistence_node = amr_ws.pose_persistence_node:main
 return_home_node = amr_ws.return_home_node:main
 webcam_line_follow = amr_ws.webcam_line_follow:main

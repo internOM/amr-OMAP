@@ -1,1 +1,1 @@
-self.__SSG_MANIFEST=new Set([]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
+/home/intern1/ros2_ws/src/ros2_system_webview/web/out/_next/static/9zTH6-5GlVAaGD7PplLUP/_ssgManifest.js

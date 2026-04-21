@@ -1,0 +1,24 @@
+[3.573s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclpy_executors': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_executors/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_executors/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/examples_rclpy_executors/build --no-deps symlink_data --force
+[4.766s] running develop
+[5.397s] running egg_info
+[5.458s] writing examples_rclpy_executors.egg-info/PKG-INFO
+[5.459s] writing dependency_links to examples_rclpy_executors.egg-info/dependency_links.txt
+[5.460s] writing entry points to examples_rclpy_executors.egg-info/entry_points.txt
+[5.461s] writing requirements to examples_rclpy_executors.egg-info/requires.txt
+[5.462s] writing top-level names to examples_rclpy_executors.egg-info/top_level.txt
+[5.587s] reading manifest file 'examples_rclpy_executors.egg-info/SOURCES.txt'
+[5.590s] writing manifest file 'examples_rclpy_executors.egg-info/SOURCES.txt'
+[5.663s] running build_ext
+[5.663s] Creating /home/intern1/ros2_ws/install/examples_rclpy_executors/lib/python3.12/site-packages/examples-rclpy-executors.egg-link (link to .)
+[5.664s] Installing callback_group script to /home/intern1/ros2_ws/install/examples_rclpy_executors/lib/examples_rclpy_executors
+[5.664s] Installing composed script to /home/intern1/ros2_ws/install/examples_rclpy_executors/lib/examples_rclpy_executors
+[5.665s] Installing custom_callback_group script to /home/intern1/ros2_ws/install/examples_rclpy_executors/lib/examples_rclpy_executors
+[5.665s] Installing custom_executor script to /home/intern1/ros2_ws/install/examples_rclpy_executors/lib/examples_rclpy_executors
+[5.665s] Installing listener script to /home/intern1/ros2_ws/install/examples_rclpy_executors/lib/examples_rclpy_executors
+[5.665s] Installing talker script to /home/intern1/ros2_ws/install/examples_rclpy_executors/lib/examples_rclpy_executors
+[5.666s] 
+[5.666s] Installed /home/intern1/ros2_ws/build/examples_rclpy_executors
+[5.666s] running symlink_data
+[5.666s] symbolically linking /home/intern1/ros2_ws/build/examples_rclpy_executors/resource/examples_rclpy_executors -> /home/intern1/ros2_ws/install/examples_rclpy_executors/share/ament_index/resource_index/packages
+[5.666s] symbolically linking /home/intern1/ros2_ws/build/examples_rclpy_executors/package.xml -> /home/intern1/ros2_ws/install/examples_rclpy_executors/share/examples_rclpy_executors
+[6.270s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclpy_executors' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_executors/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_executors/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/examples_rclpy_executors/build --no-deps symlink_data --force

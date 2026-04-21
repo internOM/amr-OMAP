@@ -4,10 +4,10 @@
 
 #include <string.h>
 
-#include "om_msgs/msg/detail/state__functions.h"
-#include "om_msgs/msg/detail/state__type_support.h"
 #include "rosidl_typesupport_interface/macros.h"
+#include "om_msgs/msg/detail/state__type_support.h"
 #include "om_msgs/msg/detail/state__struct.h"
+#include "om_msgs/msg/detail/state__functions.h"
 
 #ifdef __cplusplus
 extern "C"

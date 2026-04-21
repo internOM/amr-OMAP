@@ -23,6 +23,7 @@ amr_ws/localization_node.py
 amr_ws/orchestrator_node.py
 amr_ws/path_logger.py
 amr_ws/path_publisher.py
+amr_ws/pose_persistence_node.py
 amr_ws/return_home_node.py
 amr_ws/webcam_line_follow.py
 launch/slam_toolbox_launch.py

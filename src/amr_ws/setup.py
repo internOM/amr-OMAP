@@ -44,6 +44,7 @@ setup(
             'localization_node = amr_ws.localization_node:main',
             'return_home_node = amr_ws.return_home_node:main',
             'orchestrator_node = amr_ws.orchestrator_node:main',
+            'pose_persistence_node = amr_ws.pose_persistence_node:main',
         ],
     },
 )

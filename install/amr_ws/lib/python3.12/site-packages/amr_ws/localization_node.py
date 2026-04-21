@@ -6,6 +6,7 @@ from nav2_msgs.srv import SetInitialPose
 from geometry_msgs.msg import PoseWithCovarianceStamped, Twist
 import time
 import math
+import sys
 
 
 # ─── Configuration ────────────────────────────────────────────────────────────
@@ -55,17 +56,34 @@ class LocalizationNode(Node):
         self.initial_yaw = INITIAL_YAW
         
         try:
-            from ament_index_python.packages import get_package_share_directory
             import os, yaml
-            wp_path = os.path.join(get_package_share_directory('amr_ws'), 'waypoints', 'waypoints.yaml')
-            with open(wp_path, 'r') as f:
-                data = yaml.safe_load(f)
-                fw = data['waypoints'][0]
-                self.initial_x = float(fw['x'])
-                self.initial_y = float(fw['y'])
-                self.initial_yaw = float(fw['yaw'])
-            self.get_logger().info(f"Loaded starting pose from waypoint A: x={self.initial_x:.2f}, y={self.initial_y:.2f}")
+            
+            # Check for saved persistence pose first
+            pose_file = '/home/intern1/ros2_ws/src/amr_ws/waypoints/amcl_logger.yaml'
+            if '--recover' in sys.argv and os.path.exists(pose_file):
+                with open(pose_file, 'r') as f:
+                    data = yaml.safe_load(f)
+                    pos = data['pose']['pose']['position']
+                    ori = data['pose']['pose']['orientation']
+                    self.initial_x = float(pos['x'])
+                    self.initial_y = float(pos['y'])
+                    # Basic quaternion z/w to yaw conversion
+                    self.initial_yaw = 2.0 * math.atan2(float(ori['z']), float(ori['w']))
+                self.get_logger().info(f"Loaded starting pose from persistence file: x={self.initial_x:.2f}, y={self.initial_y:.2f}")
+                os.remove(pose_file)
+            else:
+                from ament_index_python.packages import get_package_share_directory
+                wp_path = os.path.join(get_package_share_directory('amr_ws'), 'waypoints', 'waypoints.yaml')
+                with open(wp_path, 'r') as f:
+                    data = yaml.safe_load(f)
+                    fw = data['waypoints'][0]
+                    self.initial_x = float(fw['x'])
+                    self.initial_y = float(fw['y'])
+                    self.initial_yaw = float(fw['yaw'])
+                self.get_logger().info(f"Loaded starting pose from waypoint A: x={self.initial_x:.2f}, y={self.initial_y:.2f}")
         except Exception as e:
+
+
             self.get_logger().warn(f"Failed to load first waypoint for localization, using defaults. Error: {e}")
 
         # Service client for setting initial pose — bypasses QoS topic issues

@@ -688,6 +688,9 @@
                     window.location.href = "Manual.html";
                 } else if (actionToBypass === 'recover') {
                     publishTopic('/amr/cmd_recover');
+                    setTimeout(() => {
+                        publishTopic('/amr/cmd_recover_localize');
+                    }, 500);
                 }
             } else {
                 pinDisplay.textContent = "ERR";
@@ -860,6 +863,7 @@
                 'IDLE': { label: 'IDLE', color: 'var(--text-dark)' },
                 'NAVIGATING': { label: 'NAVIGATING', color: 'var(--success)' },
                 'RETURNING_HOME': { label: 'RETURNING HOME', color: 'var(--primary)' },
+                'TF_RECOVERY': { label: 'TF RECOVERING...', color: 'var(--warning)' },
                 'FAULT': { label: 'FAULT', color: 'var(--danger)' },
             };
             const mapped = stateMap[state];

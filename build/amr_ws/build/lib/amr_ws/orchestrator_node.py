@@ -27,6 +27,9 @@ from rclpy.action import ActionClient
 from rclpy.node import Node
 from rcl_interfaces.msg import Log
 from std_msgs.msg import Bool, String
+from nav_msgs.msg import Odometry
+
+import tf2_ros
 
 
 # ─── Constants ────────────────────────────────────────────────────────────────
@@ -102,6 +105,7 @@ class OrchestratorNode(Node):
 
         # ── Localization flags ────────────────────────────────────────────
         self._localizing_started = False
+        self._localize_mode = 'normal'
 
         # ── Waypoint navigation state ─────────────────────────────────────
         self._waypoints = []
@@ -131,6 +135,12 @@ class OrchestratorNode(Node):
         # ERROR messages from tf_help. A single transient error is ignored.
         self._tf_fault_count = 0
 
+        # ── TF Recovery ────────────────────────────────────────────────────
+        self._tf_recovery_start_time = None
+        self._interrupted_nav_type = None
+        self._interrupted_goal_wp = None
+        self._current_cmd_vel = Twist()
+
         # ── Halt-burst state ──────────────────────────────────────────────
         # After a Nav2 goal completes, we fire zero-velocity on /cmd_vel_estop
         # for a short window to overwrite any residual RPP angular velocity.
@@ -157,6 +167,14 @@ class OrchestratorNode(Node):
         # state feedback with no log pipeline delay.
         self._state_pub = self.create_publisher(String, '/amr/state', 10)
 
+        # Status and Fault Publishers
+        self._robot_status_pub = self.create_publisher(String, '/robot_status', 10)
+        self._fault_trigger_pub = self.create_publisher(String, '/amr/fault_trigger', 10)
+
+        # TF Buffer and Listener
+        self._tf_buffer = tf2_ros.Buffer()
+        self._tf_listener = tf2_ros.TransformListener(self._tf_buffer, self)
+
         # AMCL pose subscriber
         self.create_subscription(
             PoseWithCovarianceStamped,
@@ -167,10 +185,15 @@ class OrchestratorNode(Node):
 
         # HMI subscribers
         self.create_subscription(Bool, '/amr/cmd_localize',    self._cmd_localize_cb,    10)
+        self.create_subscription(Bool, '/amr/cmd_recover_localize', self._cmd_recover_localize_cb, 10)
         self.create_subscription(Bool, '/amr/cmd_navigate',    self._cmd_navigate_cb,    10)
         self.create_subscription(Bool, '/amr/cmd_return_home', self._cmd_return_home_cb, 10)
         self.create_subscription(Bool, '/amr/cmd_estop',       self._cmd_estop_cb,       10)
         self.create_subscription(Bool, '/amr/cmd_recover',     self._cmd_recover_cb,     10)
+
+        # Odometry and Cmd_Vel for indirect TF symptom detection
+        self.create_subscription(Odometry, '/odom', self._odom_cb, 10)
+        self.create_subscription(Twist, '/cmd_vel', self._cmd_vel_cb, 10)
 
         # /rosout subscriber — monitors for TF staleness faults from tf_help
         self.create_subscription(Log, '/rosout', self._rosout_cb, 10)
@@ -271,13 +294,28 @@ class OrchestratorNode(Node):
             return
         if not self._debounce_ok('_last_cmd_localize_time'):
             return
-        if self._state != 'WAITING_FOR_LOCALIZATION':
+        if self._state not in ('WAITING_FOR_LOCALIZATION', 'IDLE'):
             self.get_logger().warn(
                 f'cmd_localize ignored — current state is {self._state}, '
-                'must be WAITING_FOR_LOCALIZATION'
+                'must be WAITING_FOR_LOCALIZATION or IDLE'
             )
             return
         self.get_logger().info('cmd_localize received. Transitioning to LOCALIZING.')
+        self._localize_mode = 'normal'
+        self._state = 'LOCALIZING'
+
+    def _cmd_recover_localize_cb(self, msg: Bool):
+        if not msg.data:
+            return
+        if not self._debounce_ok('_last_cmd_localize_time'):
+            return
+        if self._state not in ('WAITING_FOR_LOCALIZATION', 'IDLE', 'FAULT'):
+            self.get_logger().warn(
+                f'cmd_recover_localize ignored — current state is {self._state}'
+            )
+            return
+        self.get_logger().info('cmd_recover_localize received. Transitioning to LOCALIZING (Recovery).')
+        self._localize_mode = 'recover'
         self._state = 'LOCALIZING'
 
     def _cmd_navigate_cb(self, msg: Bool):
@@ -337,11 +375,33 @@ class OrchestratorNode(Node):
                 f'[TF SAFETY] Transform related error #{self._tf_fault_count}/{TF_FAULT_THRESHOLD} '
                 f'from {msg.name}: "{msg.msg.strip()}"'
             )
+            self._check_tf_fault_threshold()
         else:
             # Not a transform error, reset consecutive counter
             self._tf_fault_count = 0
-            return
 
+    def _cmd_vel_cb(self, msg: Twist):
+        self._current_cmd_vel = msg
+
+    def _odom_cb(self, msg: Odometry):
+        if self._state not in ('NAVIGATING', 'RETURNING_HOME'):
+            return
+            
+        # Indirect TF symptom detection
+        odom_ang_z = abs(msg.twist.twist.angular.z)
+        cmd_ang_z = abs(self._current_cmd_vel.angular.z)
+        cmd_lin_x = abs(self._current_cmd_vel.linear.x)
+        
+        # If odom angular velocity is high (> 0.5 rad/s) but cmd_vel is near-zero (< 0.1)
+        if odom_ang_z > 0.5 and cmd_ang_z < 0.1 and cmd_lin_x < 0.1:
+            self._tf_fault_count += 1
+            self.get_logger().warn(
+                f"[TF SAFETY] Indirect TF symptom detected! Odom spin {odom_ang_z:.2f} rad/s while cmd_vel is near zero. "
+                f"Count #{self._tf_fault_count}/{TF_FAULT_THRESHOLD}"
+            )
+            self._check_tf_fault_threshold()
+
+    def _check_tf_fault_threshold(self):
         if self._tf_fault_count < TF_FAULT_THRESHOLD:
             return  # not enough consecutive errors yet — keep watching
 
@@ -349,25 +409,30 @@ class OrchestratorNode(Node):
         self._tf_fault_count = 0
         self.get_logger().error(
             f'[TF SAFETY] {TF_FAULT_THRESHOLD} consecutive transform errors. '
-            'Halting robot and entering FAULT.'
+            'Halting robot and entering TF_RECOVERY.'
         )
 
         # Cancel whichever Nav2 goal is active
         if self._state == 'NAVIGATING' and self._nav_goal_handle:
             self.get_logger().warn('[TF SAFETY] Cancelling active waypoint navigation goal.')
             self._nav_goal_handle.cancel_goal_async()
+            self._interrupted_nav_type = 'waypoint'
+            self._interrupted_goal_wp = self._waypoints[self._waypoint_index]
 
         if self._state == 'RETURNING_HOME' and self._home_nav_goal_handle:
             self.get_logger().warn('[TF SAFETY] Cancelling active home navigation goal.')
             self._home_nav_goal_handle.cancel_goal_async()
+            self._interrupted_nav_type = 'home'
+            self._interrupted_goal_wp = None
 
-        # Publish an immediate halt before entering FAULT (belt-and-suspenders)
+        # Publish an immediate halt
         self._cmd_vel_pub.publish(Twist())
 
-        self._enter_fault(
-            f'TF ERROR — {TF_FAULT_THRESHOLD} consecutive transform errors '
-            f'during {self._state}. Recover when transforms are healthy.'
-        )
+        self._robot_status_pub.publish(String(data='TF_ERROR'))
+        self._fault_trigger_pub.publish(String(data='TF_ERROR_TRIGGER'))
+
+        self._state = 'TF_RECOVERY'
+        self._tf_recovery_start_time = self.get_clock().now()
 
     def _cmd_estop_cb(self, msg: Bool):
         if not msg.data:
@@ -424,6 +489,8 @@ class OrchestratorNode(Node):
             self._handle_navigating()
         elif state == 'RETURNING_HOME':
             self._handle_returning_home()
+        elif state == 'TF_RECOVERY':
+            self._handle_tf_recovery()
         elif state == 'FAULT':
             self._handle_fault()
 
@@ -465,7 +532,10 @@ class OrchestratorNode(Node):
 
         self.get_logger().info('Launching external localization node...')
         try:
-            subprocess.Popen(['ros2', 'run', 'amr_ws', 'localization_node'])
+            cmd = ['ros2', 'run', 'amr_ws', 'localization_node']
+            if self._localize_mode == 'recover':
+                cmd.append('--recover')
+            subprocess.Popen(cmd)
         except Exception as e:
             self._enter_fault(f'LOCALIZING — Failed to launch localization_node: {e}')
             return
@@ -536,6 +606,41 @@ class OrchestratorNode(Node):
                     f'RETURNING_HOME — Navigation failed (error code: {self._home_nav_error_code})'
                 )
 
+    # ── TF_RECOVERY ───────────────────────────────────────────────────────────
+
+    def _handle_tf_recovery(self):
+        # Publish zero velocity continuously
+        self._cmd_vel_pub.publish(Twist())
+        
+        now = self.get_clock().now()
+        elapsed = (now - self._tf_recovery_start_time).nanoseconds * 1e-9
+        
+        if elapsed > 30.0:
+            self.get_logger().error('[TF SAFETY] TF did not recover within 30s timeout. Halting fully.')
+            self._robot_status_pub.publish(String(data='SAFE_STOP'))
+            self._enter_fault('TF_RECOVERY TIMEOUT — Safe Stop. Manual operator intervention required.')
+            return
+            
+        # Check if TF is healthy
+        try:
+            # Check if we can transform map to base_link
+            if self._tf_buffer.can_transform('map', 'base_link', rclpy.time.Time(), timeout=rclpy.duration.Duration(seconds=0.1)):
+                self.get_logger().info('[TF SAFETY] TF recovered! Resuming interrupted goal.')
+                self._robot_status_pub.publish(String(data='OK'))
+                
+                # Resume based on what was interrupted
+                if self._interrupted_nav_type == 'waypoint':
+                    self._state = 'NAVIGATING'
+                    self._nav_state = 'idle'
+                elif self._interrupted_nav_type == 'home':
+                    self._state = 'RETURNING_HOME'
+                    self._home_nav_state = 'idle'
+                else:
+                    self._state = 'IDLE'
+                    self._last_heartbeat = self.get_clock().now()
+        except Exception as e:
+            pass # continue waiting
+
     # ── FAULT ─────────────────────────────────────────────────────────────────
 
     def _handle_fault(self):
@@ -554,6 +659,8 @@ class OrchestratorNode(Node):
         self._fault_message = reason
         self._fault_logged = False
         self._state = 'FAULT'
+        self._robot_status_pub.publish(String(data='SAFE_STOP'))
+        self._fault_trigger_pub.publish(String(data=reason))
 
     # ── Localization Helpers ──────────────────────────────────────────────────
 

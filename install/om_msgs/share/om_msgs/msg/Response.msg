@@ -1,4 +1,1 @@
-int32[64] data
-int8 slave_id
-int8 func_code
-
+/home/intern1/ros2_ws/om_modbus_master/om_msgs/msg/Response.msg
