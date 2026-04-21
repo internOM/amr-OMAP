@@ -123,6 +123,8 @@ class OrchestratorNode(Node):
         self._home_nav_success = False
         self._home_nav_error_code = 0
         self._home_nav_goal_handle = None
+        self._return_waypoints = []
+        self._return_waypoint_index = 0
 
         # ── Feedback throttle ─────────────────────────────────────────────
         # Only log distance_remaining every 5th Nav2 feedback callback (~1 Hz)
@@ -294,10 +296,10 @@ class OrchestratorNode(Node):
             return
         if not self._debounce_ok('_last_cmd_localize_time'):
             return
-        if self._state not in ('WAITING_FOR_LOCALIZATION', 'IDLE'):
+        if self._state != 'WAITING_FOR_LOCALIZATION':
             self.get_logger().warn(
                 f'cmd_localize ignored — current state is {self._state}, '
-                'must be WAITING_FOR_LOCALIZATION or IDLE'
+                'must be WAITING_FOR_LOCALIZATION'
             )
             return
         self.get_logger().info('cmd_localize received. Transitioning to LOCALIZING.')
@@ -309,9 +311,10 @@ class OrchestratorNode(Node):
             return
         if not self._debounce_ok('_last_cmd_localize_time'):
             return
-        if self._state not in ('WAITING_FOR_LOCALIZATION', 'IDLE', 'FAULT'):
+        if self._state not in ('WAITING_FOR_LOCALIZATION', 'FAULT'):
             self.get_logger().warn(
-                f'cmd_recover_localize ignored — current state is {self._state}'
+                f'cmd_recover_localize ignored — current state is {self._state}, '
+                'must be WAITING_FOR_LOCALIZATION or FAULT'
             )
             return
         self.get_logger().info('cmd_recover_localize received. Transitioning to LOCALIZING (Recovery).')
@@ -343,7 +346,9 @@ class OrchestratorNode(Node):
                 f'cmd_return_home ignored — current state is {self._state}, must be IDLE'
             )
             return
-        self.get_logger().info('cmd_return_home received. Transitioning to RETURNING_HOME.')
+        self.get_logger().info('cmd_return_home received. Transitioning to RETURNING_HOME (Reverse Sequence).')
+        self._return_waypoints = list(reversed(self._waypoints))
+        self._return_waypoint_index = 0
         self._home_nav_state = 'idle'
         self._state = 'RETURNING_HOME'
 
@@ -586,24 +591,41 @@ class OrchestratorNode(Node):
 
     def _handle_returning_home(self):
         if self._home_nav_state == 'idle':
+            wp = self._return_waypoints[self._return_waypoint_index]
+            
+            # Fetch current heading to "ignore" the waypoint's saved yaw.
+            # arrivals will be much smoother as the robot won't try to spin backwards.
+            curr_yaw = self._get_current_robot_yaw()
+            
             self.get_logger().info(
-                f'Returning home (Point A): x={self.home_x}, y={self.home_y}, yaw={self.home_yaw}'
+                f"Returning home — Navigating to waypoint: {wp['name']} "
+                f"(x={wp['x']}, y={wp['y']}, yaw=IGNORE[current={math.degrees(curr_yaw):.1f}°])"
             )
-            self._send_home_nav_goal()
+            self._send_home_nav_goal(wp, target_yaw=curr_yaw)
             self._home_nav_state = 'waiting'
 
         elif self._home_nav_state in ('waiting', 'navigating'):
             pass  # waiting for Nav2 callbacks
 
         elif self._home_nav_state == 'done':
+            wp = self._return_waypoints[self._return_waypoint_index]
             if self._home_nav_success:
-                self.get_logger().info('✓ Robot has successfully returned home.')
-                self._home_nav_state = 'idle'
-                self._last_heartbeat = self.get_clock().now()
-                self._state = 'IDLE'
+                self.get_logger().info(f"Reached return waypoint: {wp['name']}")
+                self._return_waypoint_index += 1
+
+                if self._return_waypoint_index < len(self._return_waypoints):
+                    # Intermediate waypoint — continue to the next one
+                    self._home_nav_state = 'idle'
+                else:
+                    # Final waypoint (Point A / Home) reached
+                    self.get_logger().info('✓ Robot has successfully returned home to Point A.')
+                    self._home_nav_state = 'idle'
+                    self._last_heartbeat = self.get_clock().now()
+                    self._state = 'IDLE'
             else:
                 self._enter_fault(
-                    f'RETURNING_HOME — Navigation failed (error code: {self._home_nav_error_code})'
+                    f"RETURNING_HOME — Navigation failed for waypoint: {wp['name']} "
+                    f'(error code: {self._home_nav_error_code})'
                 )
 
     # ── TF_RECOVERY ───────────────────────────────────────────────────────────
@@ -760,9 +782,9 @@ class OrchestratorNode(Node):
         )
         send_future.add_done_callback(self._goal_response_callback)
 
-    def _send_home_nav_goal(self):
-        """Send a NavigateToPose goal for the home pose (Point A). Uses home-level callbacks."""
-        goal_msg = self._build_pose_stamped(self.home_x, self.home_y, self.home_yaw)
+    def _send_home_nav_goal(self, wp: dict, target_yaw: float):
+        """Send a NavigateToPose goal for a return waypoint. target_yaw overrides waypoint yaw."""
+        goal_msg = self._build_pose_stamped(wp['x'], wp['y'], target_yaw)
         self._nav_action_client.wait_for_server()
         send_future = self._nav_action_client.send_goal_async(
             goal_msg,
@@ -880,6 +902,21 @@ class OrchestratorNode(Node):
         Future: check /battery_low topic or loop counter.
         """
         return False
+
+    def _get_current_robot_yaw(self) -> float:
+        """Fetch current robot heading (yaw) from TF tree."""
+        try:
+            # We use a 0-timestamp to get the latest available transform
+            now = rclpy.time.Time()
+            t = self._tf_buffer.lookup_transform('map', 'base_link', now)
+            q = t.transform.rotation
+            # Conversion: quat to yaw
+            siny_cosp = 2 * (q.w * q.z + q.x * q.y)
+            cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z)
+            return math.atan2(siny_cosp, cosy_cosp)
+        except Exception as e:
+            self.get_logger().warn(f'Could not look up robot yaw from TF: {e}')
+            return 0.0
 
     def _handle_waypoint_arrival(self, waypoint: dict):
         """

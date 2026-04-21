@@ -16,7 +16,7 @@
         <RecoveryNode number_of_retries="1" name="FollowPath">
           <FollowPath path="{path}" controller_id="FollowPath"/>
           <!-- Wait broadly if path following fails, e.g. obstacle in way -->
-          <Wait wait_duration="10.0"/>
+          <Wait wait_duration="15.0"/>
         </RecoveryNode>
         
       </PipelineSequence>
