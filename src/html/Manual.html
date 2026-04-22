@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Manual Control</title>
-    
+
     <!-- Prevents pinching/scrolling on all screen sizes including the 800x480 monitor -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
     <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
@@ -40,71 +42,127 @@
             --label-mt: 16px;
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
         body {
-            margin: 0; padding: 0; background-color: var(--bg);
-            color: var(--text-dark); height: 100dvh;
-            display: flex; flex-direction: column; overflow: hidden;
-            user-select: none; -webkit-user-select: none;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
             touch-action: none;
         }
 
         /* ── Header ── */
         header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 20px; background: var(--surface);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            height: var(--header-h); flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: var(--surface);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            height: var(--header-h);
+            flex-shrink: 0;
         }
 
         .back-btn {
-            background: #334155; color: white;
-            border: none; border-radius: 8px;
-            padding: 10px 15px; font-size: 15px; font-weight: 600;
-            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex; align-items: center; gap: 8px;
+            background: #334155;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .back-btn:active { transform: scale(0.95); }
 
-        h1 { margin: 0; font-size: 19px; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; }
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: 0.5px;
+        }
 
         .status-badge {
-            display: inline-flex; align-items: center; gap: 7px;
-            background: #e9ecef; padding: 6px 12px;
-            border-radius: 20px; font-size: 13px; font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
         }
+
         .dot {
-            width: 9px; height: 9px; border-radius: 50%;
-            background: var(--danger); box-shadow: 0 0 6px var(--danger);
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--danger);
+            box-shadow: 0 0 6px var(--danger);
         }
-        .connected .dot { background: var(--success); box-shadow: 0 0 6px var(--success); }
+
+        .connected .dot {
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
 
         /* ── Main Workspace ── */
         .workspace {
-            flex: 1; display: flex; flex-direction: row;
-            padding: var(--ws-pad); gap: var(--ws-gap);
-            justify-content: space-between; align-items: center;
-            min-height: 0; overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            padding: var(--ws-pad);
+            gap: var(--ws-gap);
+            justify-content: space-between;
+            align-items: center;
+            min-height: 0;
+            overflow: hidden;
         }
 
         .joystick-container {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             min-width: 0;
         }
 
         .center-column {
-            flex: 0 0 auto; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 0;
         }
 
         /* ── Joystick Tracks ── */
         .joystick-bg {
-            background: var(--track-bg); border: 4px solid var(--track-border);
-            position: relative; box-shadow: inset 0 8px 15px rgba(0,0,0,0.1);
-            touch-action: none; cursor: crosshair;
+            background: var(--track-bg);
+            border: 4px solid var(--track-border);
+            position: relative;
+            box-shadow: inset 0 8px 15px rgba(0, 0, 0, 0.1);
+            touch-action: none;
+            cursor: crosshair;
         }
 
         .joystick-bg.vertical-track {
@@ -120,91 +178,152 @@
         }
 
         .knob {
-            width: var(--knob-size); height: var(--knob-size);
-            background: var(--primary); border: 2px solid var(--primary-dark);
-            border-radius: 50%; position: absolute;
+            width: var(--knob-size);
+            height: var(--knob-size);
+            background: var(--primary);
+            border: 2px solid var(--primary-dark);
+            border-radius: 50%;
+            position: absolute;
             box-shadow: 0 6px 15px rgba(30, 136, 229, 0.5);
-            touch-action: none; pointer-events: none;
+            touch-action: none;
+            pointer-events: none;
             transition: 0.05s ease top, 0.05s ease left;
         }
-        .joystick-bg.active .knob { transform: scale(0.95); background: var(--primary-dark); }
+
+        .joystick-bg.active .knob {
+            transform: scale(0.95);
+            background: var(--primary-dark);
+        }
 
         .label {
-            margin-top: var(--label-mt); font-weight: 800;
-            color: #64748b; font-size: var(--label-font); letter-spacing: 1px;
+            margin-top: var(--label-mt);
+            font-weight: 800;
+            color: #64748b;
+            font-size: var(--label-font);
+            letter-spacing: 1px;
             text-align: center;
         }
 
         /* ── Gauges ── */
         .gauge-row {
-            display: flex; gap: var(--gauge-gap); align-items: center;
+            display: flex;
+            gap: var(--gauge-gap);
+            align-items: center;
         }
 
         .gauge {
-            width: var(--gauge-size); height: var(--gauge-size);
-            position: relative; border-radius: 50%;
+            width: var(--gauge-size);
+            height: var(--gauge-size);
+            position: relative;
+            border-radius: 50%;
             background: #1e293b;
-            box-shadow: inset 0 10px 25px rgba(0,0,0,0.6), 0 8px 15px rgba(0,0,0,0.15);
+            box-shadow: inset 0 10px 25px rgba(0, 0, 0, 0.6), 0 8px 15px rgba(0, 0, 0, 0.15);
             border: 5px solid #64748b;
             flex-shrink: 0;
         }
 
         .gauge-ring {
-            position: absolute; top: 8%; left: 8%; width: 84%; height: 84%;
-            border-radius: 50%; border: 6px solid #334155;
+            position: absolute;
+            top: 8%;
+            left: 8%;
+            width: 84%;
+            height: 84%;
+            border-radius: 50%;
+            border: 6px solid #334155;
             border-bottom-color: transparent;
             transition: border-color 0.2s linear;
         }
 
         .gauge-ticks {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
+
         .tick {
-            position: absolute; top: 50%; left: 50%;
-            background: #94a3b8; border-radius: 2px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            background: #94a3b8;
+            border-radius: 2px;
         }
-        .minor-tick { width: 3px; height: 9px; }
-        .major-tick { width: 4px; height: 15px; background: #f8fafc; }
+
+        .minor-tick {
+            width: 3px;
+            height: 9px;
+        }
+
+        .major-tick {
+            width: 4px;
+            height: 15px;
+            background: #f8fafc;
+        }
 
         .gauge-needle-wrapper {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             transform: rotate(-135deg);
             transition: transform 0.1s linear;
         }
+
         .gauge-needle {
             position: absolute;
-            left: calc(50% - 3px); bottom: 50%;
-            width: 6px; height: 42%;
+            left: calc(50% - 3px);
+            bottom: 50%;
+            width: 6px;
+            height: 42%;
             background: #cbd5e1;
-            border-top-left-radius: 6px; border-top-right-radius: 6px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
             transition: background 0.1s linear, box-shadow 0.1s linear;
         }
 
         .gauge-cap {
-            position: absolute; top: 50%; left: 50%;
-            width: 30px; height: 30px;
-            background: #334155; border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background: #334155;
+            border-radius: 50%;
             transform: translate(-50%, -50%);
             border: 3px solid #0f172a;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             z-index: 10;
         }
 
         .gauge-digital {
-            position: absolute; bottom: 12%; left: 50%;
+            position: absolute;
+            bottom: 12%;
+            left: 50%;
             transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
         .gauge-val {
-            font-size: var(--gauge-font); font-weight: 900; color: #f8fafc;
-            font-family: monospace; letter-spacing: -1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            font-size: var(--gauge-font);
+            font-weight: 900;
+            color: #f8fafc;
+            font-family: monospace;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
             transition: color 0.1s linear;
         }
+
         .gauge-title {
-            font-size: var(--gauge-sub); font-weight: 800; color: #94a3b8;
-            margin-top: 2px; letter-spacing: 0.5px;
+            font-size: var(--gauge-sub);
+            font-weight: 800;
+            color: #94a3b8;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
         }
 
         /* ════════════════════════════════════════════════════════
@@ -231,12 +350,34 @@
                 --label-font: 12px;
                 --label-mt: 8px;
             }
-            header { padding: 6px 14px; }
-            h1 { font-size: 15px; }
-            .back-btn { padding: 6px 11px; font-size: 13px; }
-            .status-badge { font-size: 11px; padding: 4px 8px; }
-            .gauge { border-width: 3px; }
-            .gauge-cap { width: 22px; height: 22px; border-width: 2px; }
+
+            header {
+                padding: 6px 14px;
+            }
+
+            h1 {
+                font-size: 15px;
+            }
+
+            .back-btn {
+                padding: 6px 11px;
+                font-size: 13px;
+            }
+
+            .status-badge {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .gauge {
+                border-width: 3px;
+            }
+
+            .gauge-cap {
+                width: 22px;
+                height: 22px;
+                border-width: 2px;
+            }
         }
 
         /* ── Mobile portrait (< 650px wide) ──────────────────────
@@ -258,28 +399,57 @@
                 --label-font: 12px;
                 --label-mt: 8px;
             }
+
             .workspace {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
             }
-            .joystick-container { flex: 0 0 auto; flex-direction: row; gap: 12px; }
+
+            .joystick-container {
+                flex: 0 0 auto;
+                flex-direction: row;
+                gap: 12px;
+            }
+
             /* In portrait, show both joysticks side-by-side above the gauges */
-            .joystick-container:first-child { order: 1; }
-            .center-column { order: 2; }
-            .joystick-container:last-child { order: 1; }
+            .joystick-container:first-child {
+                order: 1;
+            }
+
+            .center-column {
+                order: 2;
+            }
+
+            .joystick-container:last-child {
+                order: 1;
+            }
 
             /* Rearrange to: [left-joy | right-joy] on top, [gauges] below */
-            .workspace { flex-wrap: wrap; }
-            .joystick-container { flex: 0 0 auto; }
-            .center-column { flex: 0 0 100%; }
-            h1 { font-size: 16px; }
-            .back-btn { padding: 7px 12px; font-size: 13px; }
+            .workspace {
+                flex-wrap: wrap;
+            }
+
+            .joystick-container {
+                flex: 0 0 auto;
+            }
+
+            .center-column {
+                flex: 0 0 100%;
+            }
+
+            h1 {
+                font-size: 16px;
+            }
+
+            .back-btn {
+                padding: 7px 12px;
+                font-size: 13px;
+            }
         }
 
         /* ── Laptop / large screen (≥ 870px wide or tall viewport) ──
            Uses default :root tokens — no override needed. */
-
     </style>
 </head>
 
@@ -348,54 +518,54 @@
 
     </div>
 
-<script>
-    /* ---------------- TICK GENERATION ---------------- */
-    function buildTicks(containerId) {
-        const container = document.getElementById(containerId);
-        for (let d = -135; d <= 135; d += 15) {
-            let tick = document.createElement("div");
-            tick.className = (d % 45 === 0) ? "tick major-tick" : "tick minor-tick";
-            tick.style.transform = `translate(-50%, -50%) rotate(${d}deg) translateY(-60px)`;
-            container.appendChild(tick);
-        }
-    }
-    buildTicks("ticks-v");
-    buildTicks("ticks-w");
-
-    /* ---------------- SINGLE CLIENT ENFORCEMENT ---------------- */
-    const sessionStartTime = Date.now();
-    const clientId = "client_" + sessionStartTime + "_" + Math.floor(Math.random() * 1000);
-
-    /* ---------------- ROS SETUP ---------------- */
-    const ROS_IP = "192.168.251.47";
-    const ros = new ROSLIB.Ros({ url: `ws://${ROS_IP}:9090` });
-
-    const activeClientTopic = new ROSLIB.Topic({
-        ros: ros,
-        name: '/ui_active_client',
-        messageType: 'std_msgs/String'
-    });
-
-    activeClientTopic.subscribe(function(message) {
-        try {
-            const data = JSON.parse(message.data);
-            if (data.id !== clientId) {
-                if (data.time > sessionStartTime) {
-                    terminateSession();
-                } else if (data.time < sessionStartTime) {
-                    broadcastPresence();
-                } else {
-                    if (data.id > clientId) terminateSession();
-                    else broadcastPresence();
-                }
+    <script>
+        /* ---------------- TICK GENERATION ---------------- */
+        function buildTicks(containerId) {
+            const container = document.getElementById(containerId);
+            for (let d = -135; d <= 135; d += 15) {
+                let tick = document.createElement("div");
+                tick.className = (d % 45 === 0) ? "tick major-tick" : "tick minor-tick";
+                tick.style.transform = `translate(-50%, -50%) rotate(${d}deg) translateY(-60px)`;
+                container.appendChild(tick);
             }
-        } catch(e) {}
-    });
+        }
+        buildTicks("ticks-v");
+        buildTicks("ticks-w");
 
-    function terminateSession() {
-        activeClientTopic.unsubscribe();
-        ros.close();
-        document.body.innerHTML = `
+        /* ---------------- SINGLE CLIENT ENFORCEMENT ---------------- */
+        const sessionStartTime = Date.now();
+        const clientId = "client_" + sessionStartTime + "_" + Math.floor(Math.random() * 1000);
+
+        /* ---------------- ROS SETUP ---------------- */
+        const ROS_IP = "192.168.251.47";
+        const ros = new ROSLIB.Ros({ url: `ws://${ROS_IP}:9090` });
+
+        const activeClientTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: '/ui_active_client',
+            messageType: 'std_msgs/String'
+        });
+
+        activeClientTopic.subscribe(function (message) {
+            try {
+                const data = JSON.parse(message.data);
+                if (data.id !== clientId) {
+                    if (data.time > sessionStartTime) {
+                        terminateSession();
+                    } else if (data.time < sessionStartTime) {
+                        broadcastPresence();
+                    } else {
+                        if (data.id > clientId) terminateSession();
+                        else broadcastPresence();
+                    }
+                }
+            } catch (e) { }
+        });
+
+        function terminateSession() {
+            activeClientTopic.unsubscribe();
+            ros.close();
+            document.body.innerHTML = `
             <div style="display:flex; height:100vh; width:100vw; background:var(--bg); color:var(--text-dark);
                         align-items:center; justify-content:center; text-align:center; padding:20px; flex-direction:column; font-family:'Inter',sans-serif;">
                 <h1 style="color:var(--danger); font-size: 28px; margin-bottom: 15px;">Session Terminated</h1>
@@ -403,166 +573,167 @@
                 <button onclick="location.reload()" style="background:var(--primary); color:#fff; padding:12px 24px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer;">Reconnect / Steal Session</button>
             </div>
         `;
-    }
-
-    function broadcastPresence() {
-        if (ros.isConnected) {
-            activeClientTopic.publish(new ROSLIB.Message({
-                data: JSON.stringify({ id: clientId, time: sessionStartTime })
-            }));
-        }
-    }
-
-    setInterval(broadcastPresence, 2000);
-
-    ros.on("connection", () => {
-        document.getElementById("connection-status").classList.add("connected");
-        document.getElementById("status-text").textContent = "Connected";
-        broadcastPresence();
-    });
-
-    ros.on("close", () => {
-        document.getElementById("connection-status").classList.remove("connected");
-        document.getElementById("status-text").textContent = "Disconnected";
-    });
-
-    /* ── twist_mux: Manual teleop publishes to /cmd_vel_teleop (priority 100).
-       This is higher than Nav2's /cmd_vel_nav (10) but yields to E-stop (255). ── */
-    const cmdVel = new ROSLIB.Topic({
-        ros: ros, name: "/cmd_vel_teleop", messageType: "geometry_msgs/Twist"
-    });
-
-    /* ---------------- DRIVING LOGIC ---------------- */
-    const MAX_LINEAR  = 0.50;   // m/s
-    const MAX_ANGULAR = 0.75;   // rad/s
-
-    let linear  = 0.0;
-    let angular = 0.0;
-
-    const txtV    = document.getElementById("txt-v");
-    const txtW    = document.getElementById("txt-w");
-    const wrapV   = document.getElementById("wrap-v");
-    const wrapW   = document.getElementById("wrap-w");
-    const needleV = document.getElementById("needle-v");
-    const needleW = document.getElementById("needle-w");
-    const ringV   = document.getElementById("ring-v");
-    const ringW   = document.getElementById("ring-w");
-
-    function updateDisplay(v, w) {
-        linear  = v;
-        angular = w;
-
-        txtV.textContent = v.toFixed(2);
-        txtW.textContent = w.toFixed(2);
-
-        // Linear needle (magnitude only, direction shown by colour)
-        let pctV = Math.abs(v) / MAX_LINEAR;
-        wrapV.style.transform = `rotate(${-135 + pctV * 270}deg)`;
-        if (v > 0) {
-            let col = "var(--success)";
-            needleV.style.background = col; needleV.style.boxShadow = `0 0 10px ${col}`;
-            ringV.style.borderTopColor = col; ringV.style.borderRightColor = col; ringV.style.borderLeftColor = col;
-            txtV.style.color = col;
-        } else if (v < 0) {
-            let col = "var(--danger)";
-            needleV.style.background = col; needleV.style.boxShadow = `0 0 10px ${col}`;
-            ringV.style.borderTopColor = col; ringV.style.borderRightColor = col; ringV.style.borderLeftColor = col;
-            txtV.style.color = col;
-        } else {
-            needleV.style.background = "#cbd5e1"; needleV.style.boxShadow = "none";
-            ringV.style.borderColor = "#334155"; ringV.style.borderBottomColor = "transparent";
-            txtV.style.color = "#f8fafc";
         }
 
-        // Angular needle
-        let pctW = Math.abs(w) / MAX_ANGULAR;
-        wrapW.style.transform = `rotate(${-135 + pctW * 270}deg)`;
-        if (w > 0) {
-            let col = "var(--primary)";
-            needleW.style.background = col; needleW.style.boxShadow = `0 0 10px ${col}`;
-            ringW.style.borderTopColor = col; ringW.style.borderRightColor = col; ringW.style.borderLeftColor = col;
-            txtW.style.color = col;
-        } else if (w < 0) {
-            let col = "var(--warning)";
-            needleW.style.background = col; needleW.style.boxShadow = `0 0 10px ${col}`;
-            ringW.style.borderTopColor = col; ringW.style.borderRightColor = col; ringW.style.borderLeftColor = col;
-            txtW.style.color = col;
-        } else {
-            needleW.style.background = "#cbd5e1"; needleW.style.boxShadow = "none";
-            ringW.style.borderColor = "#334155"; ringW.style.borderBottomColor = "transparent";
-            txtW.style.color = "#f8fafc";
-        }
-    }
-
-    /* ---------------- JOYSTICK BINDING ---------------- */
-    const leftKnob  = document.getElementById("joy-left-knob");
-    const rightKnob = document.getElementById("joy-right-knob");
-
-    function reCenter(knob) {
-        const rad = knob.offsetWidth / 2 || 40;
-        knob.style.left = `calc(50% - ${rad}px)`;
-        knob.style.top  = `calc(50% - ${rad}px)`;
-    }
-
-    setTimeout(() => { reCenter(leftKnob); reCenter(rightKnob); }, 100);
-    reCenter(leftKnob);
-    reCenter(rightKnob);
-    window.addEventListener('resize', () => { reCenter(leftKnob); reCenter(rightKnob); });
-
-    function bindSlider(bgId, knobId, axis) {
-        const bg   = document.getElementById(bgId);
-        const knob = document.getElementById(knobId);
-        let dragging = false;
-
-        const centerKnob = () => {
-            dragging = false;
-            bg.classList.remove("active");
-            reCenter(knob);
-            if (axis === 'vertical')   updateDisplay(0.0, angular);
-            if (axis === 'horizontal') updateDisplay(linear, 0.0);
-        };
-
-        const processMove = (e) => {
-            const rect      = bg.getBoundingClientRect();
-            const knobRadius = knob.offsetWidth / 2;
-
-            if (axis === 'vertical') {
-                const height = rect.height;
-                const midY   = height / 2;
-                let ny = Math.max(knobRadius, Math.min(height - knobRadius, e.clientY - rect.top));
-                knob.style.top = (ny - knobRadius) + "px";
-                let normalized = (midY - ny) / (midY - knobRadius);
-                updateDisplay(normalized * MAX_LINEAR, angular);
-
-            } else {
-                const width = rect.width;
-                const midX  = width / 2;
-                let nx = Math.max(knobRadius, Math.min(width - knobRadius, e.clientX - rect.left));
-                knob.style.left = (nx - knobRadius) + "px";
-                let normalized = (midX - nx) / (midX - knobRadius);
-                updateDisplay(linear, normalized * MAX_ANGULAR);
+        function broadcastPresence() {
+            if (ros.isConnected) {
+                activeClientTopic.publish(new ROSLIB.Message({
+                    data: JSON.stringify({ id: clientId, time: sessionStartTime })
+                }));
             }
-        };
+        }
 
-        bg.addEventListener("pointerdown",  (e) => { bg.setPointerCapture(e.pointerId); dragging = true; bg.classList.add("active"); processMove(e); e.preventDefault(); });
-        bg.addEventListener("pointermove",  (e) => { if (!dragging) return; processMove(e); e.preventDefault(); });
-        bg.addEventListener("pointerup",    centerKnob);
-        bg.addEventListener("pointercancel",centerKnob);
-        bg.addEventListener("contextmenu",  e => e.preventDefault());
-    }
+        setInterval(broadcastPresence, 2000);
 
-    bindSlider('joy-left-bg',  'joy-left-knob',  'vertical');
-    bindSlider('joy-right-bg', 'joy-right-knob', 'horizontal');
+        ros.on("connection", () => {
+            document.getElementById("connection-status").classList.add("connected");
+            document.getElementById("status-text").textContent = "Connected";
+            broadcastPresence();
+        });
 
-    /* Continuous 10 Hz Publisher */
-    setInterval(() => {
-        cmdVel.publish(new ROSLIB.Message({
-            linear:  { x: linear,  y: 0, z: 0 },
-            angular: { x: 0, y: 0, z: angular }
-        }));
-    }, 100);
+        ros.on("close", () => {
+            document.getElementById("connection-status").classList.remove("connected");
+            document.getElementById("status-text").textContent = "Disconnected";
+        });
 
-</script>
+        /* ── twist_mux: Manual teleop publishes to /cmd_vel_teleop (priority 100).
+           This is higher than Nav2's /cmd_vel_nav (10) but yields to E-stop (255). ── */
+        const cmdVel = new ROSLIB.Topic({
+            ros: ros, name: "/cmd_vel_teleop", messageType: "geometry_msgs/Twist"
+        });
+
+        /* ---------------- DRIVING LOGIC ---------------- */
+        const MAX_LINEAR = 0.50;   // m/s
+        const MAX_ANGULAR = 0.75;   // rad/s
+
+        let linear = 0.0;
+        let angular = 0.0;
+
+        const txtV = document.getElementById("txt-v");
+        const txtW = document.getElementById("txt-w");
+        const wrapV = document.getElementById("wrap-v");
+        const wrapW = document.getElementById("wrap-w");
+        const needleV = document.getElementById("needle-v");
+        const needleW = document.getElementById("needle-w");
+        const ringV = document.getElementById("ring-v");
+        const ringW = document.getElementById("ring-w");
+
+        function updateDisplay(v, w) {
+            linear = v;
+            angular = w;
+
+            txtV.textContent = v.toFixed(2);
+            txtW.textContent = w.toFixed(2);
+
+            // Linear needle (magnitude only, direction shown by colour)
+            let pctV = Math.abs(v) / MAX_LINEAR;
+            wrapV.style.transform = `rotate(${-135 + pctV * 270}deg)`;
+            if (v > 0) {
+                let col = "var(--success)";
+                needleV.style.background = col; needleV.style.boxShadow = `0 0 10px ${col}`;
+                ringV.style.borderTopColor = col; ringV.style.borderRightColor = col; ringV.style.borderLeftColor = col;
+                txtV.style.color = col;
+            } else if (v < 0) {
+                let col = "var(--danger)";
+                needleV.style.background = col; needleV.style.boxShadow = `0 0 10px ${col}`;
+                ringV.style.borderTopColor = col; ringV.style.borderRightColor = col; ringV.style.borderLeftColor = col;
+                txtV.style.color = col;
+            } else {
+                needleV.style.background = "#cbd5e1"; needleV.style.boxShadow = "none";
+                ringV.style.borderColor = "#334155"; ringV.style.borderBottomColor = "transparent";
+                txtV.style.color = "#f8fafc";
+            }
+
+            // Angular needle
+            let pctW = Math.abs(w) / MAX_ANGULAR;
+            wrapW.style.transform = `rotate(${-135 + pctW * 270}deg)`;
+            if (w > 0) {
+                let col = "var(--primary)";
+                needleW.style.background = col; needleW.style.boxShadow = `0 0 10px ${col}`;
+                ringW.style.borderTopColor = col; ringW.style.borderRightColor = col; ringW.style.borderLeftColor = col;
+                txtW.style.color = col;
+            } else if (w < 0) {
+                let col = "var(--warning)";
+                needleW.style.background = col; needleW.style.boxShadow = `0 0 10px ${col}`;
+                ringW.style.borderTopColor = col; ringW.style.borderRightColor = col; ringW.style.borderLeftColor = col;
+                txtW.style.color = col;
+            } else {
+                needleW.style.background = "#cbd5e1"; needleW.style.boxShadow = "none";
+                ringW.style.borderColor = "#334155"; ringW.style.borderBottomColor = "transparent";
+                txtW.style.color = "#f8fafc";
+            }
+        }
+
+        /* ---------------- JOYSTICK BINDING ---------------- */
+        const leftKnob = document.getElementById("joy-left-knob");
+        const rightKnob = document.getElementById("joy-right-knob");
+
+        function reCenter(knob) {
+            const rad = knob.offsetWidth / 2 || 40;
+            knob.style.left = `calc(50% - ${rad}px)`;
+            knob.style.top = `calc(50% - ${rad}px)`;
+        }
+
+        setTimeout(() => { reCenter(leftKnob); reCenter(rightKnob); }, 100);
+        reCenter(leftKnob);
+        reCenter(rightKnob);
+        window.addEventListener('resize', () => { reCenter(leftKnob); reCenter(rightKnob); });
+
+        function bindSlider(bgId, knobId, axis) {
+            const bg = document.getElementById(bgId);
+            const knob = document.getElementById(knobId);
+            let dragging = false;
+
+            const centerKnob = () => {
+                dragging = false;
+                bg.classList.remove("active");
+                reCenter(knob);
+                if (axis === 'vertical') updateDisplay(0.0, angular);
+                if (axis === 'horizontal') updateDisplay(linear, 0.0);
+            };
+
+            const processMove = (e) => {
+                const rect = bg.getBoundingClientRect();
+                const knobRadius = knob.offsetWidth / 2;
+
+                if (axis === 'vertical') {
+                    const height = rect.height;
+                    const midY = height / 2;
+                    let ny = Math.max(knobRadius, Math.min(height - knobRadius, e.clientY - rect.top));
+                    knob.style.top = (ny - knobRadius) + "px";
+                    let normalized = (midY - ny) / (midY - knobRadius);
+                    updateDisplay(normalized * MAX_LINEAR, angular);
+
+                } else {
+                    const width = rect.width;
+                    const midX = width / 2;
+                    let nx = Math.max(knobRadius, Math.min(width - knobRadius, e.clientX - rect.left));
+                    knob.style.left = (nx - knobRadius) + "px";
+                    let normalized = (midX - nx) / (midX - knobRadius);
+                    updateDisplay(linear, normalized * MAX_ANGULAR);
+                }
+            };
+
+            bg.addEventListener("pointerdown", (e) => { bg.setPointerCapture(e.pointerId); dragging = true; bg.classList.add("active"); processMove(e); e.preventDefault(); });
+            bg.addEventListener("pointermove", (e) => { if (!dragging) return; processMove(e); e.preventDefault(); });
+            bg.addEventListener("pointerup", centerKnob);
+            bg.addEventListener("pointercancel", centerKnob);
+            bg.addEventListener("contextmenu", e => e.preventDefault());
+        }
+
+        bindSlider('joy-left-bg', 'joy-left-knob', 'vertical');
+        bindSlider('joy-right-bg', 'joy-right-knob', 'horizontal');
+
+        /* Continuous 10 Hz Publisher */
+        setInterval(() => {
+            cmdVel.publish(new ROSLIB.Message({
+                linear: { x: linear, y: 0, z: 0 },
+                angular: { x: 0, y: 0, z: angular }
+            }));
+        }, 100);
+
+    </script>
 
 </body>
+
 </html>

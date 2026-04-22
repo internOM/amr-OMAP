@@ -770,11 +770,15 @@ class OrchestratorNode(Node):
         return goal_msg
 
     def _send_nav_goal(self, wp: dict):
-        """Send a NavigateToPose goal for a waypoint. Uses waypoint-level callbacks."""
+        """Send a NavigateToPose goal for a waypoint. Uses current yaw to ignore saved orientation."""
         tolerances = {
             k: wp[k] for k in ('xy_tolerance', 'yaw_tolerance') if k in wp
         }
-        goal_msg = self._build_pose_stamped(wp['x'], wp['y'], wp['yaw'], tolerances)
+        
+        # Override waypoint yaw with current heading for smooth transitions
+        curr_yaw = self._get_current_robot_yaw()
+        
+        goal_msg = self._build_pose_stamped(wp['x'], wp['y'], curr_yaw, tolerances)
         self._nav_action_client.wait_for_server()
         send_future = self._nav_action_client.send_goal_async(
             goal_msg,

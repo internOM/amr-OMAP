@@ -20,14 +20,14 @@ class WebcamLineFollow(Node):
         self.twist = Twist()
 
         # U-turn and line detection thresholds
-        self.EXPLOSION_THRESHOLD = 750000  # Green area for "explosion"
+        self.EXPLOSION_THRESHOLD = 670000  # Green area for "explosion"
         self.u_turning = False
         self.u_turn_start_time = None
         self.U_TURN_MIN_TIME = 2.0  # seconds before checking line
 
         # PD controller for line following
-        self.Kp = 0.0025
-        self.Kd = 0.00075
+        self.Kp = 0.0032
+        self.Kd = 0.00067
         self.last_err = 0
         self.last_time = None
         self.MAX_ANG_Z = 1.0
@@ -96,7 +96,7 @@ class WebcamLineFollow(Node):
             if abs(angular_z) < self.MIN_ANG_Z_DEADZONE:
                 angular_z = 0.0
 
-            self.twist.linear.x = 0.175
+            self.twist.linear.x = 0.25 #linear speed
             self.twist.angular.z = angular_z
             self.cmd_vel_pub.publish(self.twist)
 

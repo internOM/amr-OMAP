@@ -592,11 +592,16 @@ class OrchestratorNode(Node):
     def _handle_returning_home(self):
         if self._home_nav_state == 'idle':
             wp = self._return_waypoints[self._return_waypoint_index]
+            
+            # Fetch current heading to "ignore" the waypoint's saved yaw.
+            # arrivals will be much smoother as the robot won't try to spin backwards.
+            curr_yaw = self._get_current_robot_yaw()
+            
             self.get_logger().info(
                 f"Returning home — Navigating to waypoint: {wp['name']} "
-                f"(x={wp['x']}, y={wp['y']}, yaw={wp['yaw']})"
+                f"(x={wp['x']}, y={wp['y']}, yaw=IGNORE[current={math.degrees(curr_yaw):.1f}°])"
             )
-            self._send_home_nav_goal(wp)
+            self._send_home_nav_goal(wp, target_yaw=curr_yaw)
             self._home_nav_state = 'waiting'
 
         elif self._home_nav_state in ('waiting', 'navigating'):
@@ -765,11 +770,15 @@ class OrchestratorNode(Node):
         return goal_msg
 
     def _send_nav_goal(self, wp: dict):
-        """Send a NavigateToPose goal for a waypoint. Uses waypoint-level callbacks."""
+        """Send a NavigateToPose goal for a waypoint. Uses current yaw to ignore saved orientation."""
         tolerances = {
             k: wp[k] for k in ('xy_tolerance', 'yaw_tolerance') if k in wp
         }
-        goal_msg = self._build_pose_stamped(wp['x'], wp['y'], wp['yaw'], tolerances)
+        
+        # Override waypoint yaw with current heading for smooth transitions
+        curr_yaw = self._get_current_robot_yaw()
+        
+        goal_msg = self._build_pose_stamped(wp['x'], wp['y'], curr_yaw, tolerances)
         self._nav_action_client.wait_for_server()
         send_future = self._nav_action_client.send_goal_async(
             goal_msg,
@@ -777,9 +786,9 @@ class OrchestratorNode(Node):
         )
         send_future.add_done_callback(self._goal_response_callback)
 
-    def _send_home_nav_goal(self, wp: dict):
-        """Send a NavigateToPose goal for a return waypoint. Uses home-level callbacks."""
-        goal_msg = self._build_pose_stamped(wp['x'], wp['y'], wp['yaw'])
+    def _send_home_nav_goal(self, wp: dict, target_yaw: float):
+        """Send a NavigateToPose goal for a return waypoint. target_yaw overrides waypoint yaw."""
+        goal_msg = self._build_pose_stamped(wp['x'], wp['y'], target_yaw)
         self._nav_action_client.wait_for_server()
         send_future = self._nav_action_client.send_goal_async(
             goal_msg,
@@ -897,6 +906,21 @@ class OrchestratorNode(Node):
         Future: check /battery_low topic or loop counter.
         """
         return False
+
+    def _get_current_robot_yaw(self) -> float:
+        """Fetch current robot heading (yaw) from TF tree."""
+        try:
+            # We use a 0-timestamp to get the latest available transform
+            now = rclpy.time.Time()
+            t = self._tf_buffer.lookup_transform('map', 'base_link', now)
+            q = t.transform.rotation
+            # Conversion: quat to yaw
+            siny_cosp = 2 * (q.w * q.z + q.x * q.y)
+            cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z)
+            return math.atan2(siny_cosp, cosy_cosp)
+        except Exception as e:
+            self.get_logger().warn(f'Could not look up robot yaw from TF: {e}')
+            return 0.0
 
     def _handle_waypoint_arrival(self, waypoint: dict):
         """
