@@ -27,11 +27,11 @@ class WebcamLineFollow(Node):
 
         # PD controller for line following
         self.Kp = 0.0032
-        self.Kd = 0.00067
+        self.Kd = 0.00072
         self.last_err = 0
         self.last_time = None
         self.MAX_ANG_Z = 1.0
-        self.MIN_ANG_Z_DEADZONE = 0.01
+        self.MIN_ANG_Z_DEADZONE = 0.05
 
         self.get_logger().info("Webcam Line Follow node started")
 
