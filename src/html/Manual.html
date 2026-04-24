@@ -3,9 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Manual Control</title>
-
-    <!-- Prevents pinching/scrolling on all screen sizes including the 800x480 monitor -->
+    <title>AGV Control</title>
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
@@ -22,24 +20,18 @@
             --danger: #e53935;
             --warning: #fb8c00;
             --text-dark: #212529;
+            --text-muted: #6c757d;
             --track-bg: #e2e8f0;
             --track-border: #cbd5e1;
 
-            /* Gauge size token — overridden per breakpoint */
-            --gauge-size: 170px;
-            --gauge-gap: 40px;
-            --gauge-font: 20px;
-            --gauge-sub: 13px;
             --header-h: 60px;
-            --ws-pad: 20px;
-            --ws-gap: 20px;
             --track-v-w: 100px;
-            --track-v-h: 260px;
-            --track-h-w: 260px;
+            --track-v-h: 240px;
+            --track-h-w: 240px;
             --track-h-h: 100px;
-            --knob-size: 80px;
-            --label-font: 16px;
-            --label-mt: 16px;
+            --knob-size: 78px;
+            --label-font: 15px;
+            --label-mt: 12px;
         }
 
         * {
@@ -71,25 +63,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
             height: var(--header-h);
             flex-shrink: 0;
-        }
-
-        .back-btn {
-            background: #334155;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-btn:active {
-            transform: scale(0.95);
         }
 
         h1 {
@@ -124,38 +97,221 @@
             box-shadow: 0 0 6px var(--success);
         }
 
-        /* ── Main Workspace ── */
+        /* ── Two-row workspace ── */
         .workspace {
             flex: 1;
             display: flex;
-            flex-direction: row;
-            padding: var(--ws-pad);
-            gap: var(--ws-gap);
-            justify-content: space-between;
-            align-items: center;
-            min-height: 0;
+            flex-direction: column;
             overflow: hidden;
+            min-height: 0;
         }
 
-        .joystick-container {
+        /* ── TOP HALF: state card + GO/STOP ── */
+        .top-half {
             flex: 1;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
             justify-content: center;
-            min-width: 0;
+            gap: 28px;
+            padding: 18px 28px 12px;
+            min-height: 0;
         }
 
-        .center-column {
-            flex: 0 0 auto;
+        .state-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 22px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+            text-align: center;
+            flex: 1;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            transition: box-shadow 0.4s ease;
+        }
+
+        .state-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .state-value {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+            line-height: 1.1;
+        }
+
+        .state-value.running {
+            color: var(--success);
+        }
+
+        .state-value.stopped {
+            color: var(--danger);
+        }
+
+        .state-value.waiting {
+            color: var(--warning);
+        }
+
+        .state-sub {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-height: 16px;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07), 0 0 0 0 rgba(67, 160, 71, 0.45);
+            }
+
+            70% {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07), 0 0 0 16px rgba(67, 160, 71, 0);
+            }
+
+            100% {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07), 0 0 0 0 rgba(67, 160, 71, 0);
+            }
+        }
+
+        .state-card.running {
+            animation: pulse-ring 1.8s ease-out infinite;
+        }
+
+        /* GO / STOP */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+
+        .ctrl-btn {
+            width: 108px;
+            height: 108px;
+            border: none;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 900;
+            color: #fff;
+            cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0;
+            gap: 4px;
+            letter-spacing: 0.5px;
+            transition: transform 0.1s, filter 0.2s, opacity 0.3s;
+            border: 4px solid;
         }
 
-        /* ── Joystick Tracks ── */
+        .ctrl-btn:active:not(:disabled) {
+            transform: scale(0.92);
+            filter: brightness(1.1);
+        }
+
+        .ctrl-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            filter: grayscale(60%);
+        }
+
+        .ctrl-btn .btn-icon {
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        .btn-go {
+            background: linear-gradient(145deg, #4caf50, #2e7d32);
+            border-color: #1b5e20;
+            box-shadow: 0 6px 18px rgba(46, 125, 50, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-stop {
+            background: linear-gradient(145deg, #e53935, #b71c1c);
+            border-color: #7f0000;
+            box-shadow: 0 6px 18px rgba(183, 28, 28, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.12);
+        }
+
+        /* ── Divider ── */
+        .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 0 24px;
+            flex-shrink: 0;
+        }
+
+        /* ── BOTTOM HALF: joysticks ── */
+        .bottom-half {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            padding: 12px 28px 18px;
+            min-height: 0;
+            position: relative;
+        }
+
+        /* ── Joystick lock overlay ── */
+        .joy-lock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(248, 249, 250, 0.85);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+            pointer-events: all;
+        }
+
+        .joy-lock-overlay.visible {
+            display: flex;
+        }
+
+        .lock-icon {
+            font-size: 34px;
+            line-height: 1;
+        }
+
+        .lock-label {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--success);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .lock-sub {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 260px;
+        }
+
+        /* ── Joystick tracks ── */
+        .joystick-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
         .joystick-bg {
             background: var(--track-bg);
             border: 4px solid var(--track-border);
@@ -195,7 +351,7 @@
             background: var(--primary-dark);
         }
 
-        .label {
+        .joy-label {
             margin-top: var(--label-mt);
             font-weight: 800;
             color: #64748b;
@@ -204,151 +360,19 @@
             text-align: center;
         }
 
-        /* ── Gauges ── */
-        .gauge-row {
-            display: flex;
-            gap: var(--gauge-gap);
-            align-items: center;
-        }
+        /* ════════════ BREAKPOINTS ════════════ */
 
-        .gauge {
-            width: var(--gauge-size);
-            height: var(--gauge-size);
-            position: relative;
-            border-radius: 50%;
-            background: #1e293b;
-            box-shadow: inset 0 10px 25px rgba(0, 0, 0, 0.6), 0 8px 15px rgba(0, 0, 0, 0.15);
-            border: 5px solid #64748b;
-            flex-shrink: 0;
-        }
-
-        .gauge-ring {
-            position: absolute;
-            top: 8%;
-            left: 8%;
-            width: 84%;
-            height: 84%;
-            border-radius: 50%;
-            border: 6px solid #334155;
-            border-bottom-color: transparent;
-            transition: border-color 0.2s linear;
-        }
-
-        .gauge-ticks {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .tick {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            background: #94a3b8;
-            border-radius: 2px;
-        }
-
-        .minor-tick {
-            width: 3px;
-            height: 9px;
-        }
-
-        .major-tick {
-            width: 4px;
-            height: 15px;
-            background: #f8fafc;
-        }
-
-        .gauge-needle-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transform: rotate(-135deg);
-            transition: transform 0.1s linear;
-        }
-
-        .gauge-needle {
-            position: absolute;
-            left: calc(50% - 3px);
-            bottom: 50%;
-            width: 6px;
-            height: 42%;
-            background: #cbd5e1;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-            transition: background 0.1s linear, box-shadow 0.1s linear;
-        }
-
-        .gauge-cap {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 30px;
-            height: 30px;
-            background: #334155;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            border: 3px solid #0f172a;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            z-index: 10;
-        }
-
-        .gauge-digital {
-            position: absolute;
-            bottom: 12%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .gauge-val {
-            font-size: var(--gauge-font);
-            font-weight: 900;
-            color: #f8fafc;
-            font-family: monospace;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-            transition: color 0.1s linear;
-        }
-
-        .gauge-title {
-            font-size: var(--gauge-sub);
-            font-weight: 800;
-            color: #94a3b8;
-            margin-top: 2px;
-            letter-spacing: 0.5px;
-        }
-
-        /* ════════════════════════════════════════════════════════
-           BREAKPOINTS
-           ════════════════════════════════════════════════════════ */
-
-        /* ── 7" monitor / compact landscape (800×480 range) ──────
-           Triggered when viewport is between 500px–870px wide
-           AND shorter than 540px (landscape monitor). */
+        /* 7" monitor compact landscape (800×480) */
         @media (max-width: 870px) and (max-height: 540px) {
             :root {
-                --gauge-size: 125px;
-                --gauge-gap: 20px;
-                --gauge-font: 16px;
-                --gauge-sub: 11px;
                 --header-h: 46px;
-                --ws-pad: 10px 15px;
-                --ws-gap: 12px;
-                --track-v-w: 76px;
-                --track-v-h: 190px;
-                --track-h-w: 190px;
-                --track-h-h: 76px;
-                --knob-size: 60px;
+                --track-v-w: 72px;
+                --track-v-h: 170px;
+                --track-h-w: 170px;
+                --track-h-h: 72px;
+                --knob-size: 56px;
                 --label-font: 12px;
-                --label-mt: 8px;
+                --label-mt: 7px;
             }
 
             header {
@@ -359,105 +383,105 @@
                 font-size: 15px;
             }
 
-            .back-btn {
-                padding: 6px 11px;
-                font-size: 13px;
-            }
-
             .status-badge {
                 font-size: 11px;
                 padding: 4px 8px;
             }
 
-            .gauge {
+            .top-half {
+                padding: 8px 16px 6px;
+                gap: 16px;
+            }
+
+            .divider {
+                margin: 0 16px;
+            }
+
+            .bottom-half {
+                padding: 6px 16px 10px;
+                gap: 28px;
+            }
+
+            .state-card {
+                padding: 12px 18px;
+            }
+
+            .state-value {
+                font-size: 22px;
+            }
+
+            .ctrl-btn {
+                width: 76px;
+                height: 76px;
+                font-size: 12px;
                 border-width: 3px;
             }
 
-            .gauge-cap {
-                width: 22px;
-                height: 22px;
-                border-width: 2px;
-            }
-        }
-
-        /* ── Mobile portrait (< 650px wide) ──────────────────────
-           Stack everything single-column. */
-        @media (max-width: 649px) {
-            :root {
-                --gauge-size: 115px;
-                --gauge-gap: 16px;
-                --gauge-font: 15px;
-                --gauge-sub: 10px;
-                --header-h: 52px;
-                --ws-pad: 12px;
-                --ws-gap: 10px;
-                --track-v-w: 70px;
-                --track-v-h: 140px;
-                --track-h-w: 200px;
-                --track-h-h: 70px;
-                --knob-size: 56px;
-                --label-font: 12px;
-                --label-mt: 8px;
+            .ctrl-btn .btn-icon {
+                font-size: 20px;
             }
 
-            .workspace {
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+            .btn-stack {
+                gap: 8px;
             }
 
-            .joystick-container {
-                flex: 0 0 auto;
-                flex-direction: row;
-                gap: 12px;
-            }
-
-            /* In portrait, show both joysticks side-by-side above the gauges */
-            .joystick-container:first-child {
-                order: 1;
-            }
-
-            .center-column {
-                order: 2;
-            }
-
-            .joystick-container:last-child {
-                order: 1;
-            }
-
-            /* Rearrange to: [left-joy | right-joy] on top, [gauges] below */
-            .workspace {
-                flex-wrap: wrap;
-            }
-
-            .joystick-container {
-                flex: 0 0 auto;
-            }
-
-            .center-column {
-                flex: 0 0 100%;
-            }
-
-            h1 {
-                font-size: 16px;
-            }
-
-            .back-btn {
-                padding: 7px 12px;
+            .lock-label {
                 font-size: 13px;
             }
+
+            .lock-icon {
+                font-size: 26px;
+            }
+
+            .lock-sub {
+                font-size: 11px;
+            }
         }
 
-        /* ── Laptop / large screen (≥ 870px wide or tall viewport) ──
-           Uses default :root tokens — no override needed. */
+        /* Mobile portrait */
+        @media (max-width: 649px) {
+            :root {
+                --header-h: 52px;
+                --track-v-w: 68px;
+                --track-v-h: 150px;
+                --track-h-w: 150px;
+                --track-h-h: 68px;
+                --knob-size: 54px;
+                --label-font: 12px;
+                --label-mt: 7px;
+            }
+
+            .top-half {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px 16px 8px;
+            }
+
+            .btn-stack {
+                flex-direction: row;
+            }
+
+            .state-card {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .state-value {
+                font-size: 24px;
+            }
+
+            .bottom-half {
+                gap: 20px;
+                padding: 8px 16px 14px;
+            }
+        }
     </style>
 </head>
 
 <body>
 
     <header>
-        <button class="back-btn" onclick="window.location.href='Auto.html'">⬅ Auto Mode</button>
-        <h1>MANUAL OVERRIDE</h1>
+        <h1>AGV CONTROL</h1>
         <div id="connection-status" class="status-badge">
             <div class="dot"></div> <span id="status-text">Disconnected</span>
         </div>
@@ -465,78 +489,68 @@
 
     <div class="workspace">
 
-        <!-- LEFT JOYSTICK: Vertical (Forward / Reverse) -->
-        <div class="joystick-container">
-            <div id="joy-left-bg" class="joystick-bg vertical-track">
-                <div id="joy-left-knob" class="knob"></div>
+        <!-- ── TOP HALF ── -->
+        <div class="top-half">
+
+            <div class="state-card" id="state-card">
+                <div class="state-label">AGV State</div>
+                <div class="state-value waiting" id="state-value">WAITING</div>
+                <div class="state-sub" id="state-sub">Awaiting ROS connection…</div>
             </div>
-            <div class="label">FORWARD / REVERSE</div>
+
+            <div class="btn-stack">
+                <button class="ctrl-btn btn-go" id="btn-go" onclick="sendEnable()" disabled>
+                    <span class="btn-icon">▶</span>GO
+                </button>
+                <button class="ctrl-btn btn-stop" id="btn-stop" onclick="sendStop()" disabled>
+                    <span class="btn-icon">⏹</span>STOP
+                </button>
+            </div>
+
         </div>
 
-        <!-- CENTER: Dual Speedometer Gauges -->
-        <div class="center-column">
-            <div class="gauge-row">
+        <div class="divider"></div>
 
-                <!-- Linear Velocity Gauge -->
-                <div class="gauge">
-                    <div class="gauge-ring" id="ring-v"></div>
-                    <div class="gauge-ticks" id="ticks-v"></div>
-                    <div class="gauge-needle-wrapper" id="wrap-v">
-                        <div class="gauge-needle" id="needle-v"></div>
-                    </div>
-                    <div class="gauge-cap"></div>
-                    <div class="gauge-digital">
-                        <span class="gauge-val" id="txt-v">0.00</span>
-                        <span class="gauge-title">V (m/s)</span>
-                    </div>
-                </div>
+        <!-- ── BOTTOM HALF ── -->
+        <div class="bottom-half">
 
-                <!-- Angular Velocity Gauge -->
-                <div class="gauge">
-                    <div class="gauge-ring" id="ring-w"></div>
-                    <div class="gauge-ticks" id="ticks-w"></div>
-                    <div class="gauge-needle-wrapper" id="wrap-w">
-                        <div class="gauge-needle" id="needle-w"></div>
-                    </div>
-                    <div class="gauge-cap"></div>
-                    <div class="gauge-digital">
-                        <span class="gauge-val" id="txt-w">0.00</span>
-                        <span class="gauge-title">θ (rad/s)</span>
-                    </div>
-                </div>
-
+            <!-- Lock overlay: covers joysticks while AGV is running -->
+            <div class="joy-lock-overlay" id="joy-lock-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-label">Joystick Locked</div>
+                <div class="lock-sub">AGV line following active — press STOP to regain manual control</div>
             </div>
-        </div>
 
-        <!-- RIGHT JOYSTICK: Horizontal (Turn L / Turn R) -->
-        <div class="joystick-container">
-            <div id="joy-right-bg" class="joystick-bg horizontal-track">
-                <div id="joy-right-knob" class="knob"></div>
+            <!-- Left: vertical (forward / reverse) -->
+            <div class="joystick-container">
+                <div id="joy-left-bg" class="joystick-bg vertical-track">
+                    <div id="joy-left-knob" class="knob"></div>
+                </div>
+                <div class="joy-label">FORWARD / REVERSE</div>
             </div>
-            <div class="label">TURN L / TURN R</div>
+
+            <!-- Right: horizontal (turn L / turn R) -->
+            <div class="joystick-container">
+                <div id="joy-right-bg" class="joystick-bg horizontal-track">
+                    <div id="joy-right-knob" class="knob"></div>
+                </div>
+                <div class="joy-label">TURN L / TURN R</div>
+            </div>
+
         </div>
 
     </div>
 
     <script>
-        /* ---------------- TICK GENERATION ---------------- */
-        function buildTicks(containerId) {
-            const container = document.getElementById(containerId);
-            for (let d = -135; d <= 135; d += 15) {
-                let tick = document.createElement("div");
-                tick.className = (d % 45 === 0) ? "tick major-tick" : "tick minor-tick";
-                tick.style.transform = `translate(-50%, -50%) rotate(${d}deg) translateY(-60px)`;
-                container.appendChild(tick);
-            }
-        }
-        buildTicks("ticks-v");
-        buildTicks("ticks-w");
-
-        /* ---------------- SINGLE CLIENT ENFORCEMENT ---------------- */
+        /* ================================================================
+           SINGLE CLIENT ENFORCEMENT
+           ================================================================ */
         const sessionStartTime = Date.now();
         const clientId = "client_" + sessionStartTime + "_" + Math.floor(Math.random() * 1000);
 
-        /* ---------------- ROS SETUP ---------------- */
+        /* ================================================================
+           ROS SETUP
+           ================================================================ */
         const ROS_IP = "192.168.251.47";
         const ros = new ROSLIB.Ros({ url: `ws://${ROS_IP}:9090` });
 
@@ -550,11 +564,9 @@
             try {
                 const data = JSON.parse(message.data);
                 if (data.id !== clientId) {
-                    if (data.time > sessionStartTime) {
-                        terminateSession();
-                    } else if (data.time < sessionStartTime) {
-                        broadcastPresence();
-                    } else {
+                    if (data.time > sessionStartTime) terminateSession();
+                    else if (data.time < sessionStartTime) broadcastPresence();
+                    else {
                         if (data.id > clientId) terminateSession();
                         else broadcastPresence();
                     }
@@ -566,13 +578,16 @@
             activeClientTopic.unsubscribe();
             ros.close();
             document.body.innerHTML = `
-            <div style="display:flex; height:100vh; width:100vw; background:var(--bg); color:var(--text-dark);
-                        align-items:center; justify-content:center; text-align:center; padding:20px; flex-direction:column; font-family:'Inter',sans-serif;">
-                <h1 style="color:var(--danger); font-size: 28px; margin-bottom: 15px;">Session Terminated</h1>
-                <p style="font-size: 16px; margin-bottom: 25px;">A new user has logged in elsewhere.<br>You have been disconnected to prevent conflicts.</p>
-                <button onclick="location.reload()" style="background:var(--primary); color:#fff; padding:12px 24px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer;">Reconnect / Steal Session</button>
-            </div>
-        `;
+                <div style="display:flex;height:100vh;width:100vw;background:var(--bg);color:var(--text-dark);
+                            align-items:center;justify-content:center;text-align:center;padding:20px;
+                            flex-direction:column;font-family:'Inter',sans-serif;">
+                    <h1 style="color:var(--danger);font-size:28px;margin-bottom:15px;">Session Terminated</h1>
+                    <p style="font-size:16px;margin-bottom:25px;">A new user has logged in elsewhere.<br>
+                       You have been disconnected to prevent conflicts.</p>
+                    <button onclick="location.reload()" style="background:var(--primary);color:#fff;
+                            padding:12px 24px;border:none;border-radius:10px;font-size:15px;
+                            font-weight:600;cursor:pointer;">Reconnect / Steal Session</button>
+                </div>`;
         }
 
         function broadcastPresence() {
@@ -585,86 +600,102 @@
 
         setInterval(broadcastPresence, 2000);
 
+        /* ================================================================
+           CONNECTION EVENTS
+           ================================================================ */
         ros.on("connection", () => {
             document.getElementById("connection-status").classList.add("connected");
             document.getElementById("status-text").textContent = "Connected";
+            document.getElementById("btn-go").disabled = false;
+            document.getElementById("btn-stop").disabled = false;
+            document.getElementById("state-sub").textContent = "Ready — press GO to start line following";
             broadcastPresence();
         });
 
         ros.on("close", () => {
             document.getElementById("connection-status").classList.remove("connected");
             document.getElementById("status-text").textContent = "Disconnected";
+            document.getElementById("btn-go").disabled = true;
+            document.getElementById("btn-stop").disabled = true;
+            setDisplayState("WAITING", "waiting", "Awaiting ROS connection…");
+            setAgvRunning(false);   // unlock joystick on disconnect
         });
 
-        /* ── twist_mux: Manual teleop publishes to /cmd_vel_teleop (priority 100).
-           This is higher than Nav2's /cmd_vel_nav (10) but yields to E-stop (255). ── */
-        const cmdVel = new ROSLIB.Topic({
-            ros: ros, name: "/cmd_vel_teleop", messageType: "geometry_msgs/Twist"
+        /* ================================================================
+           AGV COMMAND TOPICS
+           ================================================================ */
+        const enableTopic = new ROSLIB.Topic({
+            ros: ros, name: "/agv/cmd_enable", messageType: "std_msgs/Bool"
         });
 
-        /* ---------------- DRIVING LOGIC ---------------- */
+        const agvStopTopic = new ROSLIB.Topic({
+            ros: ros, name: "/agv/cmd_stop", messageType: "std_msgs/Bool"
+        });
+
+        function sendEnable() {
+            enableTopic.publish(new ROSLIB.Message({ data: true }));
+        }
+
+        function sendStop() {
+            agvStopTopic.publish(new ROSLIB.Message({ data: true }));
+        }
+
+        /* ================================================================
+           /agv/state SUBSCRIBER
+           Python node publishes "RUNNING" or "STOPPED" here.
+           This drives both the state card and the joystick lock.
+           ================================================================ */
+        const agvStateTopic = new ROSLIB.Topic({
+            ros: ros, name: "/agv/state", messageType: "std_msgs/String"
+        });
+
+        agvStateTopic.subscribe((msg) => {
+            if (msg.data === "RUNNING") {
+                setDisplayState("RUNNING", "running", "Line following active · /cmd_vel_agv");
+                setAgvRunning(true);
+            } else if (msg.data === "STOPPED") {
+                setDisplayState("STOPPED", "stopped", "Stopped · teleop priority restored");
+                setAgvRunning(false);
+            }
+        });
+
+        function setDisplayState(label, cssClass, sub) {
+            const val = document.getElementById("state-value");
+            const card = document.getElementById("state-card");
+            val.textContent = label;
+            val.className = "state-value " + cssClass;
+            document.getElementById("state-sub").textContent = sub;
+            card.className = "state-card" + (cssClass === "running" ? " running" : "");
+        }
+
+        /* ================================================================
+           JOYSTICK LOCK
+           agvRunning = true  → teleop interval skips publishing entirely
+                                → /cmd_vel_teleop times out in twist_mux (0.5 s)
+                                → AGV topic at priority 10 takes over
+           agvRunning = false → teleop resumes publishing at priority 255
+           ================================================================ */
+        let agvRunning = false;
+
+        function setAgvRunning(running) {
+            agvRunning = running;
+            document.getElementById("joy-lock-overlay")
+                .classList.toggle("visible", running);
+        }
+
+        /* ================================================================
+           JOYSTICK BINDING  — publishes /cmd_vel_teleop (priority 255)
+           ================================================================ */
         const MAX_LINEAR = 0.50;   // m/s
         const MAX_ANGULAR = 0.75;   // rad/s
 
         let linear = 0.0;
         let angular = 0.0;
 
-        const txtV = document.getElementById("txt-v");
-        const txtW = document.getElementById("txt-w");
-        const wrapV = document.getElementById("wrap-v");
-        const wrapW = document.getElementById("wrap-w");
-        const needleV = document.getElementById("needle-v");
-        const needleW = document.getElementById("needle-w");
-        const ringV = document.getElementById("ring-v");
-        const ringW = document.getElementById("ring-w");
+        const cmdVel = new ROSLIB.Topic({
+            ros: ros, name: "/cmd_vel_teleop", messageType: "geometry_msgs/Twist"
+        });
 
-        function updateDisplay(v, w) {
-            linear = v;
-            angular = w;
-
-            txtV.textContent = v.toFixed(2);
-            txtW.textContent = w.toFixed(2);
-
-            // Linear needle (magnitude only, direction shown by colour)
-            let pctV = Math.abs(v) / MAX_LINEAR;
-            wrapV.style.transform = `rotate(${-135 + pctV * 270}deg)`;
-            if (v > 0) {
-                let col = "var(--success)";
-                needleV.style.background = col; needleV.style.boxShadow = `0 0 10px ${col}`;
-                ringV.style.borderTopColor = col; ringV.style.borderRightColor = col; ringV.style.borderLeftColor = col;
-                txtV.style.color = col;
-            } else if (v < 0) {
-                let col = "var(--danger)";
-                needleV.style.background = col; needleV.style.boxShadow = `0 0 10px ${col}`;
-                ringV.style.borderTopColor = col; ringV.style.borderRightColor = col; ringV.style.borderLeftColor = col;
-                txtV.style.color = col;
-            } else {
-                needleV.style.background = "#cbd5e1"; needleV.style.boxShadow = "none";
-                ringV.style.borderColor = "#334155"; ringV.style.borderBottomColor = "transparent";
-                txtV.style.color = "#f8fafc";
-            }
-
-            // Angular needle
-            let pctW = Math.abs(w) / MAX_ANGULAR;
-            wrapW.style.transform = `rotate(${-135 + pctW * 270}deg)`;
-            if (w > 0) {
-                let col = "var(--primary)";
-                needleW.style.background = col; needleW.style.boxShadow = `0 0 10px ${col}`;
-                ringW.style.borderTopColor = col; ringW.style.borderRightColor = col; ringW.style.borderLeftColor = col;
-                txtW.style.color = col;
-            } else if (w < 0) {
-                let col = "var(--warning)";
-                needleW.style.background = col; needleW.style.boxShadow = `0 0 10px ${col}`;
-                ringW.style.borderTopColor = col; ringW.style.borderRightColor = col; ringW.style.borderLeftColor = col;
-                txtW.style.color = col;
-            } else {
-                needleW.style.background = "#cbd5e1"; needleW.style.boxShadow = "none";
-                ringW.style.borderColor = "#334155"; ringW.style.borderBottomColor = "transparent";
-                txtW.style.color = "#f8fafc";
-            }
-        }
-
-        /* ---------------- JOYSTICK BINDING ---------------- */
         const leftKnob = document.getElementById("joy-left-knob");
         const rightKnob = document.getElementById("joy-right-knob");
 
@@ -688,8 +719,8 @@
                 dragging = false;
                 bg.classList.remove("active");
                 reCenter(knob);
-                if (axis === 'vertical') updateDisplay(0.0, angular);
-                if (axis === 'horizontal') updateDisplay(linear, 0.0);
+                if (axis === 'vertical') linear = 0.0;
+                if (axis === 'horizontal') angular = 0.0;
             };
 
             const processMove = (e) => {
@@ -701,31 +732,41 @@
                     const midY = height / 2;
                     let ny = Math.max(knobRadius, Math.min(height - knobRadius, e.clientY - rect.top));
                     knob.style.top = (ny - knobRadius) + "px";
-                    let normalized = (midY - ny) / (midY - knobRadius);
-                    updateDisplay(normalized * MAX_LINEAR, angular);
-
+                    linear = ((midY - ny) / (midY - knobRadius)) * MAX_LINEAR;
                 } else {
                     const width = rect.width;
                     const midX = width / 2;
                     let nx = Math.max(knobRadius, Math.min(width - knobRadius, e.clientX - rect.left));
                     knob.style.left = (nx - knobRadius) + "px";
-                    let normalized = (midX - nx) / (midX - knobRadius);
-                    updateDisplay(linear, normalized * MAX_ANGULAR);
+                    angular = ((midX - nx) / (midX - knobRadius)) * MAX_ANGULAR;
                 }
             };
 
-            bg.addEventListener("pointerdown", (e) => { bg.setPointerCapture(e.pointerId); dragging = true; bg.classList.add("active"); processMove(e); e.preventDefault(); });
+            bg.addEventListener("pointerdown", (e) => {
+                bg.setPointerCapture(e.pointerId);
+                dragging = true;
+                bg.classList.add("active");
+                processMove(e);
+                e.preventDefault();
+            });
             bg.addEventListener("pointermove", (e) => { if (!dragging) return; processMove(e); e.preventDefault(); });
             bg.addEventListener("pointerup", centerKnob);
             bg.addEventListener("pointercancel", centerKnob);
-            bg.addEventListener("contextmenu", e => e.preventDefault());
+            bg.addEventListener("contextmenu", (e) => e.preventDefault());
         }
 
         bindSlider('joy-left-bg', 'joy-left-knob', 'vertical');
         bindSlider('joy-right-bg', 'joy-right-knob', 'horizontal');
 
-        /* Continuous 10 Hz Publisher */
+        /*
+         * 10 Hz teleop publisher.
+         * When agvRunning is true this interval fires but returns immediately —
+         * nothing is published, so twist_mux's 0.5 s timeout drops the teleop
+         * topic and the AGV's /cmd_vel_agv (priority 10) takes sole control.
+         * When agvRunning is false, normal publishing resumes at priority 255.
+         */
         setInterval(() => {
+            if (agvRunning) return;
             cmdVel.publish(new ROSLIB.Message({
                 linear: { x: linear, y: 0, z: 0 },
                 angular: { x: 0, y: 0, z: angular }

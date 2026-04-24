@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AGV Control</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Dark Industrial Palette */
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-raised: #334155;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.6);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+
+            --track-bg: #0b1120;
+            --track-border: #334155;
+
+            /* Default Desktop/Tablet Dimensions */
+            --header-h: 64px;
+            --track-v-w: 90px;
+            --track-v-h: 220px;
+            --track-h-w: 220px;
+            --track-h-h: 90px;
+            --knob-size: 70px;
+            --label-font: 13px;
+            --label-mt: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text-main);
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        /* ── Header ── */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--surface-raised);
+            height: var(--header-h);
+            flex-shrink: 0;
+            z-index: 30;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: 1.5px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--surface-raised);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+            transition: all 0.3s ease;
+        }
+
+        .connected {
+            color: var(--text-main);
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .connected .dot {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        /* ── Workspace (Grid Layout) ── */
+        .workspace {
+            flex: 1;
+            display: grid;
+            /* Default to Landscape RC-style Layout */
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 24px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ── Central Dashboard ── */
+        .dashboard-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 24px;
+            z-index: 20;
+            /* Keep above lock overlay */
+        }
+
+        .state-card {
+            background: var(--surface);
+            border: 1px solid var(--surface-raised);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .state-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--surface-raised);
+            transition: background 0.4s ease;
+        }
+
+        .state-card.running::before {
+            background: var(--success);
+        }
+
+        .state-card.stopped::before {
+            background: var(--danger);
+        }
+
+        .state-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .state-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            line-height: 1.2;
+        }
+
+        .state-value.running {
+            color: var(--success);
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .state-value.stopped {
+            color: var(--danger);
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .state-value.waiting {
+            color: var(--warning);
+        }
+
+        .state-sub {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            min-height: 18px;
+        }
+
+        @keyframes pulse-border {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.2);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .state-card.running {
+            animation: pulse-border 2s infinite;
+        }
+
+        /* GO / STOP Buttons */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .ctrl-btn {
+            height: 90px;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 1px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 20;
+            /* Keep clickable over lock overlay */
+        }
+
+        .ctrl-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .ctrl-btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+
+        .ctrl-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            filter: grayscale(80%);
+        }
+
+        .btn-go {
+            background: #064e3b;
+            color: #34d399;
+            border: 1px solid #047857;
+            box-shadow: 0 6px 0 #022c22, 0 15px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-go:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #022c22, 0 5px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-stop {
+            background: #7f1d1d;
+            color: #fca5a5;
+            border: 1px solid #b91c1c;
+            box-shadow: 0 6px 0 #450a0a, 0 15px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-stop:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #450a0a, 0 5px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ── Joystick Panels ── */
+        .joy-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .joystick-bg {
+            background: var(--track-bg);
+            border: 2px solid var(--track-border);
+            position: relative;
+            box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.5), 0 2px 5px rgba(255, 255, 255, 0.02);
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        .joystick-bg::after {
+            content: '';
+            position: absolute;
+            background: var(--surface-raised);
+            z-index: 0;
+        }
+
+        .joystick-bg.vertical-track {
+            border-radius: 100px;
+            width: var(--track-v-w);
+            height: var(--track-v-h);
+        }
+
+        .joystick-bg.vertical-track::after {
+            top: 50%;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            transform: translateY(-50%);
+        }
+
+        .joystick-bg.horizontal-track {
+            border-radius: 100px;
+            width: var(--track-h-w);
+            height: var(--track-h-h);
+        }
+
+        .joystick-bg.horizontal-track::after {
+            left: 50%;
+            top: 20%;
+            bottom: 20%;
+            width: 2px;
+            transform: translateX(-50%);
+        }
+
+        .knob {
+            width: var(--knob-size);
+            height: var(--knob-size);
+            background: var(--surface);
+            border: 2px solid var(--surface-raised);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            touch-action: none;
+            pointer-events: none;
+            transition: 0.05s ease top, 0.05s ease left, box-shadow 0.2s, background 0.2s;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .knob::before {
+            content: '';
+            width: 40%;
+            height: 40%;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--surface-raised) 20%, transparent 20%), radial-gradient(circle, var(--surface-raised) 20%, transparent 20%);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            opacity: 0.5;
+        }
+
+        .joystick-bg.active .knob {
+            background: var(--primary);
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px var(--primary-glow), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+        }
+
+        .joystick-bg.active .knob::before {
+            opacity: 0.2;
+            background: radial-gradient(circle, #000 20%, transparent 20%), radial-gradient(circle, #000 20%, transparent 20%);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+        }
+
+        .joy-label {
+            margin-top: var(--label-mt);
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: var(--label-font);
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+
+        /* ── Full Screen Blur Overlay ── */
+        .joy-lock-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 40px;
+            pointer-events: all;
+        }
+
+        .joy-lock-overlay.visible {
+            display: flex;
+        }
+
+        .lock-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            padding: 16px 32px;
+            border-radius: 100px;
+            border: 1px solid var(--surface-raised);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .joy-lock-overlay svg {
+            color: var(--success);
+            width: 24px;
+            height: 24px;
+        }
+
+        .lock-label {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--success);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* ════════════ BREAKPOINTS ════════════ */
+
+        /* Landscape Mobile / Tablet Layout (Short screens) */
+        @media (orientation: landscape) and (max-height: 600px) {
+            :root {
+                --header-h: 48px;
+                --track-v-w: 70px;
+                --track-v-h: 160px;
+                --track-h-w: 160px;
+                --track-h-h: 70px;
+                --knob-size: 56px;
+                --label-font: 11px;
+                --label-mt: 10px;
+            }
+
+            header {
+                padding: 0 16px;
+            }
+
+            h1 {
+                font-size: 15px;
+            }
+
+            .workspace {
+                padding: 12px 24px;
+                gap: 16px;
+                grid-template-columns: 1fr 1.5fr 1fr;
+            }
+
+            .dashboard-panel {
+                gap: 12px;
+            }
+
+            .state-card {
+                padding: 16px;
+            }
+
+            .state-value {
+                font-size: 24px;
+            }
+
+            .state-label {
+                font-size: 10px;
+            }
+
+            .state-sub {
+                font-size: 11px;
+            }
+
+            .btn-stack {
+                flex-direction: row;
+                gap: 12px;
+            }
+
+            .ctrl-btn {
+                height: 60px;
+                flex: 1;
+                font-size: 13px;
+                border-radius: 16px;
+                box-shadow: 0 4px 0 rgba(0, 0, 0, 0.6);
+            }
+
+            .ctrl-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .ctrl-btn:active:not(:disabled) {
+                transform: translateY(4px);
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0.6);
+            }
+
+            .joy-lock-overlay {
+                padding-bottom: 20px;
+            }
+
+            .lock-content {
+                padding: 10px 24px;
+                flex-direction: row;
+            }
+        }
+
+        /* Portrait Mobile Layout */
+        @media (orientation: portrait) and (max-width: 800px) {
+            :root {
+                --header-h: 56px;
+                --track-v-w: 80px;
+                --track-v-h: 180px;
+                --track-h-w: 180px;
+                --track-h-h: 80px;
+                --knob-size: 64px;
+                --label-font: 11px;
+                --label-mt: 12px;
+            }
+
+            .workspace {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto 1fr;
+                padding: 16px;
+                gap: 24px;
+            }
+
+            .dashboard-panel {
+                grid-column: 1 / -1;
+                gap: 16px;
+            }
+
+            .joy-panel.left-joy {
+                grid-column: 1;
+                align-items: flex-start;
+                padding-left: 10px;
+            }
+
+            .joy-panel.right-joy {
+                grid-column: 2;
+                align-items: flex-end;
+                padding-right: 10px;
+            }
+
+            .btn-stack {
+                flex-direction: row;
+                gap: 16px;
+            }
+
+            .ctrl-btn {
+                height: 70px;
+                flex: 1;
+                border-radius: 16px;
+                box-shadow: 0 5px 0 rgba(0, 0, 0, 0.6);
+            }
+
+            .ctrl-btn:active:not(:disabled) {
+                transform: translateY(5px);
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0.6);
+            }
+
+            .state-card {
+                padding: 20px;
+            }
+
+            .joy-lock-overlay {
+                padding-bottom: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>AGV CONTROL</h1>
+        <div id="connection-status" class="status-badge">
+            <div class="dot"></div> <span id="status-text">Disconnected</span>
+        </div>
+    </header>
+
+    <div class="workspace">
+
+        <div class="joy-lock-overlay" id="joy-lock-overlay">
+            <div class="lock-content">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <div class="lock-label">Teleop Locked</div>
+            </div>
+        </div>
+
+        <div class="joy-panel left-joy">
+            <div id="joy-left-bg" class="joystick-bg vertical-track">
+                <div id="joy-left-knob" class="knob"></div>
+            </div>
+            <div class="joy-label">FWD / REV</div>
+        </div>
+
+        <div class="dashboard-panel">
+            <div class="state-card" id="state-card">
+                <div class="state-label">AGV State</div>
+                <div class="state-value waiting" id="state-value">WAITING</div>
+                <div class="state-sub" id="state-sub">Awaiting ROS connection…</div>
+            </div>
+
+            <div class="btn-stack">
+                <button class="ctrl-btn btn-go" id="btn-go" onclick="sendEnable()" disabled>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                    GO
+                </button>
+                <button class="ctrl-btn btn-stop" id="btn-stop" onclick="sendStop()" disabled>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 6h12v12H6z" />
+                    </svg>
+                    STOP
+                </button>
+            </div>
+        </div>
+
+        <div class="joy-panel right-joy">
+            <div id="joy-right-bg" class="joystick-bg horizontal-track">
+                <div id="joy-right-knob" class="knob"></div>
+            </div>
+            <div class="joy-label">TURN L / R</div>
+        </div>
+
+    </div>
+
+    <script>
+        /* ================================================================
+           SINGLE CLIENT ENFORCEMENT
+           ================================================================ */
+        const sessionStartTime = Date.now();
+        const clientId = "client_" + sessionStartTime + "_" + Math.floor(Math.random() * 1000);
+
+        /* ================================================================
+           ROS SETUP
+           ================================================================ */
+        const ROS_IP = "192.168.251.47";
+        const ros = new ROSLIB.Ros({ url: `ws://${ROS_IP}:9090` });
+
+        const activeClientTopic = new ROSLIB.Topic({
+            ros: ros, name: '/ui_active_client', messageType: 'std_msgs/String'
+        });
+
+        activeClientTopic.subscribe(function (message) {
+            try {
+                const data = JSON.parse(message.data);
+                if (data.id !== clientId) {
+                    if (data.time > sessionStartTime) terminateSession();
+                    else if (data.time < sessionStartTime) broadcastPresence();
+                    else {
+                        if (data.id > clientId) terminateSession();
+                        else broadcastPresence();
+                    }
+                }
+            } catch (e) { }
+        });
+
+        function terminateSession() {
+            activeClientTopic.unsubscribe();
+            ros.close();
+            document.body.innerHTML = `
+                <div style="display:flex;height:100vh;width:100vw;background:var(--bg);color:var(--text-main);
+                            align-items:center;justify-content:center;text-align:center;padding:20px;
+                            flex-direction:column;font-family:'Inter',sans-serif;">
+                    <h1 style="color:var(--danger);font-size:28px;margin-bottom:15px;font-weight:800;">Session Terminated</h1>
+                    <p style="font-size:15px;margin-bottom:30px;color:var(--text-muted);">A new user has logged in elsewhere.<br>
+                       You have been disconnected to prevent conflicts.</p>
+                    <button onclick="location.reload()" style="background:var(--primary);color:#fff;
+                            padding:14px 28px;border:none;border-radius:12px;font-size:15px;
+                            font-weight:700;cursor:pointer;box-shadow:0 4px 15px var(--primary-glow);">Reconnect</button>
+                </div>`;
+        }
+
+        function broadcastPresence() {
+            if (ros.isConnected) {
+                activeClientTopic.publish(new ROSLIB.Message({
+                    data: JSON.stringify({ id: clientId, time: sessionStartTime })
+                }));
+            }
+        }
+
+        setInterval(broadcastPresence, 2000);
+
+        /* ================================================================
+           CONNECTION EVENTS
+           ================================================================ */
+        ros.on("connection", () => {
+            document.getElementById("connection-status").classList.add("connected");
+            document.getElementById("status-text").textContent = "Connected";
+            document.getElementById("btn-go").disabled = false;
+            document.getElementById("btn-stop").disabled = false;
+            document.getElementById("state-sub").textContent = "Ready — press GO to start";
+            broadcastPresence();
+        });
+
+        ros.on("close", () => {
+            document.getElementById("connection-status").classList.remove("connected");
+            document.getElementById("status-text").textContent = "Disconnected";
+            document.getElementById("btn-go").disabled = true;
+            document.getElementById("btn-stop").disabled = true;
+            setDisplayState("WAITING", "waiting", "Awaiting ROS connection…");
+            setAgvRunning(false);
+        });
+
+        /* ================================================================
+           AGV COMMAND TOPICS
+           ================================================================ */
+        const enableTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/cmd_enable", messageType: "std_msgs/Bool" });
+        const agvStopTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/cmd_stop", messageType: "std_msgs/Bool" });
+
+        function sendEnable() { enableTopic.publish(new ROSLIB.Message({ data: true })); }
+        function sendStop() { agvStopTopic.publish(new ROSLIB.Message({ data: true })); }
+
+        /* ================================================================
+           /agv/state SUBSCRIBER
+           ================================================================ */
+        const agvStateTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/state", messageType: "std_msgs/String" });
+
+        agvStateTopic.subscribe((msg) => {
+            if (msg.data === "RUNNING") {
+                setDisplayState("RUNNING", "running", "Line following active");
+                setAgvRunning(true);
+            } else if (msg.data === "STOPPED") {
+                setDisplayState("STOPPED", "stopped", "Stopped · Teleop restored");
+                setAgvRunning(false);
+            }
+        });
+
+        function setDisplayState(label, cssClass, sub) {
+            const val = document.getElementById("state-value");
+            const card = document.getElementById("state-card");
+            val.textContent = label;
+            val.className = "state-value " + cssClass;
+            document.getElementById("state-sub").textContent = sub;
+            card.className = "state-card " + cssClass;
+        }
+
+        /* ================================================================
+           JOYSTICK LOCK
+           ================================================================ */
+        let agvRunning = false;
+
+        function setAgvRunning(running) {
+            agvRunning = running;
+            document.getElementById("joy-lock-overlay").classList.toggle("visible", running);
+        }
+
+        /* ================================================================
+           JOYSTICK BINDING
+           ================================================================ */
+        const MAX_LINEAR = 0.50;
+        const MAX_ANGULAR = 0.75;
+
+        let linear = 0.0;
+        let angular = 0.0;
+
+        const cmdVel = new ROSLIB.Topic({ ros: ros, name: "/cmd_vel_teleop", messageType: "geometry_msgs/Twist" });
+
+        const leftKnob = document.getElementById("joy-left-knob");
+        const rightKnob = document.getElementById("joy-right-knob");
+
+        function reCenter(knob) {
+            const rad = knob.offsetWidth / 2 || 35;
+            knob.style.left = `calc(50% - ${rad}px)`;
+            knob.style.top = `calc(50% - ${rad}px)`;
+        }
+
+        setTimeout(() => { reCenter(leftKnob); reCenter(rightKnob); }, 100);
+        reCenter(leftKnob); reCenter(rightKnob);
+        window.addEventListener('resize', () => { reCenter(leftKnob); reCenter(rightKnob); });
+
+        function bindSlider(bgId, knobId, axis) {
+            const bg = document.getElementById(bgId);
+            const knob = document.getElementById(knobId);
+            let dragging = false;
+
+            const centerKnob = () => {
+                dragging = false;
+                bg.classList.remove("active");
+                reCenter(knob);
+                if (axis === 'vertical') linear = 0.0;
+                if (axis === 'horizontal') angular = 0.0;
+            };
+
+            const processMove = (e) => {
+                const rect = bg.getBoundingClientRect();
+                const knobRadius = knob.offsetWidth / 2;
+
+                if (axis === 'vertical') {
+                    const height = rect.height;
+                    const midY = height / 2;
+                    let ny = Math.max(knobRadius, Math.min(height - knobRadius, e.clientY - rect.top));
+                    knob.style.top = (ny - knobRadius) + "px";
+                    linear = ((midY - ny) / (midY - knobRadius)) * MAX_LINEAR;
+                } else {
+                    const width = rect.width;
+                    const midX = width / 2;
+                    let nx = Math.max(knobRadius, Math.min(width - knobRadius, e.clientX - rect.left));
+                    knob.style.left = (nx - knobRadius) + "px";
+                    angular = ((midX - nx) / (midX - knobRadius)) * MAX_ANGULAR;
+                }
+            };
+
+            bg.addEventListener("pointerdown", (e) => { bg.setPointerCapture(e.pointerId); dragging = true; bg.classList.add("active"); processMove(e); e.preventDefault(); });
+            bg.addEventListener("pointermove", (e) => { if (!dragging) return; processMove(e); e.preventDefault(); });
+            bg.addEventListener("pointerup", centerKnob);
+            bg.addEventListener("pointercancel", centerKnob);
+            bg.addEventListener("contextmenu", (e) => e.preventDefault());
+        }
+
+        bindSlider('joy-left-bg', 'joy-left-knob', 'vertical');
+        bindSlider('joy-right-bg', 'joy-right-knob', 'horizontal');
+
+        setInterval(() => {
+            if (agvRunning) return;
+            cmdVel.publish(new ROSLIB.Message({
+                linear: { x: linear, y: 0, z: 0 },
+                angular: { x: 0, y: 0, z: angular }
+            }));
+        }, 100);
+
+    </script>
+
+</body>
+
+</html>
