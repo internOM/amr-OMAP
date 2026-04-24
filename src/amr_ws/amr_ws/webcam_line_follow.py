@@ -49,7 +49,7 @@ class WebcamLineFollow(Node):
 
         self.twist = Twist()
 
-        self.get_logger().info("Webcam Line Follow node started — waiting for /agv/cmd_enable")
+        self.get_logger().info("Webcam Line Follo node started — waiting for /agv/cmd_enable")
 
         # Publish initial state so UI shows STOPPED on boot
         self._publish_state("STOPPED")
@@ -120,12 +120,28 @@ class WebcamLineFollow(Node):
             # Only check for line after minimum U-turn time
             if current_time - self.u_turn_start_time >= self.U_TURN_MIN_TIME:
                 M = cv2.moments(mask)
-                if M['m00'] > 0:    # Line detected → U-turn completed
-                    self.u_turning = False
-                    self.twist.linear.x = 0.0
-                    self.twist.angular.z = 0.0
-                    self.cmd_vel_pub.publish(self.twist)
-                    self.get_logger().info("U-turn completed, resuming line following.")
+                if M['m00'] > 0:
+                    cx_uturn = int(M['m10'] / M['m00'])
+                    err_uturn = cx_uturn - w // 2
+                    # Require a solid line (not just a sliver) AND reasonably centred.
+                    # mask_sum < 50 000 → still catching a corner/edge of tape.
+                    # |err| > 80 px   → line is still too far off-centre.
+                    line_solid = mask_sum > 50000
+                    line_centred = abs(err_uturn) < 80
+                    if line_solid and line_centred:
+                        self.u_turning = False
+                        self.twist.linear.x = 0.0
+                        self.twist.angular.z = 0.0
+                        self.cmd_vel_pub.publish(self.twist)
+                        self.get_logger().info(
+                            f"U-turn completed — cx={cx_uturn}, err={err_uturn}, "
+                            f"mask_sum={mask_sum}. Resuming line following."
+                        )
+                    else:
+                        self.get_logger().debug(
+                            f"U-turn check: solid={line_solid}, centred={line_centred} "
+                            f"(err={err_uturn}, mask_sum={mask_sum}) — continuing turn."
+                        )
             return  # Skip normal PD while U-turning
 
         # ── Normal PD line-following ───────────────────────────────────
