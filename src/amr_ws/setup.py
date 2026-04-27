@@ -45,6 +45,7 @@ setup(
             'return_home_node = amr_ws.return_home_node:main',
             'orchestrator_node = amr_ws.orchestrator_node:main',
             'pose_persistence_node = amr_ws.pose_persistence_node:main',
+            'agv_audio_node = amr_ws.agv_audio_node:main',
         ],
     },
 )

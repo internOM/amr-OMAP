@@ -7,6 +7,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/compass.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/Automation_and_Lidar.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/baselink_laser_tf.py
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/agv_audio_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/localization_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/joystick_to_motor.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__init__.py
@@ -24,6 +25,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/compass.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/Automation_and_Lidar.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/baselink_laser_tf.cpython-312.pyc
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/agv_audio_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/localization_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/joystick_to_motor.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/__init__.cpython-312.pyc
@@ -48,6 +50,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/Automation_and_Lidar
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/Automation_and_Lidar2
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/Demo_Automation
+/home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/agv_audio_node
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/baselink_laser_tf
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/camera_follow
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/cmdvelsmoothed_to_cmdvel

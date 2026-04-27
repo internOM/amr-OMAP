@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AGV Camera Feed</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Dark Industrial Palette */
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-raised: #334155;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.6);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --header-h: 64px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text-main);
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ── Header ── */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--surface-raised);
+            height: var(--header-h);
+            flex-shrink: 0;
+            z-index: 30;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: 1.5px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--surface-raised);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+            transition: all 0.3s ease;
+        }
+
+        .connected {
+            color: var(--text-main);
+            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .connected .dot {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        /* ── Workspace ── */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .camera-panel {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--surface-raised);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        #camera-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Maintain aspect ratio */
+            display: none;
+            /* Give it a dark background of its own so black bars blend well */
+            background-color: #000;
+        }
+
+        .no-feed-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            position: absolute;
+            z-index: 10;
+        }
+
+        /* ── Controls ── */
+        .controls-panel {
+            background: var(--surface);
+            border: 1px solid var(--surface-raised);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--surface-raised);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0 24px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .stats {
+            display: flex;
+            gap: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        
+        .stat-value.good { color: var(--success); }
+        .stat-value.warn { color: var(--warning); }
+        .stat-value.bad { color: var(--danger); }
+
+        /* Breakpoints */
+        @media (max-width: 768px) {
+            .controls-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .stats {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>CAMERA FEED</h1>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <div id="ping-badge" class="status-badge" style="font-family: 'JetBrains Mono', monospace; min-width: 100px; justify-content: center; transition: 0.3s ease;">
+                Ping: <span id="ping-text">--</span>ms
+            </div>
+            <div id="connection-status" class="status-badge">
+                <div class="dot"></div> <span id="status-text">Disconnected</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <div class="camera-panel">
+            <div class="no-feed-text" id="no-feed-text">NO FEED DETECTED</div>
+            <img id="camera-feed" src="" alt="Live Feed">
+        </div>
+
+        <div class="controls-panel">
+            <div class="input-group">
+                <label>Image Topic (CompressedImage)</label>
+                <div class="input-row">
+                    <input type="text" id="topic-input" value="/camera/image_raw/compressed">
+                    <button onclick="subscribeTopic()">Subscribe</button>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">FPS</span>
+                    <span class="stat-value" id="fps-val">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Latency</span>
+                    <span class="stat-value" id="latency-val">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Note: Make sure ROS_IP matches the one used in your agv_display.html
+        const ROS_IP = "192.168.251.47";
+        const ros = new ROSLIB.Ros({ url: `ws://${ROS_IP}:9090` });
+
+        /* ================================================================
+           CONNECTION EVENTS
+           ================================================================ */
+        ros.on("connection", () => {
+            document.getElementById("connection-status").classList.add("connected");
+            document.getElementById("status-text").textContent = "Connected";
+            subscribeTopic(); // Auto subscribe on connect
+        });
+
+        ros.on("close", () => {
+            document.getElementById("connection-status").classList.remove("connected");
+            document.getElementById("status-text").textContent = "Disconnected";
+            showNoFeed();
+        });
+
+        /* ================================================================
+           HEARTBEAT PING (Reused from agv_display)
+           ================================================================ */
+        const heartbeatTopic = new ROSLIB.Topic({ ros: ros, name: "/ui_heartbeat", messageType: "std_msgs/String" });
+        
+        setInterval(() => {
+            if(ros.isConnected) {
+                heartbeatTopic.publish(new ROSLIB.Message({ data: Date.now().toString() }));
+            }
+        }, 1000);
+
+        let smoothedPing = 0;
+
+        heartbeatTopic.subscribe((msg) => {
+            const sentTimestamp = parseInt(msg.data, 10);
+            if (!isNaN(sentTimestamp)) {
+                const latency = Date.now() - sentTimestamp;
+                
+                if (smoothedPing === 0) {
+                    smoothedPing = latency;
+                } else {
+                    smoothedPing = (smoothedPing * 0.7) + (latency * 0.3);
+                }
+
+                const displayLatency = Math.round(smoothedPing);
+
+                const pingText = document.getElementById("ping-text");
+                const pingBadge = document.getElementById("ping-badge");
+                pingText.textContent = displayLatency;
+                
+                // Color update based on Ping
+                if(displayLatency < 50) {
+                    pingBadge.style.color = "var(--success)";
+                    pingBadge.style.borderColor = "var(--success)";
+                    pingBadge.style.background = "rgba(16, 185, 129, 0.1)";
+                } else if(displayLatency < 150) {
+                    pingBadge.style.color = "var(--warning)";
+                    pingBadge.style.borderColor = "var(--warning)";
+                    pingBadge.style.background = "rgba(245, 158, 11, 0.1)";
+                } else {
+                    pingBadge.style.color = "var(--danger)";
+                    pingBadge.style.borderColor = "var(--danger)";
+                    pingBadge.style.background = "rgba(239, 68, 68, 0.1)";
+                }
+            }
+        });
+
+        /* ================================================================
+           IMAGE SUBSCRIPTION
+           ================================================================ */
+        let imageTopic = null;
+        let framesCount = 0;
+        let lastFpsTime = Date.now();
+        
+        const feedImg = document.getElementById("camera-feed");
+        const noFeedText = document.getElementById("no-feed-text");
+        const fpsVal = document.getElementById("fps-val");
+
+        // FPS Counter
+        setInterval(() => {
+            const now = Date.now();
+            if (now - lastFpsTime >= 1000) {
+                fpsVal.textContent = framesCount;
+                
+                fpsVal.className = "stat-value";
+                if(framesCount >= 10) fpsVal.classList.add("good");
+                else if (framesCount > 0) fpsVal.classList.add("warn");
+                else fpsVal.classList.add("bad");
+
+                framesCount = 0;
+                lastFpsTime = now;
+            }
+        }, 1000);
+
+        function showNoFeed() {
+            feedImg.style.display = "none";
+            noFeedText.style.display = "block";
+            feedImg.src = "";
+        }
+
+        function subscribeTopic() {
+            const topicName = document.getElementById("topic-input").value.trim();
+            if (!topicName) return;
+
+            // Unsubscribe from previous if exists
+            if (imageTopic) {
+                imageTopic.unsubscribe();
+                showNoFeed();
+            }
+
+            if (!ros.isConnected) return;
+
+            // Create new topic listener for CompressedImage
+            imageTopic = new ROSLIB.Topic({
+                ros: ros,
+                name: topicName,
+                messageType: 'sensor_msgs/CompressedImage'
+            });
+
+            imageTopic.subscribe(function(message) {
+                // message.data contains base64 string
+                feedImg.style.display = "block";
+                noFeedText.style.display = "none";
+                feedImg.src = "data:image/jpeg;base64," + message.data;
+                
+                framesCount++;
+
+                // Latency Calculation (experimental if header.stamp is synced)
+                if(message.header && message.header.stamp) {
+                    const secs = message.header.stamp.sec || message.header.stamp.secs; // ROS1/ROS2 compatibility
+                    const nsecs = message.header.stamp.nanosec || message.header.stamp.nsecs || 0;
+                    const imgTimeMs = (secs * 1000) + Math.floor(nsecs / 1000000);
+                    
+                    if (!isNaN(imgTimeMs) && imgTimeMs > 0) {
+                        const rLatency = Date.now() - imgTimeMs;
+                        // Show only if offset seems reasonable (avoids massive jumps if clocks drifted)
+                        if (Math.abs(rLatency) < 86400000) { 
+                            document.getElementById("latency-val").textContent = Math.max(0, rLatency) + "ms";
+                        } else {
+                            document.getElementById("latency-val").textContent = "N/A";
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

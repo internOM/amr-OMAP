@@ -21,6 +21,9 @@ class WebcamLineFollow(Node):
         # UI control topics
         self.create_subscription(Bool, '/agv/cmd_enable', self.enable_callback, 10)
         self.create_subscription(Bool, '/agv/cmd_stop',   self.stop_callback,   10)
+        
+        # Ping Echo
+        self.create_subscription(String, '/ui_heartbeat', self.heartbeat_callback, 10)
 
         # ── Publishers ─────────────────────────────────────────────────
         # twist_mux picks this up at priority 10 (same slot as Nav2)
@@ -28,20 +31,23 @@ class WebcamLineFollow(Node):
 
         # State feedback → UI
         self.state_pub = self.create_publisher(String, '/agv/state', 10)
+        
+        # Ping Echo pub
+        self.heartbeat_pub = self.create_publisher(String, '/ui_heartbeat', 10)
 
         # ── Internal enable gate ───────────────────────────────────────
         # Node starts disabled; GO button on the UI enables it.
         self.enabled = False
 
         # ── U-turn detection thresholds ────────────────────────────────
-        self.EXPLOSION_THRESHOLD = 670000
+        self.EXPLOSION_THRESHOLD = 1500000
         self.u_turning = False
         self.u_turn_start_time = None
         self.U_TURN_MIN_TIME = 2.0      # seconds before checking for line again
 
         # ── PD controller ──────────────────────────────────────────────
         self.Kp = 0.0032
-        self.Kd = 0.00075
+        self.Kd = 0.00072
         self.last_err = 0
         self.last_time = None
         self.MAX_ANG_Z = 1.0
@@ -49,27 +55,35 @@ class WebcamLineFollow(Node):
 
         self.twist = Twist()
 
-        self.get_logger().info("Webcam Line Follo node started — waiting for /agv/cmd_enable")
+        self.get_logger().info("Webcam Line Follow node started — waiting for /agv/cmd_enable")
 
-        # Publish initial state so UI shows STOPPED on boot
-        self._publish_state("STOPPED")
+        # Broadcast state at 1Hz so UI knows the node is active
+        self.current_state = "WAITING"
+        self.state_timer = self.create_timer(1.0, self.timer_state_callback)
+        self._publish_state(self.current_state)
 
-    # ── Enable / Stop callbacks ────────────────────────────────────────
+    # ── Enable / Stop & Ping callbacks ───────────────────────────────────
+
+    def heartbeat_callback(self, msg: String):
+        # Bounce the ping straight back to the UI
+        self.heartbeat_pub.publish(msg)
 
     def enable_callback(self, msg: Bool):
         if msg.data and not self.enabled:
             self.enabled = True
+            self.current_state = "RUNNING"
             self.get_logger().info("AGV ENABLED — line following active")
-            self._publish_state("RUNNING")
+            self._publish_state(self.current_state)
 
     def stop_callback(self, msg: Bool):
         if msg.data and self.enabled:
             self.enabled = False
+            self.current_state = "STOPPED"
             # Publish a zero Twist immediately to halt the robot
             zero = Twist()
             self.cmd_vel_pub.publish(zero)
             self.get_logger().info("AGV STOPPED — cmd_vel_agv zeroed")
-            self._publish_state("STOPPED")
+            self._publish_state(self.current_state)
             # Reset U-turn state so next GO starts clean
             self.u_turning = False
             self.u_turn_start_time = None
@@ -80,6 +94,9 @@ class WebcamLineFollow(Node):
         msg = String()
         msg.data = state
         self.state_pub.publish(msg)
+
+    def timer_state_callback(self):
+        self._publish_state(self.current_state)
 
     # ── Image callback ────────────────────────────────────────────────
 

@@ -1,0 +1,21 @@
+[4.580s] Invoking command in '/home/intern1/ros2_ws/src/examples/rclpy/services/minimal_service': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/examples_rclpy_minimal_service/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../../../build/examples_rclpy_minimal_service build --build-base /home/intern1/ros2_ws/build/examples_rclpy_minimal_service/build install --record /home/intern1/ros2_ws/build/examples_rclpy_minimal_service/install.log --single-version-externally-managed install_data
+[5.278s] running egg_info
+[5.309s] writing ../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info/PKG-INFO
+[5.312s] writing dependency_links to ../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info/dependency_links.txt
+[5.313s] writing entry points to ../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info/entry_points.txt
+[5.314s] writing requirements to ../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info/requires.txt
+[5.314s] writing top-level names to ../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info/top_level.txt
+[5.383s] reading manifest file '../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info/SOURCES.txt'
+[5.388s] writing manifest file '../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info/SOURCES.txt'
+[5.388s] running build
+[5.388s] running build_py
+[5.388s] running install
+[5.389s] running install_lib
+[5.431s] running install_data
+[5.431s] running install_egg_info
+[5.461s] removing '/home/intern1/ros2_ws/install/examples_rclpy_minimal_service/lib/python3.12/site-packages/examples_rclpy_minimal_service-0.19.7-py3.12.egg-info' (and everything under it)
+[5.466s] Copying ../../../../../build/examples_rclpy_minimal_service/examples_rclpy_minimal_service.egg-info to /home/intern1/ros2_ws/install/examples_rclpy_minimal_service/lib/python3.12/site-packages/examples_rclpy_minimal_service-0.19.7-py3.12.egg-info
+[5.467s] running install_scripts
+[5.862s] Installing service script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_service/lib/examples_rclpy_minimal_service
+[5.863s] Installing service_member_function script to /home/intern1/ros2_ws/install/examples_rclpy_minimal_service/lib/examples_rclpy_minimal_service
+[5.863s] writing list of installed files to '/home/intern1/ros2_ws/build/examples_rclpy_minimal_service/install.log'
