@@ -229,10 +229,13 @@
             animation: pulse-border 2s infinite;
         }
 
-        /* GO / STOP Buttons */
+        /* GO / STOP / CAM Buttons */
         .btn-stack {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas: 
+                "run cam"
+                "stop stop";
             gap: 16px;
         }
 
@@ -271,6 +274,7 @@
         }
 
         .btn-go {
+            grid-area: run;
             background: #064e3b;
             color: #34d399;
             border: 1px solid #047857;
@@ -282,11 +286,32 @@
             box-shadow: 0 2px 0 #022c22, 0 5px 10px rgba(0, 0, 0, 0.4);
         }
 
+        .btn-cam {
+            grid-area: cam;
+            background: #1e3a8a;
+            color: #93c5fd;
+            border: 1px solid #1e40af;
+            box-shadow: 0 6px 0 #172554, 0 15px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-cam:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #172554, 0 5px 10px rgba(0, 0, 0, 0.4);
+        }
+
         .btn-stop {
+            grid-area: stop;
+            height: 110px; /* Make STOP bigger */
+            font-size: 20px;
             background: #7f1d1d;
             color: #fca5a5;
             border: 1px solid #b91c1c;
             box-shadow: 0 6px 0 #450a0a, 0 15px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-stop svg {
+            width: 36px;
+            height: 36px;
         }
 
         .btn-stop:active:not(:disabled) {
@@ -492,6 +517,7 @@
             }
 
             .btn-stack {
+                display: flex;
                 flex-direction: row;
                 gap: 12px;
             }
@@ -562,8 +588,10 @@
             }
 
             .btn-stack {
+                display: flex;
                 flex-direction: row;
                 gap: 16px;
+                flex-wrap: wrap; /* Allows STOP to take full width on tight spaces if needed, but we force row for now */
             }
 
             .ctrl-btn {
@@ -636,7 +664,14 @@
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z" />
                     </svg>
-                    GO
+                    RUN
+                </button>
+                <button class="ctrl-btn btn-cam" onclick="window.location.href='camera_feed.html'">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    CAM
                 </button>
                 <button class="ctrl-btn btn-stop" id="btn-stop" onclick="sendStop()" disabled>
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -793,7 +828,7 @@
         /* ================================================================
            JOYSTICK BINDING
            ================================================================ */
-        const MAX_LINEAR = 0.50;
+        const MAX_LINEAR = 0.75;
         const MAX_ANGULAR = 0.75;
 
         // TARGET requested by user joystick
@@ -899,15 +934,15 @@
                 if (displayLatency < 50) {
                     pingBadge.style.color = "var(--success)";
                     pingBadge.style.borderColor = "var(--success)";
-                    pingBadge.style.background = "rgba(16, 185, 129, 0.1)";
+                    pingBadge.style.background = "rgba(16, 185, 129, 0.05)";
                 } else if (displayLatency < 150) {
                     pingBadge.style.color = "var(--warning)";
                     pingBadge.style.borderColor = "var(--warning)";
-                    pingBadge.style.background = "rgba(245, 158, 11, 0.1)";
+                    pingBadge.style.background = "rgba(245, 158, 11, 0.05)";
                 } else {
                     pingBadge.style.color = "var(--danger)";
                     pingBadge.style.borderColor = "var(--danger)";
-                    pingBadge.style.background = "rgba(239, 68, 68, 0.1)";
+                    pingBadge.style.background = "rgba(239, 68, 68, 0.05)";
                 }
             }
         });

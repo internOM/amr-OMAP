@@ -277,10 +277,16 @@
 
         <div class="controls-panel">
             <div class="input-group">
-                <label>Image Topic (CompressedImage)</label>
+                <label>Image Topic</label>
                 <div class="input-row">
-                    <input type="text" id="topic-input" value="/camera/image_raw/compressed">
+                    <input type="text" id="topic-input" value="/image_raw">
+                    <select id="topic-type" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--surface-raised); border-radius: 12px; padding: 12px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; outline: none; transition: border-color 0.2s;">
+                        <option value="sensor_msgs/Image">Raw</option>
+                        <option value="sensor_msgs/CompressedImage">Compressed</option>
+                    </select>
                     <button onclick="subscribeTopic()">Subscribe</button>
+                    <button onclick="stopViewing()" style="background: #7f1d1d; color: #fca5a5; box-shadow: 0 4px 15px rgba(127, 29, 29, 0.4);">Stop</button>
+                    <button onclick="window.location.href='agv_display.html'" style="background: var(--surface-raised); color: var(--text-main); box-shadow: none;">Return</button>
                 </div>
             </div>
             <div class="stats">
@@ -396,9 +402,25 @@
             feedImg.src = "";
         }
 
+        function stopViewing() {
+            if (imageTopic) {
+                imageTopic.unsubscribe();
+                imageTopic = null;
+                showNoFeed();
+            }
+        }
+
         function subscribeTopic() {
-            const topicName = document.getElementById("topic-input").value.trim();
+            let topicName = document.getElementById("topic-input").value.trim();
+            const messageType = document.getElementById("topic-type").value;
+            
             if (!topicName) return;
+            
+            // Fix typical typo "user entered /.image_raw instead of /image_raw"
+            if (topicName.startsWith("/.")) {
+                topicName = "/" + topicName.substring(2);
+                document.getElementById("topic-input").value = topicName;
+            }
 
             // Unsubscribe from previous if exists
             if (imageTopic) {
@@ -408,18 +430,100 @@
 
             if (!ros.isConnected) return;
 
-            // Create new topic listener for CompressedImage
+            // Create new topic listener
             imageTopic = new ROSLIB.Topic({
                 ros: ros,
                 name: topicName,
-                messageType: 'sensor_msgs/CompressedImage'
+                messageType: messageType
             });
 
             imageTopic.subscribe(function(message) {
-                // message.data contains base64 string
                 feedImg.style.display = "block";
                 noFeedText.style.display = "none";
-                feedImg.src = "data:image/jpeg;base64," + message.data;
+                
+                if (messageType === 'sensor_msgs/CompressedImage') {
+                    // message.data contains base64 string
+                    feedImg.src = "data:image/jpeg;base64," + message.data;
+                } else {
+                    // It is a Raw Image (sensor_msgs/Image)
+                    const width = message.width;
+                    const height = message.height;
+                    
+                    if (!window.offscreenCanvas) {
+                        window.offscreenCanvas = document.createElement('canvas');
+                        window.offscreenCtx = window.offscreenCanvas.getContext('2d');
+                    }
+                    if (window.offscreenCanvas.width !== width || window.offscreenCanvas.height !== height) {
+                        window.offscreenCanvas.width = width;
+                        window.offscreenCanvas.height = height;
+                    }
+                    
+                    const ctx = window.offscreenCtx;
+                    const imgData = ctx.createImageData(width, height);
+                    const dataOut = imgData.data;
+
+                    try {
+                        const binaryString = atob(message.data);
+                        const len = binaryString.length;
+                        
+                        if (message.encoding === 'rgb8') {
+                            for (let i = 0, j = 0; i < len; i += 3, j += 4) {
+                                dataOut[j] = binaryString.charCodeAt(i);
+                                dataOut[j + 1] = binaryString.charCodeAt(i + 1);
+                                dataOut[j + 2] = binaryString.charCodeAt(i + 2);
+                                dataOut[j + 3] = 255;
+                            }
+                        } else if (message.encoding === 'bgr8') {
+                            for (let i = 0, j = 0; i < len; i += 3, j += 4) {
+                                dataOut[j] = binaryString.charCodeAt(i + 2);
+                                dataOut[j + 1] = binaryString.charCodeAt(i + 1);
+                                dataOut[j + 2] = binaryString.charCodeAt(i);
+                                dataOut[j + 3] = 255;
+                            }
+                        } else if (message.encoding === 'mono8' || message.encoding === '8UC1') {
+                            for (let i = 0, j = 0; i < len; i += 1, j += 4) {
+                                const val = binaryString.charCodeAt(i);
+                                dataOut[j] = val;
+                                dataOut[j + 1] = val;
+                                dataOut[j + 2] = val;
+                                dataOut[j + 3] = 255;
+                            }
+                        } else if (message.encoding === 'yuv422_yuy2' || message.encoding === 'yuyv') {
+                            for (let i = 0, j = 0; i < len; i += 4, j += 8) {
+                                let y1 = binaryString.charCodeAt(i);
+                                let u  = binaryString.charCodeAt(i + 1) - 128;
+                                let y2 = binaryString.charCodeAt(i + 2);
+                                let v  = binaryString.charCodeAt(i + 3) - 128;
+                                
+                                // Pixel 1
+                                let r1 = y1 + 1.402 * v;
+                                let g1 = y1 - 0.344 * u - 0.714 * v;
+                                let b1 = y1 + 1.772 * u;
+                                dataOut[j] = r1 < 0 ? 0 : (r1 > 255 ? 255 : r1);
+                                dataOut[j+1] = g1 < 0 ? 0 : (g1 > 255 ? 255 : g1);
+                                dataOut[j+2] = b1 < 0 ? 0 : (b1 > 255 ? 255 : b1);
+                                dataOut[j+3] = 255;
+                                
+                                // Pixel 2
+                                let r2 = y2 + 1.402 * v;
+                                let g2 = y2 - 0.344 * u - 0.714 * v;
+                                let b2 = y2 + 1.772 * u;
+                                dataOut[j+4] = r2 < 0 ? 0 : (r2 > 255 ? 255 : r2);
+                                dataOut[j+5] = g2 < 0 ? 0 : (g2 > 255 ? 255 : g2);
+                                dataOut[j+6] = b2 < 0 ? 0 : (b2 > 255 ? 255 : b2);
+                                dataOut[j+7] = 255;
+                            }
+                        } else {
+                            // Fallback rendering
+                            console.warn("Unsupported encoding:", message.encoding);
+                        }
+                        
+                        ctx.putImageData(imgData, 0, 0);
+                        feedImg.src = window.offscreenCanvas.toDataURL('image/jpeg', 0.8);
+                    } catch (e) {
+                        console.error("Error decoding raw image:", e);
+                    }
+                }
                 
                 framesCount++;
 
