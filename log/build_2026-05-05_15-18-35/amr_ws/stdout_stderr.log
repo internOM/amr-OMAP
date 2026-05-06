@@ -1,0 +1,40 @@
+running egg_info
+writing ../../build/amr_ws/amr_ws.egg-info/PKG-INFO
+writing dependency_links to ../../build/amr_ws/amr_ws.egg-info/dependency_links.txt
+writing entry points to ../../build/amr_ws/amr_ws.egg-info/entry_points.txt
+writing requirements to ../../build/amr_ws/amr_ws.egg-info/requires.txt
+writing top-level names to ../../build/amr_ws/amr_ws.egg-info/top_level.txt
+reading manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+running build
+running build_py
+copying amr_ws/hsv_probe_node.py -> /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws
+running install
+running install_lib
+copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/hsv_probe_node.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/hsv_probe_node.py to hsv_probe_node.cpython-312.pyc
+running install_data
+running install_egg_info
+removing '/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info' (and everything under it)
+Copying ../../build/amr_ws/amr_ws.egg-info to /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info
+running install_scripts
+Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing agv_audio_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing hsv_probe_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing pose_persistence_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+writing list of installed files to '/home/intern1/ros2_ws/build/amr_ws/install.log'

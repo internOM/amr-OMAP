@@ -18,6 +18,7 @@ amr_ws/baselink_laser_tf.py
 amr_ws/camera_follow.py
 amr_ws/cmdvelsmoothed_to_cmdvel.py
 amr_ws/compass.py
+amr_ws/hsv_probe_node.py
 amr_ws/joystick_to_motor.py
 amr_ws/keyboard_listener.py
 amr_ws/localization_node.py

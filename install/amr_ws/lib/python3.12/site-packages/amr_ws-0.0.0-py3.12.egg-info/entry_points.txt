@@ -7,6 +7,7 @@ baselink_laser_tf = amr_ws.baselink_laser_tf:main
 camera_follow = amr_ws.camera_follow:main
 cmdvelsmoothed_to_cmdvel = amr_ws.cmdvelsmoothed_to_cmdvel:main
 compass = amr_ws.compass:main
+hsv_probe_node = amr_ws.hsv_probe_node:main
 joystick_to_motor = amr_ws.joystick_to_motor:main
 keyboard_listener = amr_ws.keyboard_listener:main
 localization_node = amr_ws.localization_node:main

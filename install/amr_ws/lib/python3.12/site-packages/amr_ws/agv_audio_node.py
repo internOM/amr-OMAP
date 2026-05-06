@@ -17,23 +17,13 @@ its keyboard handler is SDL/terminal-based, not stdin-based.
 import os
 import signal
 import subprocess
+import glob
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool
 
 
-AUDIO_FILE = '/home/intern1/Downloads/AGV_JC.mp3'
-
-# ffplay flags:
-#   -nodisp     : no video window
-#   -loglevel quiet : suppress console spam
-#   Note: we intentionally omit -autoexit so the process stays alive to resume
-FFPLAY_CMD = [
-    'ffplay',
-    '-nodisp',
-    '-loglevel', 'quiet',
-    AUDIO_FILE,
-]
+AUDIO_DIR = '/home/intern1/Downloads/AGV_playlist'
 
 
 class AgvAudioNode(Node):
@@ -43,6 +33,11 @@ class AgvAudioNode(Node):
 
         self._proc = None        # subprocess.Popen handle for ffplay
         self._is_paused = False  # True when we have sent a pause command
+
+        self._playlist = sorted(glob.glob(os.path.join(AUDIO_DIR, '*.mp3')))
+        self._track_idx = 0
+        if not self._playlist:
+            self.get_logger().warn(f'No MP3 files found in {AUDIO_DIR}!')
 
         self.create_subscription(
             Bool,
@@ -57,11 +52,24 @@ class AgvAudioNode(Node):
             10,
         )
 
+        # Timer to poll if the current track has finished
+        self.create_timer(1.0, self._check_track_finished)
+
         self.get_logger().info('AGV Audio Node started. Waiting for commands…')
 
     # ------------------------------------------------------------------
-    # Subscriber Callbacks
+    # Subscriber Callbacks & Timers
     # ------------------------------------------------------------------
+
+    def _check_track_finished(self):
+        """Polls ffplay to see if the current track has finished automatically."""
+        if self._proc is not None and not self._is_paused:
+            if self._proc.poll() is not None:
+                # Play the next track
+                if self._playlist:
+                    self._track_idx = (self._track_idx + 1) % len(self._playlist)
+                    self.get_logger().info(f'Track finished. Moving to track {self._track_idx + 1}/{len(self._playlist)}')
+                    self._start_audio()
 
     def _on_enable(self, msg: Bool):
         """Called when GO is pressed on the web UI."""
@@ -92,15 +100,28 @@ class AgvAudioNode(Node):
     # ------------------------------------------------------------------
 
     def _start_audio(self):
-        """Launch ffplay as a background process."""
+        """Launch ffplay as a background process for the current track."""
+        if not self._playlist:
+            self.get_logger().warn('Playlist is empty, cannot start audio.')
+            return
+
+        cmd = [
+            'ffplay',
+            '-nodisp',
+            '-loglevel', 'quiet',
+            '-autoexit',  # ensures ffplay exits when the song ends
+            self._playlist[self._track_idx],
+        ]
+
         try:
             self._proc = subprocess.Popen(
-                FFPLAY_CMD,
+                cmd,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
             self._is_paused = False
-            self.get_logger().info(f'Audio playback started (PID {self._proc.pid})')
+            track_name = os.path.basename(self._playlist[self._track_idx])
+            self.get_logger().info(f'Audio playback started (PID {self._proc.pid}): {track_name}')
         except FileNotFoundError:
             self.get_logger().error(
                 'ffplay not found! Install it with: sudo apt install ffmpeg'

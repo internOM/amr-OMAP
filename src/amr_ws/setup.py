@@ -46,6 +46,7 @@ setup(
             'orchestrator_node = amr_ws.orchestrator_node:main',
             'pose_persistence_node = amr_ws.pose_persistence_node:main',
             'agv_audio_node = amr_ws.agv_audio_node:main',
+            'hsv_probe_node = amr_ws.hsv_probe_node:main',
         ],
     },
 )

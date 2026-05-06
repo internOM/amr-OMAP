@@ -1,0 +1,22 @@
+[2.629s] Invoking command in '/home/intern1/ros2_ws/om_mvc01': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/om_mvc01/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/om_mvc01 build --build-base /home/intern1/ros2_ws/build/om_mvc01/build install --record /home/intern1/ros2_ws/build/om_mvc01/install.log --single-version-externally-managed install_data
+[3.285s] running egg_info
+[3.317s] writing ../build/om_mvc01/om_mvc01.egg-info/PKG-INFO
+[3.317s] writing dependency_links to ../build/om_mvc01/om_mvc01.egg-info/dependency_links.txt
+[3.317s] writing entry points to ../build/om_mvc01/om_mvc01.egg-info/entry_points.txt
+[3.317s] writing requirements to ../build/om_mvc01/om_mvc01.egg-info/requires.txt
+[3.318s] writing top-level names to ../build/om_mvc01/om_mvc01.egg-info/top_level.txt
+[3.383s] reading manifest file '../build/om_mvc01/om_mvc01.egg-info/SOURCES.txt'
+[3.384s] writing manifest file '../build/om_mvc01/om_mvc01.egg-info/SOURCES.txt'
+[3.385s] running build
+[3.385s] running build_py
+[3.385s] running install
+[3.394s] running install_lib
+[3.426s] running install_data
+[3.426s] running install_egg_info
+[3.462s] removing '/home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages/om_mvc01-0.0.0-py3.12.egg-info' (and everything under it)
+[3.462s] Copying ../build/om_mvc01/om_mvc01.egg-info to /home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages/om_mvc01-0.0.0-py3.12.egg-info
+[3.464s] running install_scripts
+[3.710s] Installing om_mvc01_node script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+[3.710s] Installing om_mvc01_node2 script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+[3.710s] Installing om_mvc01_node3 script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+[3.710s] writing list of installed files to '/home/intern1/ros2_ws/build/om_mvc01/install.log'

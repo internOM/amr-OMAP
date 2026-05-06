@@ -12,6 +12,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/joystick_to_motor.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__init__.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/orchestrator_node.py
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/hsv_probe_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/pose_persistence_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/return_home_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/webcam_line_follow.py
@@ -30,6 +31,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/joystick_to_motor.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/__init__.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/orchestrator_node.cpython-312.pyc
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/hsv_probe_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/pose_persistence_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/return_home_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/webcam_line_follow.cpython-312.pyc
@@ -55,6 +57,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/camera_follow
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/cmdvelsmoothed_to_cmdvel
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/compass
+/home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/hsv_probe_node
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/joystick_to_motor
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/keyboard_listener
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/localization_node

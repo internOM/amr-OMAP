@@ -233,7 +233,7 @@
         .btn-stack {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-areas: 
+            grid-template-areas:
                 "run cam"
                 "stop stop";
             gap: 16px;
@@ -286,22 +286,29 @@
             box-shadow: 0 2px 0 #022c22, 0 5px 10px rgba(0, 0, 0, 0.4);
         }
 
-        .btn-cam {
+        .btn-mode {
             grid-area: cam;
-            background: #1e3a8a;
-            color: #93c5fd;
-            border: 1px solid #1e40af;
-            box-shadow: 0 6px 0 #172554, 0 15px 20px rgba(0, 0, 0, 0.4);
+            background: #1e293b;
+            color: #34d399; /* Green text by default */
+            border: 2px solid #064e3b;
+            box-shadow: 0 6px 0 #0f172a, 0 15px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
         }
 
-        .btn-cam:active:not(:disabled) {
+        .btn-mode.is-red {
+            color: #fca5a5;
+            border-color: #7f1d1d;
+        }
+
+        .btn-mode:active:not(:disabled) {
             transform: translateY(4px);
-            box-shadow: 0 2px 0 #172554, 0 5px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 0 #0f172a, 0 5px 10px rgba(0, 0, 0, 0.4);
         }
 
         .btn-stop {
             grid-area: stop;
-            height: 110px; /* Make STOP bigger */
+            height: 110px;
+            /* Make STOP bigger */
             font-size: 20px;
             background: #7f1d1d;
             color: #fca5a5;
@@ -591,7 +598,8 @@
                 display: flex;
                 flex-direction: row;
                 gap: 16px;
-                flex-wrap: wrap; /* Allows STOP to take full width on tight spaces if needed, but we force row for now */
+                flex-wrap: wrap;
+                /* Allows STOP to take full width on tight spaces if needed, but we force row for now */
             }
 
             .ctrl-btn {
@@ -660,18 +668,18 @@
             </div>
 
             <div class="btn-stack">
+                <button class="ctrl-btn btn-mode" id="btn-mode" onclick="toggleMode()" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="8" cy="12" r="4" />
+                        <rect x="2" y="6" width="20" height="12" rx="6" />
+                    </svg>
+                    Mode: Green
+                </button>
                 <button class="ctrl-btn btn-go" id="btn-go" onclick="sendEnable()" disabled>
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z" />
                     </svg>
-                    RUN
-                </button>
-                <button class="ctrl-btn btn-cam" onclick="window.location.href='camera_feed.html'">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                        <circle cx="12" cy="13" r="4"></circle>
-                    </svg>
-                    CAM
+                    START
                 </button>
                 <button class="ctrl-btn btn-stop" id="btn-stop" onclick="sendStop()" disabled>
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -751,11 +759,16 @@
         /* ================================================================
            CONNECTION EVENTS
            ================================================================ */
+        function setButtonsDisabled(disabled) {
+            document.getElementById("btn-go").disabled = disabled;
+            document.getElementById("btn-mode").disabled = disabled;
+            document.getElementById("btn-stop").disabled = disabled;
+        }
+
         ros.on("connection", () => {
             document.getElementById("connection-status").classList.add("connected");
             document.getElementById("status-text").textContent = "Connected";
-            document.getElementById("btn-go").disabled = false;
-            document.getElementById("btn-stop").disabled = false;
+            setButtonsDisabled(true);
             setDisplayState("INACTIVE", "stopped", "Searching for line follow node...");
             broadcastPresence();
         });
@@ -763,8 +776,7 @@
         ros.on("close", () => {
             document.getElementById("connection-status").classList.remove("connected");
             document.getElementById("status-text").textContent = "Disconnected";
-            document.getElementById("btn-go").disabled = true;
-            document.getElementById("btn-stop").disabled = true;
+            setButtonsDisabled(true);
             setDisplayState("WAITING", "waiting", "Awaiting ROS connection…");
             setAgvRunning(false);
         });
@@ -774,8 +786,22 @@
            ================================================================ */
         const enableTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/cmd_enable", messageType: "std_msgs/Bool" });
         const agvStopTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/cmd_stop", messageType: "std_msgs/Bool" });
+        const modeTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/cmd_mode", messageType: "std_msgs/String" });
 
-        function sendEnable() { enableTopic.publish(new ROSLIB.Message({ data: true })); }
+        let currentMode = "green";
+
+        function toggleMode() {
+            const nextMode = currentMode === "green" ? "red" : "green";
+            applyModeUI(nextMode);
+            // Immediately publish the new mode so the running node switches now.
+            modeTopic.publish(new ROSLIB.Message({ data: currentMode }));
+        }
+
+
+        function sendEnable() {
+            modeTopic.publish(new ROSLIB.Message({ data: currentMode }));
+            enableTopic.publish(new ROSLIB.Message({ data: true }));
+        }
         function sendStop() { agvStopTopic.publish(new ROSLIB.Message({ data: true })); }
 
         /* ================================================================
@@ -787,6 +813,7 @@
 
         agvStateTopic.subscribe((msg) => {
             clearTimeout(stateTimeout);
+            setButtonsDisabled(false);
 
             if (msg.data === "RUNNING") {
                 setDisplayState("RUNNING", "running", "Line following active");
@@ -797,14 +824,56 @@
             } else if (msg.data === "STOPPED") {
                 setDisplayState("STOPPED", "stopped", "Stopped · Teleop restored");
                 setAgvRunning(false);
+            } else if (msg.data === "OBSTACLE_DETECTED") {
+                setDisplayState("OBSTACLE", "stopped", "Obstacle detected — waiting for path to clear");
+                setAgvRunning(true);
             }
 
             // Watchdog: If no status published after 3 seconds, node is offline
             stateTimeout = setTimeout(() => {
                 setDisplayState("INACTIVE", "stopped", "Line follow node offline");
                 setAgvRunning(false);
+                setButtonsDisabled(true);
             }, 3000);
         });
+
+        /* ================================================================
+           /agv/mode SUBSCRIBER  — keeps the Mode button in sync with node
+           ================================================================ */
+        const agvModeTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/mode", messageType: "std_msgs/String" });
+
+        // Shared renderer — called by the subscriber AND by toggleMode()
+        function applyModeUI(mode) {
+            const btn = document.getElementById("btn-mode");
+            if (mode === "red") {
+                currentMode = "red";
+                btn.classList.add("is-red");
+                btn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="16" cy="12" r="4" fill="currentColor" />
+                        <rect x="2" y="6" width="20" height="12" rx="6" />
+                    </svg>
+                    Mode: Red
+                `;
+            } else {
+                currentMode = "green";
+                btn.classList.remove("is-red");
+                btn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="8" cy="12" r="4" fill="currentColor" />
+                        <rect x="2" y="6" width="20" height="12" rx="6" />
+                    </svg>
+                    Mode: Green
+                `;
+            }
+        }
+
+        // Node broadcasts its mode every 1 Hz — keep button in sync
+        agvModeTopic.subscribe((msg) => {
+            applyModeUI(msg.data.toLowerCase());
+        });
+
+
 
         function setDisplayState(label, cssClass, sub) {
             const val = document.getElementById("state-value");
@@ -949,8 +1018,8 @@
 
         setInterval(() => {
             // Slew Rate Limiter (ramp amount per 100ms)
-            const maxLinearSlew = 0.15;
-            const maxAngularSlew = 0.15;
+            const maxLinearSlew = 0.18;
+            const maxAngularSlew = 0.18;
 
             if (currentLinear < targetLinear) {
                 currentLinear = Math.min(currentLinear + maxLinearSlew, targetLinear);
