@@ -1,0 +1,91 @@
+[1.312s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/om_modbus_master:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/intern1/ros2_ws/src/examples/rclcpp/topics/minimal_publisher -DCMAKE_INSTALL_PREFIX=/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher
+[1.505s] -- The C compiler identification is GNU 13.3.0
+[1.695s] -- The CXX compiler identification is GNU 13.3.0
+[1.738s] -- Detecting C compiler ABI info
+[2.015s] -- Detecting C compiler ABI info - done
+[2.065s] -- Check for working C compiler: /usr/bin/cc - skipped
+[2.066s] -- Detecting C compile features
+[2.080s] -- Detecting C compile features - done
+[2.139s] -- Detecting CXX compiler ABI info
+[2.507s] -- Detecting CXX compiler ABI info - done
+[2.533s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[2.534s] -- Detecting CXX compile features
+[2.535s] -- Detecting CXX compile features - done
+[2.545s] -- Found ament_cmake: 2.5.5 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[3.181s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[3.647s] -- Found rclcpp: 28.1.16 (/opt/ros/jazzy/share/rclcpp/cmake)
+[3.832s] -- Found rosidl_generator_c: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[3.899s] -- Found rosidl_generator_cpp: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[3.978s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[4.064s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[4.412s] -- Found rmw_implementation_cmake: 7.3.3 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[4.426s] -- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[4.716s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[4.825s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[4.965s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[5.255s] -- Found std_msgs: 5.3.6 (/opt/ros/jazzy/share/std_msgs/cmake)
+[5.385s] -- Found ament_lint_auto: 0.17.4 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[5.731s] -- Added test 'copyright' to check source files copyright and LICENSE
+[5.735s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[5.736s] -- Configured cppcheck include dirs: 
+[5.736s] -- Configured cppcheck exclude dirs and/or files: 
+[5.740s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[5.740s] -- Configured cpplint exclude dirs and/or files: 
+[5.744s] -- Added test 'lint_cmake' to check CMake code style
+[5.745s] -- Added test 'uncrustify' to check C / C++ code style
+[5.745s] -- Configured uncrustify additional arguments: 
+[5.748s] -- Added test 'xmllint' to check XML markup files
+[5.753s] -- Configuring done (4.4s)
+[5.902s] -- Generating done (0.0s)
+[5.906s] -- Build files have been written to: /home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher
+[5.994s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/om_modbus_master:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/intern1/ros2_ws/src/examples/rclcpp/topics/minimal_publisher -DCMAKE_INSTALL_PREFIX=/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher
+[5.997s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/om_modbus_master:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher -- -j14 -l14
+[6.138s] [  8%] [32mBuilding CXX object CMakeFiles/publisher_lambda.dir/lambda.cpp.o[0m
+[6.155s] [ 16%] [32mBuilding CXX object CMakeFiles/publisher_not_composable.dir/not_composable.cpp.o[0m
+[6.162s] [ 25%] [32mBuilding CXX object CMakeFiles/publisher_member_function.dir/member_function.cpp.o[0m
+[6.167s] [ 33%] [32mBuilding CXX object CMakeFiles/publisher_member_function_with_unique_network_flow_endpoints.dir/member_function_with_unique_network_flow_endpoints.cpp.o[0m
+[6.177s] [ 41%] [32mBuilding CXX object CMakeFiles/publisher_member_function_with_type_adapter.dir/member_function_with_type_adapter.cpp.o[0m
+[6.268s] [ 50%] [32mBuilding CXX object CMakeFiles/publisher_wait_for_all_acked.dir/member_function_with_wait_for_all_acked.cpp.o[0m
+[25.849s] [ 58%] [32m[1mLinking CXX executable publisher_not_composable[0m
+[26.931s] [ 66%] [32m[1mLinking CXX executable publisher_wait_for_all_acked[0m
+[27.709s] [ 66%] Built target publisher_wait_for_all_acked
+[27.878s] [ 75%] [32m[1mLinking CXX executable publisher_member_function[0m
+[29.481s] [ 75%] Built target publisher_not_composable
+[31.984s] [ 75%] Built target publisher_member_function
+[39.442s] [ 83%] [32m[1mLinking CXX executable publisher_lambda[0m
+[41.859s] [ 83%] Built target publisher_lambda
+[42.485s] [ 91%] [32m[1mLinking CXX executable publisher_member_function_with_unique_network_flow_endpoints[0m
+[42.928s] [100%] [32m[1mLinking CXX executable publisher_member_function_with_type_adapter[0m
+[44.124s] [100%] Built target publisher_member_function_with_type_adapter
+[44.404s] [100%] Built target publisher_member_function_with_unique_network_flow_endpoints
+[44.557s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/om_modbus_master:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher -- -j14 -l14
+[44.560s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/om_modbus_master:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher
+[46.956s] -- Install configuration: ""
+[46.956s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_lambda
+[46.956s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_lambda" to ""
+[46.956s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function
+[46.957s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function" to ""
+[46.957s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function_with_type_adapter
+[46.959s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function_with_type_adapter" to ""
+[46.959s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function_with_unique_network_flow_endpoints
+[46.960s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_member_function_with_unique_network_flow_endpoints" to ""
+[46.960s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_wait_for_all_acked
+[46.960s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_wait_for_all_acked" to ""
+[46.960s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_not_composable
+[46.960s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/lib/examples_rclcpp_minimal_publisher/publisher_not_composable" to ""
+[46.961s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/ament_index/resource_index/package_run_dependencies/examples_rclcpp_minimal_publisher
+[46.961s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/ament_index/resource_index/parent_prefix_path/examples_rclcpp_minimal_publisher
+[46.963s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/environment/ament_prefix_path.sh
+[46.966s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/environment/ament_prefix_path.dsv
+[46.966s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/environment/path.sh
+[46.966s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/environment/path.dsv
+[46.966s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/local_setup.bash
+[46.967s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/local_setup.sh
+[46.967s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/local_setup.zsh
+[46.967s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/local_setup.dsv
+[46.967s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/package.dsv
+[46.967s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/ament_index/resource_index/packages/examples_rclcpp_minimal_publisher
+[46.967s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/cmake/examples_rclcpp_minimal_publisherConfig.cmake
+[46.968s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/cmake/examples_rclcpp_minimal_publisherConfig-version.cmake
+[46.968s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher/share/examples_rclcpp_minimal_publisher/package.xml
+[47.890s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/om_modbus_master:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher

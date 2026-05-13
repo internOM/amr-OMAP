@@ -10,17 +10,31 @@ import cv2
 import numpy as np
 import time
 
-# ── LiDAR safety constants ─────────────────────────────────────────────────────
-# The safety cone covers ±90° around the robot's forward direction (0 rad).
-# Any valid range reading inside this 180° arc that is ≤ OBSTACLE_DISTANCE_M
-# will trigger an OBSTACLE_DETECTED stop.
-OBSTACLE_DISTANCE_M = 0.32      # metres – stop threshold
-SAFETY_CONE_HALF_DEG = 60.0    # degrees each side of forward → total 120°
+# ── LiDAR tiered safety zones ────────────────────────────────────────────────
+# Each entry is (max_distance_m, half_cone_deg).
+# A beam triggers an obstacle stop when BOTH conditions are met:
+#   • its distance ≤ max_distance_m   AND
+#   • its angle from forward is within ±half_cone_deg
+# Zones are checked from the narrowest (closest) outward so the first
+# matching zone wins — keeps the logic O(zones) not O(zones²).
+#
+#  Zone │ Distance band │ Cone (total)
+#  ─────┼───────────────┼────────────
+#    1  │   0 – 0.15 m  │   45°  (±22.5°)
+#    2  │ 0.15 – 0.25 m │   60°  (±30°)
+#    3  │ 0.25 – 0.50 m │   90°  (±45°)
+#    4  │ 0.50 – 0.75 m │  120°  (±60°)
+SAFETY_TIERS = [
+    (0.15, 22.5),   # zone 1: very close  → narrow  45° cone
+    (0.25, 30.0),   # zone 2: close       → narrow  60° cone
+    (0.50, 45.0),   # zone 3: medium      → medium  90° cone
+    (0.75, 60.0),   # zone 4: far         → wide   120° cone
+]
 
 # ── Obstacle debounce & slew-rate constants ────────────────────────────────────
 # Number of consecutive obstacle-free scan frames required before the robot is
 # allowed to resume.  Prevents jitter / false-clear transients.
-OBSTACLE_CLEAR_DEBOUNCE = 5   # frames
+OBSTACLE_CLEAR_DEBOUNCE = 20   # frames
 
 # Slew-rate limiter: how much linear.x can increase per image frame once the
 # robot resumes after an obstacle clear.  Target cruise speed = 0.25 m/s.
@@ -44,6 +58,10 @@ class WebcamLineFollow(Node):
         self.create_subscription(Bool,   '/agv/cmd_enable', self.enable_callback, 10)
         self.create_subscription(Bool,   '/agv/cmd_stop',   self.stop_callback,   10)
         self.create_subscription(String, '/agv/cmd_mode',   self.mode_callback,   10)
+
+        # Rack sensor status — published by rack_websocket_server.py
+        # Format: "rack_id:status:distance_cm"  (status 1=FULL, 0=EMPTY)
+        self.create_subscription(String, '/rack_status', self.rack_status_callback, 10)
 
         # Ping Echo
         self.create_subscription(String, '/ui_heartbeat', self.heartbeat_callback, 10)
@@ -102,6 +120,11 @@ class WebcamLineFollow(Node):
         self.red_u_turn_start_time   = None
         self.U_TURN_MIN_TIME         = 2.0      # seconds before checking for line again
 
+        # Debounce for "red line lost": number of consecutive frames with
+        # red_strip_px < threshold before reverting to green.
+        self._red_lost_frames = 0
+        self.RED_LOST_DEBOUNCE = 8   # ~0.8 s at 10 Hz image rate
+
         # ── PD controller ──────────────────────────────────────────────
         self.Kp = 0.0032
         self.Kd = 0.00072
@@ -112,6 +135,12 @@ class WebcamLineFollow(Node):
 
         # Issue 4: timestamp of the last per-frame info log (throttled to 1 Hz)
         self._last_log_time = 0.0
+
+        # ── Docking Protocol State ─────────────────────────────────────
+        self.docking_type = 0
+        self.docking_phase = 0
+        self.docking_timer = 0.0
+        self.pending_docking_type = 0
 
         self.twist = Twist()
 
@@ -127,20 +156,27 @@ class WebcamLineFollow(Node):
 
     def scan_callback(self, msg: LaserScan):
         """
-        Check the forward 180° cone of the LaserScan.
+        Tiered safety-cone obstacle check.
 
-        The LaserScan convention:
-          angle_min  → first beam angle (radians)
-          angle_max  → last beam angle (radians)
-          angle_increment → step between beams
+        Instead of one flat distance/angle pair we use SAFETY_TIERS:
+          each tier = (max_dist_m, half_cone_deg)
 
-        Index of a given angle θ:
-          i = round((θ - angle_min) / angle_increment)
+        For every valid beam we find the *first* tier whose max_dist_m
+        covers the reading, then check whether the beam's angle falls
+        within that tier's cone.  Closer objects require a narrower
+        cone (fewer side false-positives); far objects still use the
+        wide 120° cone for early warning.
 
-        We want all beams whose angle θ satisfies:
-          -SAFETY_CONE_HALF_DEG ≤ θ ≤ +SAFETY_CONE_HALF_DEG   (in radians)
+        Tier table (from SAFETY_TIERS):
+          0 – 0.15 m  →  ±22.5°  (45° total)
+          0.15 – 0.25 m →  ±30°  (60° total)
+          0.25 – 0.50 m →  ±45°  (90° total)
+          0.50 – 0.75 m →  ±60°  (120° total)
         """
-        half_rad = math.radians(SAFETY_CONE_HALF_DEG)
+        # Pre-compute half-cone radians for each tier once per callback
+        tiers_rad = [(d, math.radians(h)) for d, h in SAFETY_TIERS]
+        # Widest cone among all tiers — used as a fast early-reject gate
+        max_half_rad = tiers_rad[-1][1]
 
         ranges = msg.ranges
         n = len(ranges)
@@ -154,23 +190,26 @@ class WebcamLineFollow(Node):
 
         obstacle_found = False
         for i, r in enumerate(ranges):
-            # Angle of this beam
-            angle = angle_min + i * inc
-
-            # Normalise to (-π, π)
-            angle = math.atan2(math.sin(angle), math.cos(angle))
-
-            # Only consider beams inside the ±90° forward cone
-            if abs(abs(angle) - math.pi) > half_rad:
-                continue
-
-            # Skip invalid / out-of-range readings
+            # Skip invalid / out-of-range readings first (cheap)
             if not math.isfinite(r) or r < range_min or r > range_max:
                 continue
 
-            if r <= OBSTACLE_DISTANCE_M:
-                obstacle_found = True
-                break
+            # Fast gate: skip beams outside the widest possible cone
+            angle = angle_min + i * inc
+            angle = math.atan2(math.sin(angle), math.cos(angle))  # → (-π, π]
+
+            # Forward direction aligns with angle = ±π in our LiDAR frame
+            fwd_dist = abs(abs(angle) - math.pi)   # 0 = dead ahead
+            if fwd_dist > max_half_rad:
+                continue
+
+            # Find the innermost tier that covers this distance
+            for max_dist, half_rad in tiers_rad:
+                if r <= max_dist:
+                    # Beam is within this tier's distance — check cone
+                    if fwd_dist <= half_rad:
+                        obstacle_found = True
+                    break   # tier matched (cone may or may not have fired)
 
         # ── State transitions ──────────────────────────────────────────
         if obstacle_found:
@@ -183,7 +222,7 @@ class WebcamLineFollow(Node):
                 # Reset slew speed so resume is always a smooth ramp-up.
                 self._current_linear_x = 0.0
                 self.get_logger().warn(
-                    f"OBSTACLE DETECTED within {OBSTACLE_DISTANCE_M}m — halting robot. "
+                    "OBSTACLE DETECTED (tiered safety zone triggered) — halting robot. "
                     "Waiting for path to clear…"
                 )
                 # Immediately stop the robot (if we are running)
@@ -212,6 +251,51 @@ class WebcamLineFollow(Node):
                         f"Obstacle clear frame {self._clear_frame_count}/{OBSTACLE_CLEAR_DEBOUNCE} "
                         "— waiting for debounce."
                     )
+
+    # ── Rack status callback ────────────────────────────────────────────────────
+
+    def rack_status_callback(self, msg: String):
+        """
+        Receive rack occupancy data from the ESP32 ultrasonic sensor bridge.
+
+        Message format (String): "rack_id:status:distance_cm"
+          status == 1  → rack FULL  → switch to red line following
+          status == 0  → rack EMPTY → switch to green line following
+
+        The mode switch is performed by synthesising a /agv/cmd_mode message
+        and routing it through mode_callback so all seamless-transition logic
+        is reused exactly.
+        """
+        try:
+            parts = msg.data.split(':')
+            if len(parts) < 2:
+                self.get_logger().warn(
+                    f"rack_status_callback: unexpected format '{msg.data}' — ignoring."
+                )
+                return
+
+            rack_id  = parts[0]
+            status   = int(parts[1])
+            distance = float(parts[2]) if len(parts) > 2 else 0.0
+
+            desired_mode = "red" if status == 1 else "green"
+            status_text  = "FULL"  if status == 1 else "EMPTY"
+
+            self.get_logger().info(
+                f"[Rack {rack_id}] {status_text} (dist={distance:.1f} cm) "
+                f"→ desired mode='{desired_mode}', current follow_mode='{self.follow_mode}', "
+                f"following_red={self.following_red}"
+            )
+
+            # Re-use mode_callback to keep all transition logic consistent
+            synthetic = String()
+            synthetic.data = desired_mode
+            self.mode_callback(synthetic)
+
+        except (ValueError, IndexError) as e:
+            self.get_logger().error(
+                f"rack_status_callback: failed to parse '{msg.data}': {e}"
+            )
 
     # ── Mode callback ──────────────────────────────────────────────────────────
 
@@ -304,6 +388,10 @@ class WebcamLineFollow(Node):
             self.obstacle_detected = False
             self.resume_time = 0.0
             self.following_red = False
+            self._red_lost_frames = 0
+            self.docking_type = 0
+            self.docking_phase = 0
+            self.pending_docking_type = 0
 
     def _publish_state(self, state: str):
         msg = String()
@@ -368,7 +456,7 @@ class WebcamLineFollow(Node):
 
         # ── Red mask: only computed when red mode (or red following) active ──
         # Issue 2: skip all red-mask work in pure green mode to save CPU.
-        RED_STRIP_MIN  = 500
+        RED_STRIP_MIN  = 200
         RED_CENTER_TOL = int(w * 0.45)
 
         if self.follow_mode == "red" or self.following_red:
@@ -405,48 +493,63 @@ class WebcamLineFollow(Node):
                         f"Red tape in strip (px={red_strip_px}, cx={cx_red}) "
                         "— diverting to red line."
                     )
-            self.get_logger().debug(
-                f"Strip check: red_strip_px={red_strip_px}, green_sum={green_sum}"
-            )
+            # Throttled 1-Hz info log so we can see strip values without spam
+            if current_time - self._last_log_time >= 1.0:
+                self.get_logger().info(
+                    f"[RedMode divert check] red_strip_px={red_strip_px}, "
+                    f"green_sum={green_sum}, follow_mode={self.follow_mode}, "
+                    f"following_red={self.following_red}"
+                )
 
         # ── Choose active tracking mask ────────────────────────────────────
         if self.following_red:
             # Once on red, track it in the bottom strip
             mask = mask_red
             mask_sum = int(np.sum(mask))
-            # If red disappears (end of red tape), fall back to green
-            # Issue 5: reuse already-computed red_strip_px instead of recalculating
+            # If red disappears (end of red tape), fall back to green.
+            # Use a debounce counter so a single low-pixel frame doesn't abort
+            # red following — the AGV may briefly lose the line while steering.
             if red_strip_px < 200:
-                self.following_red = False
-                self.get_logger().info("Red line lost — reverting to green tracking.")
-                mask = mask_green
-                mask_sum = green_sum
+                self._red_lost_frames += 1
+                if self._red_lost_frames >= self.RED_LOST_DEBOUNCE:
+                    self.following_red = False
+                    self._red_lost_frames = 0
+                    self.get_logger().info(
+                        f"Red line lost ({self.RED_LOST_DEBOUNCE} consecutive low frames) "
+                        "— reverting to green tracking."
+                    )
+                    mask = mask_green
+                    mask_sum = green_sum
+                else:
+                    self.get_logger().debug(
+                        f"Red low-pixel frame {self._red_lost_frames}/{self.RED_LOST_DEBOUNCE} "
+                        f"(px={red_strip_px}) — holding red tracking."
+                    )
+            else:
+                # Red is visible — reset the lost-frame counter
+                self._red_lost_frames = 0
         else:
             mask = mask_green
             mask_sum = green_sum
 
-        # ── U-turn detection (suppressed in red mode when red visible) ────────
-        if not self.following_red:
-            if not self.u_turning and green_sum > self.EXPLOSION_THRESHOLD:
-                # In red mode, don't U-turn if red tape is present in the strip
-                if self.follow_mode == "green" or red_strip_px < RED_STRIP_MIN:
-                    self.u_turning = True
-                    self.u_turn_start_time = current_time
-                    self.get_logger().warn("Green area explosion detected! Starting green U-turn.")
-
-        # ── Red U-turn detection ───────────────────────────────────────────
-        # When following red and the strip is flooded with red pixels
-        # (robot nose is in a big red zone = end-of-red-section marker),
-        # do a U-turn and wait for the red line to reappear centred.
-        if (self.following_red
-                and not self.red_u_turning
-                and red_strip_sum > self.RED_EXPLOSION_PX):
-            self.red_u_turning         = True
-            self.red_u_turn_start_time = current_time
-            self.get_logger().warn(
-                f"Red area explosion (sum={red_strip_sum}) — starting red U-turn."
-            )
-
+        # ── Docking / Explosion Triggers (Regardless of follow_mode) ─────────
+        if not self.u_turning and not self.red_u_turning and self.docking_type == 0:
+            if green_sum > self.EXPLOSION_THRESHOLD:
+                # Green explosion -> U-turn then Docking 1
+                self.u_turning = True
+                self.u_turn_start_time = current_time
+                self.current_state = "U-TURN"
+                self._publish_state(self.current_state)
+                self.pending_docking_type = 1
+                self.get_logger().warn("Green explosion -> U-TURN (leads to DOCKING 1)")
+            elif red_strip_sum > self.RED_EXPLOSION_PX:
+                # Red explosion -> Docking 2
+                self.docking_type = 2
+                self.docking_phase = 1
+                self.docking_timer = current_time
+                self.current_state = "DOCKING 2"
+                self._publish_state(self.current_state)
+                self.get_logger().warn("Red explosion -> DOCKING 2")
 
         # ── Handle green U-turn ─────────────────────────────────────────────
         if self.u_turning:
@@ -460,17 +563,22 @@ class WebcamLineFollow(Node):
                 if M['m00'] > 0:
                     cx_uturn = int(M['m10'] / M['m00'])
                     err_uturn = cx_uturn - w // 2
-                    line_solid   = green_sum > 50000
+                    line_solid   = green_sum > 100000
                     line_centred = abs(err_uturn) < 80
                     if line_solid and line_centred:
                         self.u_turning = False
-                        self.twist.linear.x = 0.0
-                        self.twist.angular.z = 0.0
-                        self.cmd_vel_pub.publish(self.twist)
-                        self.get_logger().info(
-                            f"Green U-turn completed — cx={cx_uturn}, err={err_uturn}, "
-                            f"mask_sum={green_sum}. Resuming green following."
-                        )
+                        if self.pending_docking_type == 1:
+                            self.docking_type = 1
+                            self.docking_phase = 1
+                            self.current_state = "DOCKING 1"
+                            self._publish_state(self.current_state)
+                            self.pending_docking_type = 0
+                            self.get_logger().info("Green U-turn completed. Entering DOCKING 1.")
+                        else:
+                            self.current_state = "RUNNING"
+                            self._publish_state(self.current_state)
+                            self._current_linear_x = 0.0
+                            self.get_logger().info("Green U-turn completed. Resuming normal line following.")
                     else:
                         self.get_logger().debug(
                             f"Green U-turn check: solid={line_solid}, centred={line_centred} "
@@ -485,25 +593,27 @@ class WebcamLineFollow(Node):
             self.cmd_vel_pub.publish(self.twist)
 
             if current_time - self.red_u_turn_start_time >= self.U_TURN_MIN_TIME:
-                # Look for a thin, centred red line in the strip (not a flood)
+                # Look for a solid, centred red line in the strip (not a flood).
+                # Require red_strip_sum > 100000 (solid line) AND centred,
+                # mirroring the green U-turn line_solid check.
                 if 0 < red_strip_sum < self.RED_EXPLOSION_PX:
                     Mr = cv2.moments(mask_red)
                     if Mr['m00'] > 0:
                         cx_red_ut = int(Mr['m10'] / Mr['m00'])
                         err_red   = cx_red_ut - w // 2
+                        line_solid   = red_strip_sum > 100000
                         line_centred = abs(err_red) < 80
-                        if line_centred:
+                        if line_solid and line_centred:
                             self.red_u_turning = False
-                            self.twist.linear.x = 0.0
-                            self.twist.angular.z = 0.0
-                            self.cmd_vel_pub.publish(self.twist)
+                            self.current_state = "RUNNING"
+                            self._publish_state(self.current_state)
+                            self._current_linear_x = 0.0
                             self.get_logger().info(
-                                f"Red U-turn completed — cx={cx_red_ut}, err={err_red}, "
-                                f"red_strip_sum={red_strip_sum}. Resuming red following."
+                                f"Red U-turn completed — cx={cx_red_ut}, err={err_red}. Resuming RUNNING."
                             )
                         else:
                             self.get_logger().debug(
-                                f"Red U-turn check: centred={line_centred} "
+                                f"Red U-turn check: solid={line_solid}, centred={line_centred} "
                                 f"(err={err_red}, sum={red_strip_sum}) — continuing turn."
                             )
                 else:
@@ -511,6 +621,159 @@ class WebcamLineFollow(Node):
                         f"Red U-turn: waiting for line (sum={red_strip_sum}) — continuing turn."
                     )
             return  # Skip normal PD while red-U-turning
+
+        # ── Handle Docking Protocol ─────────────────────────────────────────
+        if self.docking_type == 1:
+            if self.docking_phase == 1:
+                # Phase 1: Rotate on the spot using PD until aligned with no error
+                M = cv2.moments(mask)
+                if M['m00'] > 0:
+                    cx = int(M['m10'] / M['m00'])
+                    err = cx - w // 2
+                    dt = 0.01 if self.last_time is None else current_time - self.last_time
+                    self.last_time = current_time
+
+                    derivative = (err - self.last_err) / dt
+                    self.last_err = err
+
+                    angular_z = -self.Kp * err - self.Kd * derivative
+                    angular_z = max(min(angular_z, self.MAX_ANG_Z), -self.MAX_ANG_Z)
+
+                    # ── Minimum rotation enforcement for spot-alignment ──
+                    if abs(err) > 10:
+                        if 0 <= angular_z < self.MIN_ANG_Z_DEADZONE:
+                            angular_z = self.MIN_ANG_Z_DEADZONE
+                        elif -self.MIN_ANG_Z_DEADZONE < angular_z <= 0:
+                            angular_z = -self.MIN_ANG_Z_DEADZONE
+                    else:
+                        angular_z = 0.0
+
+                    self.twist.linear.x = 0.0
+                    self.twist.angular.z = angular_z
+                    self.cmd_vel_pub.publish(self.twist)
+
+                    # When aligned
+                    if abs(err) <= 10:
+                        self.docking_phase = 2
+                        self.docking_timer = current_time
+                        self.last_err = 0
+                        self.get_logger().info("Docking 1 Phase 1: Aligned. Moving backward.")
+                else:
+                    # Lost line during alignment
+                    self.twist.linear.x = 0.0
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+
+            elif self.docking_phase == 2:
+                # Phase 2: Move backwards
+                if current_time - self.docking_timer <= 5.0:
+                    self.twist.linear.x = -0.075
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+                else:
+                    self.docking_phase = 3
+                    self.docking_timer = current_time
+                    self.get_logger().info("Docking 1 Phase 2: Done. Phase 3: Waiting.")
+            
+            elif self.docking_phase == 3:
+                # Phase 3: Wait there
+                if current_time - self.docking_timer <= 5.0:
+                    self.twist.linear.x = 0.0
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+                else:
+                    self.docking_type = 0
+                    self.docking_phase = 0
+                    self.current_state = "RUNNING"
+                    self._current_linear_x = 0.0  # Reset slew rate for smooth start
+                    self._publish_state(self.current_state)
+                    self.get_logger().info("Docking 1 complete: Resuming normal line following.")
+            
+            return  # Skip normal PD while docking
+
+        elif self.docking_type == 2:
+            if self.docking_phase == 1:
+                # Phase 1: Move backwards 0.075 for 1s
+                if current_time - self.docking_timer <= 1.0:
+                    self.twist.linear.x = -0.075
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+                else:
+                    self.docking_phase = 2
+                    self.get_logger().info("Docking 2 Phase 1 Done. Aligning...")
+            elif self.docking_phase == 2:
+                # Phase 2: Align with line using PD
+                M = cv2.moments(mask)
+                if M['m00'] > 0:
+                    cx = int(M['m10'] / M['m00'])
+                    err = cx - w // 2
+                    dt = 0.01 if self.last_time is None else current_time - self.last_time
+                    self.last_time = current_time
+
+                    derivative = (err - self.last_err) / dt
+                    self.last_err = err
+
+                    angular_z = -self.Kp * err - self.Kd * derivative
+                    angular_z = max(min(angular_z, self.MAX_ANG_Z), -self.MAX_ANG_Z)
+
+                    # ── Minimum rotation enforcement for spot-alignment ──
+                    if abs(err) > 10:
+                        if 0 <= angular_z < self.MIN_ANG_Z_DEADZONE:
+                            angular_z = self.MIN_ANG_Z_DEADZONE
+                        elif -self.MIN_ANG_Z_DEADZONE < angular_z <= 0:
+                            angular_z = -self.MIN_ANG_Z_DEADZONE
+                    else:
+                        angular_z = 0.0
+
+                    self.twist.linear.x = 0.0
+                    self.twist.angular.z = angular_z
+                    self.cmd_vel_pub.publish(self.twist)
+
+                    if abs(err) <= 10:
+                        self.docking_phase = 3
+                        self.docking_timer = current_time
+                        self.last_err = 0
+                        self.get_logger().info("Docking 2 Phase 2: Aligned. Move forward 5s.")
+                else:
+                    self.twist.linear.x = 0.0
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+
+            elif self.docking_phase == 3:
+                # Phase 3: Move forward at 0.075 for 5s
+                if current_time - self.docking_timer <= 5.0:
+                    self.twist.linear.x = 0.075
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+                else:
+                    self.docking_phase = 4
+                    self.docking_timer = current_time
+                    self.get_logger().info("Docking 2 Phase 3 Done. Hold for 5s.")
+            elif self.docking_phase == 4:
+                # Phase 4: Hold for 5s
+                if current_time - self.docking_timer <= 5.0:
+                    self.twist.linear.x = 0.0
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+                else:
+                    self.docking_phase = 5
+                    self.docking_timer = current_time
+                    self.get_logger().info("Docking 2 Phase 4 Done. Moving backward for 5s.")
+            elif self.docking_phase == 5:
+                # Phase 5: Move backwards then U-turn
+                if current_time - self.docking_timer <= 5.0:
+                    self.twist.linear.x = -0.075
+                    self.twist.angular.z = 0.0
+                    self.cmd_vel_pub.publish(self.twist)
+                else:
+                    self.docking_type = 0
+                    self.docking_phase = 0
+                    self.red_u_turning = True
+                    self.red_u_turn_start_time = current_time
+                    self.current_state = "U-TURN"
+                    self._publish_state(self.current_state)
+                    self.get_logger().info("Docking 2 Phase 5 Done. Triggering U-TURN.")
+            return
 
         # ── Normal PD line-following ───────────────────────────────────
         M = cv2.moments(mask)

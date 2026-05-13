@@ -6,8 +6,8 @@
 
 #include "rosidl_typesupport_interface/macros.h"
 #include "om_msgs/msg/detail/query__functions.h"
-#include "om_msgs/msg/detail/query__struct.h"
 #include "om_msgs/msg/detail/query__type_support.h"
+#include "om_msgs/msg/detail/query__struct.h"
 
 #ifdef __cplusplus
 extern "C"

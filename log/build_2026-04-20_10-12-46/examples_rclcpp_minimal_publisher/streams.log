@@ -1,7 +1,0 @@
-[1.205s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher -- -j14 -l14
-[1.406s] [ 16%] Built target publisher_not_composable
-[1.408s] [ 33%] Built target publisher_lambda
-[1.418s] [ 50%] Built target publisher_wait_for_all_acked
-[1.418s] [ 66%] Built target publisher_member_function
-[1.418s] [ 83%] Built target publisher_member_function_with_unique_network_flow_endpoints
-[1.429s] [100%] Built target publisher_member_function_with_type_adapter

@@ -1,1 +1,0 @@
-ament_cmake_symlink_install_targets("TARGET_FILES" "/home/intern1/ros2_ws/build/om_msgs/rosidl_generator_py/om_msgs/om_msgs_s__rosidl_typesupport_fastrtps_c.so" "TARGETS" "om_msgs_s__rosidl_typesupport_fastrtps_c" "DESTINATION" "lib/python3.12/site-packages/om_msgs")

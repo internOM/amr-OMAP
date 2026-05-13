@@ -1,1 +1,0 @@
-/home/intern1/ros2_ws/om_mvc01/launch/om_MVC01_launch.py

@@ -1,1 +1,1 @@
-/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/path.dsv
+prepend-non-duplicate-if-exists;PATH;bin

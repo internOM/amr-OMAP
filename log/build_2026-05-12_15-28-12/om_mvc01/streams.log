@@ -1,0 +1,23 @@
+[3.624s] Invoking command in '/home/intern1/ros2_ws/om_mvc01': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/om_mvc01/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/om_mvc01 build --build-base /home/intern1/ros2_ws/build/om_mvc01/build install --record /home/intern1/ros2_ws/build/om_mvc01/install.log --single-version-externally-managed install_data
+[4.336s] running egg_info
+[4.383s] writing ../build/om_mvc01/om_mvc01.egg-info/PKG-INFO
+[4.384s] writing dependency_links to ../build/om_mvc01/om_mvc01.egg-info/dependency_links.txt
+[4.384s] writing entry points to ../build/om_mvc01/om_mvc01.egg-info/entry_points.txt
+[4.384s] writing requirements to ../build/om_mvc01/om_mvc01.egg-info/requires.txt
+[4.385s] writing top-level names to ../build/om_mvc01/om_mvc01.egg-info/top_level.txt
+[4.462s] reading manifest file '../build/om_mvc01/om_mvc01.egg-info/SOURCES.txt'
+[4.463s] writing manifest file '../build/om_mvc01/om_mvc01.egg-info/SOURCES.txt'
+[4.463s] running build
+[4.463s] running build_py
+[4.464s] running install
+[4.473s] running install_lib
+[4.503s] running install_data
+[4.504s] running install_egg_info
+[4.536s] removing '/home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages/om_mvc01-0.0.0-py3.12.egg-info' (and everything under it)
+[4.536s] Copying ../build/om_mvc01/om_mvc01.egg-info to /home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages/om_mvc01-0.0.0-py3.12.egg-info
+[4.537s] running install_scripts
+[4.733s] Installing om_mvc01_node script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+[4.733s] Installing om_mvc01_node2 script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+[4.733s] Installing om_mvc01_node3 script to /home/intern1/ros2_ws/install/om_mvc01/lib/om_mvc01
+[4.734s] writing list of installed files to '/home/intern1/ros2_ws/build/om_mvc01/install.log'
+[4.777s] Invoked command in '/home/intern1/ros2_ws/om_mvc01' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/om_mvc01/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/om_mvc01/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/om_mvc01 build --build-base /home/intern1/ros2_ws/build/om_mvc01/build install --record /home/intern1/ros2_ws/build/om_mvc01/install.log --single-version-externally-managed install_data

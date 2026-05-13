@@ -47,6 +47,7 @@ setup(
             'pose_persistence_node = amr_ws.pose_persistence_node:main',
             'agv_audio_node = amr_ws.agv_audio_node:main',
             'hsv_probe_node = amr_ws.hsv_probe_node:main',
+            'rack_websocket_server = amr_ws.rack_websocket_server:main',
         ],
     },
 )

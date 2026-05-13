@@ -43,7 +43,71 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_symlink_install/ament_cmake_symlink_install.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation" TYPE DIRECTORY FILES
+    "/home/intern1/ros2_ws/src/ros2-slam-auto-navigation/config"
+    "/home/intern1/ros2_ws/src/ros2-slam-auto-navigation/description"
+    "/home/intern1/ros2_ws/src/ros2-slam-auto-navigation/launch"
+    "/home/intern1/ros2_ws/src/ros2-slam-auto-navigation/worlds"
+    )
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/package_run_dependencies" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/ros2_slam_auto_navigation")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/parent_prefix_path" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/ros2_slam_auto_navigation")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation/environment" TYPE FILE FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation/environment" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/ament_prefix_path.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation/environment" TYPE FILE FILES "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation/environment" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/path.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/local_setup.bash")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/local_setup.sh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/local_setup.zsh")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/local_setup.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_environment_hooks/package.dsv")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/packages" TYPE FILE FILES "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_index/share/ament_index/resource_index/packages/ros2_slam_auto_navigation")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation/cmake" TYPE FILE FILES
+    "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_core/ros2_slam_auto_navigationConfig.cmake"
+    "/home/intern1/ros2_ws/build/ros2_slam_auto_navigation/ament_cmake_core/ros2_slam_auto_navigationConfig-version.cmake"
+    )
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ros2_slam_auto_navigation" TYPE FILE FILES "/home/intern1/ros2_ws/src/ros2-slam-auto-navigation/package.xml")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

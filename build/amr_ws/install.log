@@ -14,6 +14,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/orchestrator_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/hsv_probe_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/pose_persistence_node.py
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/rack_websocket_server.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/return_home_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/webcam_line_follow.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/path_publisher.py
@@ -33,6 +34,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/orchestrator_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/hsv_probe_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/pose_persistence_node.cpython-312.pyc
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/rack_websocket_server.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/return_home_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/webcam_line_follow.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/path_publisher.cpython-312.pyc
@@ -65,5 +67,6 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/path_logger
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/path_publisher
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/pose_persistence_node
+/home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/rack_websocket_server
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/return_home_node
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/webcam_line_follow

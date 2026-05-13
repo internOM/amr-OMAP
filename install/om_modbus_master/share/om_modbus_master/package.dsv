@@ -1,4 +1,8 @@
+source;share/om_modbus_master/hook/cmake_prefix_path.ps1
+source;share/om_modbus_master/hook/cmake_prefix_path.dsv
+source;share/om_modbus_master/hook/cmake_prefix_path.sh
 source;share/om_modbus_master/local_setup.bash
 source;share/om_modbus_master/local_setup.dsv
+source;share/om_modbus_master/local_setup.ps1
 source;share/om_modbus_master/local_setup.sh
 source;share/om_modbus_master/local_setup.zsh

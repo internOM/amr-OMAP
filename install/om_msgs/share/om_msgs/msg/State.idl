@@ -1,1 +1,16 @@
-/home/intern1/ros2_ws/build/om_msgs/rosidl_adapter/om_msgs/msg/State.idl
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from om_msgs/msg/State.msg
+// generated code does not contain a copyright notice
+
+
+module om_msgs {
+  module msg {
+    struct State {
+      int8 state_driver;
+
+      int8 state_mes;
+
+      int8 state_error;
+    };
+  };
+};

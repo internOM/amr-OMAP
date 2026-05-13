@@ -1,1 +1,0 @@
-/home/intern1/ros2_ws/src/amr_ws/launch/slam_toolbox_launch.py

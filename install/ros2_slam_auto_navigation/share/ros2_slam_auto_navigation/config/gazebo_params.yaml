@@ -1,1 +1,3 @@
-/home/intern1/ros2_ws/src/ros2-slam-auto-navigation/config/gazebo_params.yaml
+gazebo:
+  ros_parameters:
+    publish_rate: 400.0

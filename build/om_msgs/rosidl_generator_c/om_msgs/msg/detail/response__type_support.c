@@ -4,9 +4,9 @@
 
 #include <string.h>
 
-#include "rosidl_typesupport_interface/macros.h"
 #include "om_msgs/msg/detail/response__struct.h"
 #include "om_msgs/msg/detail/response__type_support.h"
+#include "rosidl_typesupport_interface/macros.h"
 #include "om_msgs/msg/detail/response__functions.h"
 
 #ifdef __cplusplus

@@ -1,1 +1,12 @@
-/home/intern1/ros2_ws/build/om_msgs/rosidl_generator_cpp/om_msgs/msg/state.hpp
+// generated from rosidl_generator_cpp/resource/idl.hpp.em
+// generated code does not contain a copyright notice
+
+#ifndef OM_MSGS__MSG__STATE_HPP_
+#define OM_MSGS__MSG__STATE_HPP_
+
+#include "om_msgs/msg/detail/state__struct.hpp"
+#include "om_msgs/msg/detail/state__builder.hpp"
+#include "om_msgs/msg/detail/state__traits.hpp"
+#include "om_msgs/msg/detail/state__type_support.hpp"
+
+#endif  // OM_MSGS__MSG__STATE_HPP_
