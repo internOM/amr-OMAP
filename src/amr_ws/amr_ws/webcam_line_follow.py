@@ -25,10 +25,10 @@ import time
 #    3  │ 0.25 – 0.50 m │   90°  (±45°)
 #    4  │ 0.50 – 0.75 m │  120°  (±60°)
 SAFETY_TIERS = [
-    (0.15, 22.5),   # zone 1: very close  → narrow  45° cone
-    (0.25, 30.0),   # zone 2: close       → narrow  60° cone
-    (0.50, 45.0),   # zone 3: medium      → medium  90° cone
-    (0.75, 60.0),   # zone 4: far         → wide   120° cone
+    (0.225, 90.0),    # zone 1: very close  → narrow  90.0° cone
+    (0.3182, 45.0),   # zone 2: close       → narrow  45.0° cone
+    (0.45, 30.0),     # zone 3: medium      → medium  30.0° cone
+    (0.5880, 22.5),   # zone 4: far         → wide    22.5° cone
 ]
 
 # ── Obstacle debounce & slew-rate constants ────────────────────────────────────
@@ -113,11 +113,9 @@ class WebcamLineFollow(Node):
 
         # ── U-turn detection thresholds ────────────────────────────────
         self.EXPLOSION_THRESHOLD     = 1350000  # green strip sum → green U-turn
-        self.RED_EXPLOSION_PX        = 1350000  # red strip pixels → red U-turn
+        self.RED_EXPLOSION_PX        = 900000  # red strip pixels → red U-turn
         self.u_turning               = False
         self.u_turn_start_time       = None
-        self.red_u_turning           = False
-        self.red_u_turn_start_time   = None
         self.U_TURN_MIN_TIME         = 2.0      # seconds before checking for line again
 
         # Debounce for "red line lost": number of consecutive frames with
@@ -155,6 +153,14 @@ class WebcamLineFollow(Node):
     # ── LiDAR safety callback ──────────────────────────────────────────────────
 
     def scan_callback(self, msg: LaserScan):
+        # ── Override: Ignore obstacles during Docking and U-Turns ──────────────────────
+        if self.docking_type in (1, 2) or self.u_turning:
+            if self.obstacle_detected:
+                self.obstacle_detected = False
+                self._clear_frame_count = 0
+                self.resume_time = 0.0
+            return
+
         """
         Tiered safety-cone obstacle check.
 
@@ -331,14 +337,23 @@ class WebcamLineFollow(Node):
                 self.get_logger().info(
                     "Mode → green: stopped red tracking — reverting to green follow."
                 )
-            # A red U-turn is red-specific; cancel it so the robot resumes
-            # green following without finishing an irrelevant manoeuvre.
-            if self.red_u_turning:
-                self.red_u_turning = False
-                self.red_u_turn_start_time = None
+            # Docking 2 and its subsequent U-Turn are red-specific manoeuvres;
+            # cancel them so the robot resumes green following without finishing
+            # an irrelevant manoeuvre.
+            if self.docking_type == 2:
+                self.docking_type = 0
+                self.docking_phase = 0
+                self.current_state = "RUNNING"
+                self._publish_state(self.current_state)
+                self.get_logger().info("Mode → green: cancelled active Docking 2.")
+            elif self.u_turning and self.pending_docking_type == 0:
+                self.u_turning = False
+                self.u_turn_start_time = None
+                self.current_state = "RUNNING"
+                self._publish_state(self.current_state)
                 self.get_logger().info("Mode → green: cancelled active red U-turn.")
-            # NOTE: green U-turn (u_turning) and PD state are left intact —
-            # the robot keeps moving without any jolt.
+            # NOTE: green U-turn (u_turning with pending_docking_type=1) and PD state
+            # are left intact — the robot keeps moving without any jolt.
 
         else:  # mode == "red"
             # ── Green → Red transition ─────────────────────────────────
@@ -454,27 +469,21 @@ class WebcamLineFollow(Node):
         mask_green  = cv2.inRange(hsv_strip, lower_green, upper_green)
         green_sum   = int(np.sum(mask_green))
 
-        # ── Red mask: only computed when red mode (or red following) active ──
-        # Issue 2: skip all red-mask work in pure green mode to save CPU.
+        # ── Red mask: Computed on every frame so explosions trigger regardless of mode
         RED_STRIP_MIN  = 200
         RED_CENTER_TOL = int(w * 0.45)
 
-        if self.follow_mode == "red" or self.following_red:
-            lower_red_lo = np.array([  0,  60,  60])
-            upper_red_lo = np.array([ 25, 255, 255])
-            lower_red_hi = np.array([140,  60,  60])
-            upper_red_hi = np.array([180, 255, 255])
-            mask_red = cv2.bitwise_or(
-                cv2.inRange(hsv_strip, lower_red_lo, upper_red_lo),
-                cv2.inRange(hsv_strip, lower_red_hi, upper_red_hi)
-            )
-            # Issue 5: compute pixel count once and reuse everywhere below
-            red_strip_px  = int(np.sum(mask_red > 0))
-            red_strip_sum = int(np.sum(mask_red))
-        else:
-            mask_red      = None
-            red_strip_px  = 0
-            red_strip_sum = 0
+        lower_red_lo = np.array([  0,  60,  60])
+        upper_red_lo = np.array([ 25, 255, 255])
+        lower_red_hi = np.array([140,  60,  60])
+        upper_red_hi = np.array([180, 255, 255])
+        
+        mask_red = cv2.bitwise_or(
+            cv2.inRange(hsv_strip, lower_red_lo, upper_red_lo),
+            cv2.inRange(hsv_strip, lower_red_hi, upper_red_hi)
+        )
+        red_strip_px  = int(np.sum(mask_red > 0))
+        red_strip_sum = int(np.sum(mask_red))
 
         # ── Red intersection divert check (red mode only) ──────────────────
         # Trigger: red tape appears in the bottom tracking strip alongside
@@ -509,7 +518,9 @@ class WebcamLineFollow(Node):
             # If red disappears (end of red tape), fall back to green.
             # Use a debounce counter so a single low-pixel frame doesn't abort
             # red following — the AGV may briefly lose the line while steering.
-            if red_strip_px < 200:
+            if self.docking_type != 0 or self.u_turning:
+                self._red_lost_frames = 0
+            elif red_strip_px < 200:
                 self._red_lost_frames += 1
                 if self._red_lost_frames >= self.RED_LOST_DEBOUNCE:
                     self.following_red = False
@@ -533,7 +544,7 @@ class WebcamLineFollow(Node):
             mask_sum = green_sum
 
         # ── Docking / Explosion Triggers (Regardless of follow_mode) ─────────
-        if not self.u_turning and not self.red_u_turning and self.docking_type == 0:
+        if not self.u_turning and self.docking_type == 0:
             if green_sum > self.EXPLOSION_THRESHOLD:
                 # Green explosion -> U-turn then Docking 1
                 self.u_turning = True
@@ -551,7 +562,7 @@ class WebcamLineFollow(Node):
                 self._publish_state(self.current_state)
                 self.get_logger().warn("Red explosion -> DOCKING 2")
 
-        # ── Handle green U-turn ─────────────────────────────────────────────
+        # ── Handle U-turn (Universal for active line color) ──────────────────
         if self.u_turning:
             self.twist.linear.x = 0.0
             self.twist.angular.z = -0.25
@@ -559,68 +570,37 @@ class WebcamLineFollow(Node):
 
             # Only check for line after minimum U-turn time
             if current_time - self.u_turn_start_time >= self.U_TURN_MIN_TIME:
-                M = cv2.moments(mask_green)
-                if M['m00'] > 0:
-                    cx_uturn = int(M['m10'] / M['m00'])
-                    err_uturn = cx_uturn - w // 2
-                    line_solid   = green_sum > 100000
-                    line_centred = abs(err_uturn) < 80
-                    if line_solid and line_centred:
-                        self.u_turning = False
-                        if self.pending_docking_type == 1:
-                            self.docking_type = 1
-                            self.docking_phase = 1
-                            self.current_state = "DOCKING 1"
-                            self._publish_state(self.current_state)
-                            self.pending_docking_type = 0
-                            self.get_logger().info("Green U-turn completed. Entering DOCKING 1.")
-                        else:
-                            self.current_state = "RUNNING"
-                            self._publish_state(self.current_state)
-                            self._current_linear_x = 0.0
-                            self.get_logger().info("Green U-turn completed. Resuming normal line following.")
-                    else:
-                        self.get_logger().debug(
-                            f"Green U-turn check: solid={line_solid}, centred={line_centred} "
-                            f"(err={err_uturn}, mask_sum={green_sum}) — continuing turn."
-                        )
-            return  # Skip normal PD while U-turning
-
-        # ── Handle red U-turn ───────────────────────────────────────────────
-        if self.red_u_turning:
-            self.twist.linear.x = 0.0
-            self.twist.angular.z = -0.25
-            self.cmd_vel_pub.publish(self.twist)
-
-            if current_time - self.red_u_turn_start_time >= self.U_TURN_MIN_TIME:
-                # Look for a solid, centred red line in the strip (not a flood).
-                # Require red_strip_sum > 100000 (solid line) AND centred,
-                # mirroring the green U-turn line_solid check.
-                if 0 < red_strip_sum < self.RED_EXPLOSION_PX:
-                    Mr = cv2.moments(mask_red)
-                    if Mr['m00'] > 0:
-                        cx_red_ut = int(Mr['m10'] / Mr['m00'])
-                        err_red   = cx_red_ut - w // 2
-                        line_solid   = red_strip_sum > 100000
-                        line_centred = abs(err_red) < 80
+                if 0 < mask_sum < max(self.EXPLOSION_THRESHOLD, self.RED_EXPLOSION_PX):
+                    M = cv2.moments(mask)
+                    if M['m00'] > 0:
+                        cx_uturn = int(M['m10'] / M['m00'])
+                        err_uturn = cx_uturn - w // 2
+                        line_solid   = mask_sum > 100000
+                        line_centred = abs(err_uturn) < 80
                         if line_solid and line_centred:
-                            self.red_u_turning = False
-                            self.current_state = "RUNNING"
-                            self._publish_state(self.current_state)
-                            self._current_linear_x = 0.0
-                            self.get_logger().info(
-                                f"Red U-turn completed — cx={cx_red_ut}, err={err_red}. Resuming RUNNING."
-                            )
+                            self.u_turning = False
+                            if self.pending_docking_type == 1:
+                                self.docking_type = 1
+                                self.docking_phase = 1
+                                self.current_state = "DOCKING 1"
+                                self._publish_state(self.current_state)
+                                self.pending_docking_type = 0
+                                self.get_logger().info("U-turn completed. Entering DOCKING 1.")
+                            else:
+                                self.current_state = "RUNNING"
+                                self._publish_state(self.current_state)
+                                self._current_linear_x = 0.0
+                                self.get_logger().info("U-turn completed. Resuming normal line following.")
                         else:
                             self.get_logger().debug(
-                                f"Red U-turn check: solid={line_solid}, centred={line_centred} "
-                                f"(err={err_red}, sum={red_strip_sum}) — continuing turn."
+                                f"U-turn check: solid={line_solid}, centred={line_centred} "
+                                f"(err={err_uturn}, mask_sum={mask_sum}) — continuing turn."
                             )
                 else:
                     self.get_logger().debug(
-                        f"Red U-turn: waiting for line (sum={red_strip_sum}) — continuing turn."
+                        f"U-turn: waiting for line (sum={mask_sum}) — continuing turn."
                     )
-            return  # Skip normal PD while red-U-turning
+            return  # Skip normal PD while U-turning
 
         # ── Handle Docking Protocol ─────────────────────────────────────────
         if self.docking_type == 1:
@@ -694,7 +674,7 @@ class WebcamLineFollow(Node):
         elif self.docking_type == 2:
             if self.docking_phase == 1:
                 # Phase 1: Move backwards 0.075 for 1s
-                if current_time - self.docking_timer <= 1.0:
+                if current_time - self.docking_timer <= 1.5:
                     self.twist.linear.x = -0.075
                     self.twist.angular.z = 0.0
                     self.cmd_vel_pub.publish(self.twist)
@@ -768,8 +748,8 @@ class WebcamLineFollow(Node):
                 else:
                     self.docking_type = 0
                     self.docking_phase = 0
-                    self.red_u_turning = True
-                    self.red_u_turn_start_time = current_time
+                    self.u_turning = True
+                    self.u_turn_start_time = current_time
                     self.current_state = "U-TURN"
                     self._publish_state(self.current_state)
                     self.get_logger().info("Docking 2 Phase 5 Done. Triggering U-TURN.")
