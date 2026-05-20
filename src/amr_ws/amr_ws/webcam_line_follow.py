@@ -1,12 +1,15 @@
 #-----WARNING-----------------------------------------
-#This code was first written by an Intern, which will be projected to be passed down to interns after interns
+#This code was first written by an Intern, which has been projected to be passed down to interns after interns
 
-#When I first wrote this code, only God and me know how this worked.
+#When I first wrote this code, only God and me knew how this worked.
 #Now, only God knows how this code works.
 
 #This code works to a certain extent, and if you add features, be wary of the hours you will have to spend debugging.
 #Always remember to push to GitHub to save your progress. 
+
 #Hours spent debugging: 120
+#First Intern: Tan Dong Xu
+#Second Intern: Tang Wei Lun
 #-----WARNING-----------------------------------------
 
 #!/usr/bin/env python3
