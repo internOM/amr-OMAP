@@ -1009,6 +1009,12 @@
             } else if (msg.data === "U-TURN") {
                 setDisplayState("U-TURN", "waiting", "U-Turn active");
                 setAgvRunning(true);
+            } else if (msg.data === "WAITING \u2014 NO RACK") {
+                setDisplayState("NO RACK", "stopped", "No rack available \u2014 AGV holding");
+                setAgvRunning(false);
+            } else if (msg.data === "WAITING \u2014 CONFIRM") {
+                setDisplayState("CONFIRM GO", "waiting", "Sensor blocked \u2014 press GO to confirm and continue");
+                setAgvRunning(false);
             }
 
             // Watchdog: If no status published after 3 seconds, node is offline
