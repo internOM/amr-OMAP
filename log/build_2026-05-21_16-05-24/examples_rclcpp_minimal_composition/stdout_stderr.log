@@ -1,0 +1,3 @@
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'libcomposition_nodes.so'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:143: CMakeFiles/composition_nodes.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

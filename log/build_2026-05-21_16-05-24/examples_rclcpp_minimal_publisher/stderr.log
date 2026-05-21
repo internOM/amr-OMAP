@@ -1,0 +1,14 @@
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_lambda'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:147: CMakeFiles/publisher_lambda.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_member_function_with_unique_network_flow_endpoints'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:225: CMakeFiles/publisher_member_function_with_unique_network_flow_endpoints.dir/all] Error 2
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_member_function_with_type_adapter'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:199: CMakeFiles/publisher_member_function_with_type_adapter.dir/all] Error 2
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_member_function'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:173: CMakeFiles/publisher_member_function.dir/all] Error 2
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_wait_for_all_acked'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:251: CMakeFiles/publisher_wait_for_all_acked.dir/all] Error 2
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_not_composable'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:277: CMakeFiles/publisher_not_composable.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rack Monitoring Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- ROSLibJS Fallback -->
+    <script src="roslib.min.js"></script>
+    <style>
+        :root {
+            --bg-color: hsl(222, 25%, 7%);
+            --panel-bg: hsla(222, 20%, 12%, 0.6);
+            --card-bg: hsla(222, 15%, 16%, 0.4);
+            --card-bg-hover: hsla(222, 15%, 20%, 0.6);
+            
+            --border-color: hsla(222, 20%, 25%, 0.4);
+            --border-glow: hsla(222, 20%, 35%, 0.2);
+            --text-main: hsl(0, 0%, 95%);
+            --text-muted: hsl(215, 20%, 65%);
+            
+            /* Status Colors */
+            --color-empty: hsl(142, 70%, 45%);
+            --color-empty-glow: hsla(142, 70%, 45%, 0.25);
+            --color-full: hsl(38, 92%, 50%);
+            --color-full-glow: hsla(38, 92%, 50%, 0.25);
+            --color-disconnected: hsl(215, 12%, 35%);
+            --color-disconnected-glow: hsla(350, 70%, 50%, 0.15);
+            
+            --glow-pulse-red: hsla(350, 70%, 50%, 0.4);
+            --glow-pulse-green: hsla(142, 70%, 45%, 0.4);
+            --glow-pulse-amber: hsla(38, 92%, 50%, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, hsla(222, 30%, 15%, 0.5) 0px, transparent 50%),
+                radial-gradient(at 90% 10%, hsla(280, 30%, 15%, 0.3) 0px, transparent 50%),
+                radial-gradient(at 50% 90%, hsla(190, 30%, 15%, 0.4) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding: 1.5rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Glassmorphic Panel Styles */
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            padding: 1.25rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Control Panel */
+        .control-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-row {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.1rem;
+        }
+
+        .input-row input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 0.45rem 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .input-row input[name="ip"] {
+            width: 130px;
+        }
+
+        .input-row input[name="port"] {
+            width: 60px;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .select-group {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .select-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.5rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .select-btn.active {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-connect {
+            background: linear-gradient(135deg, hsl(200, 80%, 50%) 0%, hsl(220, 80%, 40%) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.55rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            align-self: flex-end;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-connect:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
+        }
+
+        .btn-connect:active {
+            transform: translateY(1px);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            height: 38px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-disconnected);
+            box-shadow: 0 0 8px var(--color-disconnected);
+            display: inline-block;
+        }
+
+        .status-dot.connected {
+            background-color: var(--color-empty);
+            box-shadow: 0 0 10px var(--color-empty);
+            animation: pulse-glow-green 2s infinite;
+        }
+
+        .status-dot.connecting {
+            background-color: var(--color-full);
+            box-shadow: 0 0 10px var(--color-full);
+            animation: pulse-glow-amber 1s infinite;
+        }
+
+        /* Racks Grid Container */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .rack-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rack-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+
+        .rack-title {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .rack-title svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-muted);
+        }
+
+        .rack-title h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .rack-summary {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Physical Rack Shelf Visualizer */
+        .rack-visualizer {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem; /* Space between shelf layers */
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        /* 3 Layers shelf layout */
+        .shelf-layer {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Columns: Column A and Column B */
+            gap: 0.75rem;
+            position: relative;
+            padding-bottom: 0.4rem;
+        }
+
+        /* Shelf beam styling below each layer */
+        .shelf-layer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #374151 0%, #1f2937 50%, #374151 100%);
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .layer-label {
+            grid-column: span 2;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-left: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Individual Rack Slot Card */
+        .rack-slot {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .rack-slot:hover {
+            background: var(--card-bg-hover);
+            transform: translateY(-2px);
+            border-color: var(--text-muted);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .slot-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slot-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: -0.2px;
+        }
+
+        .slot-col-indicator {
+            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Slot statuses visual */
+        .slot-status-box {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0;
+        }
+
+        .status-icon-bg {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-text-val {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .slot-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 0.4rem;
+            margin-top: 0.2rem;
+        }
+
+        .distance-label {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Dynamic Status States styling */
+        
+        /* 1. EMPTY Status */
+        .rack-slot.state-empty {
+            border-color: var(--color-empty-glow);
+            box-shadow: inset 0 0 12px var(--color-empty-glow);
+        }
+        .rack-slot.state-empty .status-icon-bg {
+            background-color: var(--color-empty-glow);
+            color: var(--color-empty);
+        }
+        .rack-slot.state-empty .status-text-val {
+            color: var(--color-empty);
+        }
+
+        /* 2. FULL Status */
+        .rack-slot.state-full {
+            border-color: var(--color-full-glow);
+            box-shadow: inset 0 0 12px var(--color-full-glow);
+        }
+        .rack-slot.state-full .status-icon-bg {
+            background-color: var(--color-full-glow);
+            color: var(--color-full);
+        }
+        .rack-slot.state-full .status-text-val {
+            color: var(--color-full);
+        }
+
+        /* 3. DISCONNECTED / INACTIVE Status */
+        .rack-slot.state-disconnected {
+            opacity: 0.65;
+            border-color: hsla(350, 40%, 45%, 0.15);
+        }
+        .rack-slot.state-disconnected:hover {
+            opacity: 0.9;
+        }
+        .rack-slot.state-disconnected .status-icon-bg {
+            background-color: rgba(255, 255, 255, 0.04);
+            color: var(--color-disconnected);
+        }
+        .rack-slot.state-disconnected .status-text-val {
+            color: var(--color-disconnected);
+        }
+        /* Disconnected pulsing glow ring */
+        .rack-slot.state-disconnected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background-color: hsl(350, 60%, 45%);
+            animation: pulse-glow-red 2.5s infinite;
+        }
+
+        /* Terminal Console */
+        .terminal-panel {
+            display: flex;
+            flex-direction: column;
+            height: 180px;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .terminal-title svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-muted);
+        }
+
+        .terminal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .term-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .term-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-body {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0.6rem 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.4;
+            color: hsl(200, 20%, 80%);
+            border: 1px solid rgba(0,0,0,0.25);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .log-entry {
+            margin-bottom: 0.25rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .log-time {
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .log-tag {
+            color: hsl(200, 80%, 65%);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .log-tag.update {
+            color: hsl(38, 92%, 60%);
+        }
+
+        .log-tag.system {
+            color: hsl(280, 80%, 70%);
+        }
+
+        .log-tag.error {
+            color: hsl(350, 70%, 55%);
+        }
+
+        .log-msg {
+            word-break: break-all;
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Animations */
+        @keyframes pulse-glow-green {
+            0% { box-shadow: 0 0 0 0 var(--glow-pulse-green); }
+            70% { box-shadow: 0 0 0 6px rgba(142, 70, 45, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(142, 70, 45, 0); }
+        }
+
+        @keyframes pulse-glow-amber {
+            0% { box-shadow: 0 0 0 0 var(--glow-pulse-amber); }
+            70% { box-shadow: 0 0 0 6px rgba(38, 92, 50, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(38, 92, 50, 0); }
+        }
+
+        @keyframes pulse-glow-red {
+            0% { box-shadow: 0 0 0 0 var(--glow-pulse-red); }
+            70% { box-shadow: 0 0 0 6px rgba(250, 50, 50, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(250, 50, 50, 0); }
+        }
+
+        /* Responsiveness adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 0.75rem;
+            }
+            .control-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .status-badge {
+                margin-left: 0;
+                justify-content: center;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>RACK MONITORING DASHBOARD</h1>
+            <p>Smart Ultrasonic Shelf Sensor Analytics & Fleet Connectivity</p>
+        </div>
+    </header>
+
+    <!-- Top Connection & Control Bar -->
+    <div class="glass-panel control-bar">
+        <div class="input-group">
+            <label>Bridge Connection Mode</label>
+            <div class="select-group">
+                <button type="button" class="select-btn active" id="mode-direct" onclick="setMode('direct')">Direct WS (Port 8001)</button>
+                <button type="button" class="select-btn" id="mode-ros" onclick="setMode('ros')">ROSBridge (Port 9090)</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Network IP & Port</label>
+            <div class="input-row">
+                <input type="text" name="ip" id="conn-ip" placeholder="localhost" value="">
+                <input type="text" name="port" id="conn-port" placeholder="8000" value="8000">
+            </div>
+        </div>
+
+        <button class="btn-connect" onclick="toggleConnection()">
+            <svg id="conn-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 0 1 0 12.73M6.16 6.84a9 9 0 0 0 0 12.73M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+            </svg>
+            <span id="conn-btn-text">Connect</span>
+        </button>
+
+        <div class="status-badge">
+            <span class="status-dot" id="connection-dot"></span>
+            <span id="connection-status-text" style="font-weight: 600;">Disconnected</span>
+        </div>
+    </div>
+
+    <!-- Main Visual Grid of Racks -->
+    <div class="dashboard-grid">
+        
+        <!-- STORE RACK PANEL -->
+        <div class="glass-panel rack-panel">
+            <div class="rack-header">
+                <div class="rack-title">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4v-4h4v4zm0-5h-4V9h4v4z"/>
+                    </svg>
+                    <h2>STORE STATION RACK</h2>
+                </div>
+                <div class="rack-summary" id="store-summary">Disconnected</div>
+            </div>
+            
+            <div class="rack-visualizer">
+                
+                <!-- LAYER 3 (TOP) -->
+                <div class="layer-label"><span>Layer 3 (Top)</span></div>
+                <div class="shelf-layer" id="store-layer-3">
+                    <!-- Store-A3 -->
+                    <div class="rack-slot state-disconnected" id="slot-Store-A3">
+                        <div class="slot-meta">
+                            <span class="slot-id">A3</span>
+                            <span class="slot-col-indicator">COL A</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-Store-A3">-- cm</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Store-B3 -->
+                    <div class="rack-slot state-disconnected" id="slot-Store-B3">
+                        <div class="slot-meta">
+                            <span class="slot-id">B3</span>
+                            <span class="slot-col-indicator">COL B</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-Store-B3">-- cm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 2 (MIDDLE) -->
+                <div class="layer-label"><span>Layer 2 (Middle)</span></div>
+                <div class="shelf-layer" id="store-layer-2">
+                    <!-- Store-A2 -->
+                    <div class="rack-slot state-disconnected" id="slot-Store-A2">
+                        <div class="slot-meta">
+                            <span class="slot-id">A2</span>
+                            <span class="slot-col-indicator">COL A</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-Store-A2">-- cm</span>
+                        </div>
+                    </div>
+
+                    <!-- Store-B2 -->
+                    <div class="rack-slot state-disconnected" id="slot-Store-B2">
+                        <div class="slot-meta">
+                            <span class="slot-id">B2</span>
+                            <span class="slot-col-indicator">COL B</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-Store-B2">-- cm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 1 (BOTTOM) -->
+                <div class="layer-label"><span>Layer 1 (Bottom)</span></div>
+                <div class="shelf-layer" id="store-layer-1">
+                    <!-- Store-A1 -->
+                    <div class="rack-slot state-disconnected" id="slot-Store-A1">
+                        <div class="slot-meta">
+                            <span class="slot-id">A1</span>
+                            <span class="slot-col-indicator">COL A</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-Store-A1">-- cm</span>
+                        </div>
+                    </div>
+
+                    <!-- Store-B1 -->
+                    <div class="rack-slot state-disconnected" id="slot-Store-B1">
+                        <div class="slot-meta">
+                            <span class="slot-id">B1</span>
+                            <span class="slot-col-indicator">COL B</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-Store-B1">-- cm</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CAPP RACK PANEL -->
+        <div class="glass-panel rack-panel">
+            <div class="rack-header">
+                <div class="rack-title">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4v-4h4v4zm0-5h-4V9h4v4z"/>
+                    </svg>
+                    <h2>CA-PP STATION RACK</h2>
+                </div>
+                <div class="rack-summary" id="capp-summary">Disconnected</div>
+            </div>
+            
+            <div class="rack-visualizer">
+                
+                <!-- LAYER 3 (TOP) -->
+                <div class="layer-label"><span>Layer 3 (Top)</span></div>
+                <div class="shelf-layer" id="capp-layer-3">
+                    <!-- CAPP-A3 -->
+                    <div class="rack-slot state-disconnected" id="slot-CAPP-A3">
+                        <div class="slot-meta">
+                            <span class="slot-id">A3</span>
+                            <span class="slot-col-indicator">COL A</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-CAPP-A3">-- cm</span>
+                        </div>
+                    </div>
+                    
+                    <!-- CAPP-B3 -->
+                    <div class="rack-slot state-disconnected" id="slot-CAPP-B3">
+                        <div class="slot-meta">
+                            <span class="slot-id">B3</span>
+                            <span class="slot-col-indicator">COL B</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-CAPP-B3">-- cm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 2 (MIDDLE) -->
+                <div class="layer-label"><span>Layer 2 (Middle)</span></div>
+                <div class="shelf-layer" id="capp-layer-2">
+                    <!-- CAPP-A2 -->
+                    <div class="rack-slot state-disconnected" id="slot-CAPP-A2">
+                        <div class="slot-meta">
+                            <span class="slot-id">A2</span>
+                            <span class="slot-col-indicator">COL A</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-CAPP-A2">-- cm</span>
+                        </div>
+                    </div>
+
+                    <!-- CAPP-B2 -->
+                    <div class="rack-slot state-disconnected" id="slot-CAPP-B2">
+                        <div class="slot-meta">
+                            <span class="slot-id">B2</span>
+                            <span class="slot-col-indicator">COL B</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-CAPP-B2">-- cm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAYER 1 (BOTTOM) -->
+                <div class="layer-label"><span>Layer 1 (Bottom)</span></div>
+                <div class="shelf-layer" id="capp-layer-1">
+                    <!-- CAPP-A1 -->
+                    <div class="rack-slot state-disconnected" id="slot-CAPP-A1">
+                        <div class="slot-meta">
+                            <span class="slot-id">A1</span>
+                            <span class="slot-col-indicator">COL A</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-CAPP-A1">-- cm</span>
+                        </div>
+                    </div>
+
+                    <!-- CAPP-B1 -->
+                    <div class="rack-slot state-disconnected" id="slot-CAPP-B1">
+                        <div class="slot-meta">
+                            <span class="slot-id">B1</span>
+                            <span class="slot-col-indicator">COL B</span>
+                        </div>
+                        <div class="slot-status-box">
+                            <div class="status-icon-bg">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                            </div>
+                            <span class="status-text-val">INACTIVE</span>
+                        </div>
+                        <div class="slot-details">
+                            <span>Distance</span>
+                            <span class="distance-label" id="dist-CAPP-B1">-- cm</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Retro Log Terminal -->
+    <div class="glass-panel terminal-panel">
+        <div class="terminal-header">
+            <div class="terminal-title">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM8 10H6V8h2v2zm4 0h-2V8h2v2zm8 8H4v-4h16v4zm0-5H4V9h16v4z"/>
+                </svg>
+                <span>Analytics Engine Log Output</span>
+            </div>
+            <div class="terminal-actions">
+                <button class="term-btn" onclick="clearLogs()">Clear Output</button>
+            </div>
+        </div>
+        <div class="terminal-body" id="log-terminal">
+            <div class="log-entry">
+                <span class="log-time">[--:--:--]</span>
+                <span class="log-tag system">SYSTEM</span>
+                <span class="log-msg">Dashboard initialized. Configure details above and click Connect.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Setup initial default IP on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const defaultIp = window.location.hostname || 'localhost';
+            document.getElementById('conn-ip').value = defaultIp;
+            addLog("SYSTEM", "Default connection host configured to " + defaultIp);
+        });
+
+        // Config variables
+        let socketMode = 'direct'; // 'direct' or 'ros'
+        let socketConnection = null;
+        let rosClient = null;
+        let rosTopic = null;
+        let isConnected = false;
+
+        // Visual constants for mapping
+        const RACK_IDS = [
+            "Store-A1", "Store-A2", "Store-A3",
+            "Store-B1", "Store-B2", "Store-B3",
+            "CAPP-A1", "CAPP-A2", "CAPP-A3",
+            "CAPP-B1", "CAPP-B2", "CAPP-B3"
+        ];
+
+        // Track states locally
+        const rackStates = {};
+        RACK_IDS.forEach(id => {
+            rackStates[id] = { status: -1, distance: 0.0 };
+        });
+
+        function setMode(mode) {
+            if (isConnected) {
+                addLog("SYSTEM", "Please disconnect before changing connection modes.", "error");
+                return;
+            }
+            
+            socketMode = mode;
+            document.getElementById('mode-direct').classList.toggle('active', mode === 'direct');
+            document.getElementById('mode-ros').classList.toggle('active', mode === 'ros');
+            
+            const portInput = document.getElementById('conn-port');
+            if (mode === 'direct') {
+                portInput.value = '8000';
+                addLog("SYSTEM", "Switched to Direct WebSocket. Listening on port 8000 by default.");
+            } else {
+                portInput.value = '9090';
+                addLog("SYSTEM", "Switched to ROSBridge Mode. Connecting to port 9090 by default.");
+            }
+        }
+
+        function addLog(tag, message, type = '') {
+            const terminal = document.getElementById('log-terminal');
+            const now = new Date();
+            const timeStr = `[${now.toTimeString().split(' ')[0]}]`;
+            
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            let tagClass = 'system';
+            if (tag === 'UPDATE') tagClass = 'update';
+            if (type === 'error') tagClass = 'error';
+            
+            entry.innerHTML = `
+                <span class="log-time">${timeStr}</span>
+                <span class="log-tag ${tagClass}">${tag}</span>
+                <span class="log-msg">${message}</span>
+            `;
+            
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function clearLogs() {
+            const terminal = document.getElementById('log-terminal');
+            terminal.innerHTML = '';
+            addLog("SYSTEM", "Terminal display cleared.");
+        }
+
+        function updateSlotVisual(rackId, status, distance) {
+            // Normalize case to match HTML DOM ID patterns (e.g. "Store-A1" and "CAPP-B3")
+            let normalizedId = rackId;
+            if (rackId && typeof rackId === 'string') {
+                const upper = rackId.trim().toUpperCase();
+                if (upper.startsWith("STORE-")) {
+                    normalizedId = "Store-" + upper.substring(6);
+                } else if (upper.startsWith("CAPP-")) {
+                    normalizedId = "CAPP-" + upper.substring(5);
+                }
+            }
+
+            const slotCard = document.getElementById(`slot-${normalizedId}`);
+            if (!slotCard) return;
+
+            // Remove all existing classes
+            slotCard.classList.remove('state-empty', 'state-full', 'state-disconnected');
+
+            const statusTextSpan = slotCard.querySelector('.status-text-val');
+            const iconBg = slotCard.querySelector('.status-icon-bg');
+            const distanceSpan = document.getElementById(`dist-${normalizedId}`);
+
+            const statusVal = parseInt(status);
+            const distVal = parseFloat(distance);
+
+            if (statusVal === 1) {
+                // FULL / OCCUPIED (Amber)
+                slotCard.classList.add('state-full');
+                statusTextSpan.textContent = 'OCCUPIED';
+                iconBg.innerHTML = `
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                    </svg>
+                `;
+                distanceSpan.textContent = `${isNaN(distVal) ? '0.0' : distVal.toFixed(1)} cm`;
+            } else if (statusVal === 0) {
+                // EMPTY (Green)
+                slotCard.classList.add('state-empty');
+                statusTextSpan.textContent = 'VACANT';
+                iconBg.innerHTML = `
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9"/>
+                    </svg>
+                `;
+                distanceSpan.textContent = `${isNaN(distVal) ? '0.0' : distVal.toFixed(1)} cm`;
+            } else {
+                // DISCONNECTED / INACTIVE (Gray)
+                slotCard.classList.add('state-disconnected');
+                statusTextSpan.textContent = 'INACTIVE';
+                iconBg.innerHTML = `
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/>
+                    </svg>
+                `;
+                distanceSpan.textContent = '-- cm';
+            }
+
+            // Update local tracking
+            rackStates[normalizedId] = { status: statusVal, distance: isNaN(distVal) ? 0.0 : distVal };
+            updateRackSummaries();
+        }
+
+        function updateRackSummaries() {
+            let storeConnected = 0, storeFull = 0, storeEmpty = 0;
+            let cappConnected = 0, cappFull = 0, cappEmpty = 0;
+
+            RACK_IDS.forEach(id => {
+                const info = rackStates[id];
+                const isStore = id.startsWith('Store');
+                if (info.status !== -1) {
+                    if (isStore) {
+                        storeConnected++;
+                        if (info.status === 1) storeFull++;
+                        else storeEmpty++;
+                    } else {
+                        cappConnected++;
+                        if (info.status === 1) cappFull++;
+                        else cappEmpty++;
+                    }
+                }
+            });
+
+            const storeSummary = document.getElementById('store-summary');
+            if (storeConnected === 0) {
+                storeSummary.textContent = 'Offline / Inactive';
+                storeSummary.style.color = 'var(--text-muted)';
+            } else {
+                storeSummary.textContent = `${storeConnected}/6 Active • ${storeFull} Full • ${storeEmpty} Vacant`;
+                storeSummary.style.color = storeConnected === 6 ? 'var(--color-empty)' : 'var(--color-full)';
+            }
+
+            const cappSummary = document.getElementById('capp-summary');
+            if (cappConnected === 0) {
+                cappSummary.textContent = 'Offline / Inactive';
+                cappSummary.style.color = 'var(--text-muted)';
+            } else {
+                cappSummary.textContent = `${cappConnected}/6 Active • ${cappFull} Full • ${cappEmpty} Vacant`;
+                cappSummary.style.color = cappConnected === 6 ? 'var(--color-empty)' : 'var(--color-full)';
+            }
+        }
+
+        function setConnectionUIState(state) {
+            const connDot = document.getElementById('connection-dot');
+            const connText = document.getElementById('connection-status-text');
+            const btnText = document.getElementById('conn-btn-text');
+            const btnIcon = document.getElementById('conn-btn-icon');
+
+            connDot.classList.remove('connected', 'connecting');
+
+            if (state === 'connected') {
+                isConnected = true;
+                connDot.classList.add('connected');
+                connText.textContent = 'Connected';
+                connText.style.color = 'var(--color-empty)';
+                btnText.textContent = 'Disconnect';
+                btnIcon.innerHTML = `<path d="M18.36 18.36A9 9 0 0 1 5.64 5.64M12 2v10"/>`;
+            } else if (state === 'connecting') {
+                connDot.classList.add('connecting');
+                connText.textContent = 'Connecting...';
+                connText.style.color = 'var(--color-full)';
+                btnText.textContent = 'Connecting';
+                btnIcon.innerHTML = `<circle cx="12" cy="12" r="10" stroke-dasharray="32" /><path d="M12 2v4"/>`;
+            } else {
+                isConnected = false;
+                connText.textContent = 'Disconnected';
+                connText.style.color = 'var(--text-muted)';
+                btnText.textContent = 'Connect';
+                btnIcon.innerHTML = `
+                    <path d="M18.36 6.64a9 9 0 0 1 0 12.73M6.16 6.84a9 9 0 0 0 0 12.73M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                `;
+                
+                // Set all slot visual states to disconnected
+                RACK_IDS.forEach(id => {
+                    updateSlotVisual(id, -1, 0.0);
+                });
+            }
+        }
+
+        function toggleConnection() {
+            if (isConnected) {
+                disconnect();
+            } else {
+                connect();
+            }
+        }
+
+        function connect() {
+            const ip = document.getElementById('conn-ip').value.trim() || 'localhost';
+            const port = document.getElementById('conn-port').value.trim() || '8000';
+            
+            setConnectionUIState('connecting');
+
+            if (socketMode === 'direct') {
+                const url = `ws://${ip}:${port}`;
+                addLog("SYSTEM", `Connecting directly to WebSocket server at ${url}...`);
+
+                try {
+                    socketConnection = new WebSocket(url);
+                    
+                    socketConnection.onopen = () => {
+                        setConnectionUIState('connected');
+                        addLog("SYSTEM", `Successfully established connection to websocket server at ${url}`);
+                    };
+
+                    socketConnection.onmessage = (event) => {
+                        try {
+                            const payload = JSON.parse(event.data);
+                            
+                            if (payload.type === 'all_states') {
+                                addLog("SYSTEM", "Received full states dump from server");
+                                Object.keys(payload.data).forEach(rackId => {
+                                    const entry = payload.data[rackId];
+                                    updateSlotVisual(rackId, entry.status, entry.distance_cm);
+                                });
+                            } else if (payload.type === 'update') {
+                                const statusVal = parseInt(payload.status);
+                                const distVal = parseFloat(payload.distance_cm);
+                                const statusTxt = statusVal === 1 ? 'OCCUPIED' : (statusVal === 0 ? 'VACANT' : 'INACTIVE');
+                                addLog("UPDATE", `[${payload.rack_id}] Status: ${statusTxt} | Dist: ${isNaN(distVal) ? '--' : distVal.toFixed(1)} cm`);
+                                updateSlotVisual(payload.rack_id, payload.status, payload.distance_cm);
+                            }
+                        } catch (err) {
+                            addLog("SYSTEM", `Error processing message payload: ${err.message}`, "error");
+                        }
+                    };
+
+                    socketConnection.onclose = (event) => {
+                        setConnectionUIState('disconnected');
+                        addLog("SYSTEM", `WebSocket connection closed. (Code: ${event.code})`);
+                        socketConnection = null;
+                    };
+
+                    socketConnection.onerror = (error) => {
+                        addLog("SYSTEM", "WebSocket connection error detected.", "error");
+                    };
+
+                } catch (err) {
+                    setConnectionUIState('disconnected');
+                    addLog("SYSTEM", `Failed to instantiate WebSocket: ${err.message}`, "error");
+                }
+            } else {
+                // ROSBridge mode
+                const url = `ws://${ip}:${port}`;
+                addLog("SYSTEM", `Connecting to ROSBridge at ${url}...`);
+
+                try {
+                    rosClient = new ROSLIB.Ros({ url });
+
+                    rosClient.on('connection', () => {
+                        setConnectionUIState('connected');
+                        addLog("SYSTEM", `Connected to ROSBridge websocket server at ${url}`);
+                        
+                        // Subscribe to topic
+                        rosTopic = new ROSLIB.Topic({
+                            ros: rosClient,
+                            name: '/rack_status',
+                            messageType: 'std_msgs/String'
+                        });
+
+                        rosTopic.subscribe((message) => {
+                            // Message format: "rack_id:status:distance"
+                            try {
+                                const parts = message.data.split(':');
+                                if (parts.length >= 2) {
+                                    const rackId = parts[0];
+                                    const status = parseInt(parts[1]);
+                                    const distance = parts.length > 2 ? parseFloat(parts[2]) : 0.0;
+                                    
+                                    const statusTxt = status === 1 ? 'OCCUPIED' : (status === 0 ? 'VACANT' : 'INACTIVE');
+                                    addLog("UPDATE", `[${rackId}] Status: ${statusTxt} | Dist: ${distance.toFixed(1)} cm (via ROSBridge)`);
+                                    updateSlotVisual(rackId, status, distance);
+                                }
+                            } catch (err) {
+                                addLog("SYSTEM", `Failed to parse ROS message: ${err.message}`, "error");
+                            }
+                        });
+                        addLog("SYSTEM", "Subscribed to ROS 2 topic: /rack_status");
+                    });
+
+                    rosClient.on('error', (error) => {
+                        setConnectionUIState('disconnected');
+                        addLog("SYSTEM", "ROSBridge interface error occurred.", "error");
+                    });
+
+                    rosClient.on('close', () => {
+                        setConnectionUIState('disconnected');
+                        addLog("SYSTEM", "ROSBridge connection closed.");
+                        rosClient = null;
+                        rosTopic = null;
+                    });
+
+                } catch (err) {
+                    setConnectionUIState('disconnected');
+                    addLog("SYSTEM", `Failed to connect via ROSBridge: ${err.message}`, "error");
+                }
+            }
+        }
+
+        function disconnect() {
+            addLog("SYSTEM", "Initiating manual disconnection...");
+            
+            if (socketConnection) {
+                socketConnection.close();
+                socketConnection = null;
+            }
+            
+            if (rosTopic) {
+                rosTopic.unsubscribe();
+                rosTopic = null;
+            }
+
+            if (rosClient) {
+                rosClient.close();
+                rosClient = null;
+            }
+            
+            setConnectionUIState('disconnected');
+        }
+    </script>
+</body>
+</html>

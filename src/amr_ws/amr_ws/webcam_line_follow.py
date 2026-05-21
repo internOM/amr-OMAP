@@ -8,8 +8,9 @@
 #Always remember to push to GitHub to save your progress. 
 
 #Hours spent debugging: 120
-#First Intern: Tan Dong Xu
-#Second Intern: Tang Wei Lun
+#First    Intern: Tan Dong Xu
+#Second   Intern: Tang Wei Lun
+#Third    Intern: <place name here>
 #-----WARNING-----------------------------------------
 
 #!/usr/bin/env python3
@@ -298,17 +299,19 @@ class WebcamLineFollow(Node):
             status   = int(parts[1])
             distance = float(parts[2]) if len(parts) > 2 else 0.0
 
-            if rack_id not in self.rack_states:
+            if rack_id == "force_update":
+                self.get_logger().info(f"[Rack force_update] Triggering recomputation")
+            elif rack_id not in self.rack_states:
                 self.get_logger().warn(
                     f"rack_status_callback: unknown rack_id '{rack_id}' — ignoring."
                 )
                 return
-
-            self.rack_states[rack_id] = status
-            status_text = "OCCUPIED" if status == 1 else "EMPTY"
-            self.get_logger().info(
-                f"[Rack {rack_id}] {status_text} (dist={distance:.1f} cm)"
-            )
+            else:
+                self.rack_states[rack_id] = status
+                status_text = "OCCUPIED" if status == 1 else "EMPTY"
+                self.get_logger().info(
+                    f"[Rack {rack_id}] {status_text} (dist={distance:.1f} cm)"
+                )
 
             # ── Recompute column occupancy ─────────────────────────────
             store_A = any(self.rack_states[k] == 1 for k in ["Store-A1", "Store-A2", "Store-A3"])

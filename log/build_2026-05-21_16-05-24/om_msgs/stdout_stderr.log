@@ -1,0 +1,21 @@
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'libom_msgs__rosidl_typesupport_fastrtps_c.so'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:267: CMakeFiles/om_msgs__rosidl_typesupport_fastrtps_c.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'libom_msgs__rosidl_typesupport_fastrtps_cpp.so'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:372: CMakeFiles/om_msgs__rosidl_typesupport_fastrtps_cpp.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2
+[  1%] Built target om_msgs__rosidl_generator_type_description
+[  1%] Built target ament_cmake_python_copy_om_msgs
+[  3%] Built target om_msgs__cpp
+[ 24%] Built target om_msgs__rosidl_generator_c
+[ 33%] Built target om_msgs__rosidl_typesupport_cpp
+[ 42%] Built target om_msgs__rosidl_typesupport_c
+[ 57%] Built target om_msgs__rosidl_typesupport_introspection_cpp
+[ 61%] Built target om_msgs__rosidl_typesupport_introspection_c
+running egg_info
+writing om_msgs.egg-info/PKG-INFO
+writing dependency_links to om_msgs.egg-info/dependency_links.txt
+writing top-level names to om_msgs.egg-info/top_level.txt
+reading manifest file 'om_msgs.egg-info/SOURCES.txt'
+writing manifest file 'om_msgs.egg-info/SOURCES.txt'
+[ 61%] Built target ament_cmake_python_build_om_msgs_egg

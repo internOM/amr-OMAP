@@ -1,3 +1,17 @@
+#-----WARNING-----------------------------------------
+#This code was first written by an Intern, which has been projected to be passed down to interns after interns
+
+#When I first wrote this code, only God and me knew how this worked.
+#Now, only God knows how this code works.
+
+#This code works to a certain extent, and if you add features, be wary of the hours you will have to spend debugging.
+#Always remember to push to GitHub to save your progress. 
+
+#Hours spent debugging: 120
+#First Intern: Tan Dong Xu
+#Second Intern: Tang Wei Lun
+#-----WARNING-----------------------------------------
+
 #!/usr/bin/env python3
 import math
 import rclpy
@@ -147,6 +161,16 @@ class WebcamLineFollow(Node):
             "CAPP-B1": 0, "CAPP-B2": 0, "CAPP-B3": 0,
         }
         self.waiting_operator_confirm = False
+        self.waiting_capp_full_d1 = False    # True when aligned at D1 but CA-PP is all full
+        self.waiting_store_empty_d2 = False  # True when aligned at D2 but Store is all empty
+
+        # Cooldown after any docking completes — suppresses explosion re-trigger
+        # while the AGV is still physically inside the docking zone.
+        self.post_docking_cooldown_until = 0.0
+
+        # Tracks which leg of the journey the AGV is on: "to_store" or "to_capp"
+        # This determines which set of sensors controls the lane selection.
+        self.agv_direction = "to_store"
 
         self.twist = Twist()
 
@@ -292,41 +316,30 @@ class WebcamLineFollow(Node):
             capp_A  = any(self.rack_states[k] == 1 for k in ["CAPP-A1",  "CAPP-A2",  "CAPP-A3"])
             capp_B  = any(self.rack_states[k] == 1 for k in ["CAPP-B1",  "CAPP-B2",  "CAPP-B3"])
 
-            # ── Store (green explosion — loading): go where material is ──
-            if not store_A and not store_B:
-                # Nothing to load — stop
-                self._rack_stop("WAITING \u2014 NO RACK",
-                                "Store columns both empty — nothing to load.")
-                return
-            elif store_A:
-                store_lane = "green"   # A takes priority
-            else:
-                store_lane = "red"     # only B has material
+            # ── Direction-based Lane Selection ─────────────────────────
+            desired_mode = "green"  # default
+            
+            if self.agv_direction == "to_store":
+                # Store determines the lane (Leg 1)
+                if store_A:
+                    desired_mode = "green"  # A takes priority
+                elif store_B:
+                    desired_mode = "red"    # only B has material
+                # if both empty, stays green (Docking 1 gate handles the wait)
+                
+            elif self.agv_direction == "to_capp":
+                # CA-PP determines the lane (Leg 2)
+                if not capp_A:
+                    desired_mode = "green"  # A has space
+                elif not capp_B:
+                    desired_mode = "red"    # A full, B has space
+                # if both full, stays green (Docking 1 gate handles the wait)
 
-            # ── CA-PP (red explosion — unloading): avoid full columns ──
-            if capp_A and capp_B:
-                # Both full — stop
-                self._rack_stop("WAITING \u2014 NO RACK",
-                                "CA-PP columns both full — nowhere to unload.")
-                return
-            elif capp_A:
-                capp_lane = "red"      # A full, go B
-            else:
-                capp_lane = "green"    # default green (covers 0/0, 0/1)
-
-            # ── Re-enable if previously stopped by rack logic ──────────
-            if self.current_state == "WAITING \u2014 NO RACK":
-                self.enabled = True
-                self.current_state = "RUNNING"
-                self._publish_state(self.current_state)
-                self.get_logger().info("Rack available again — resuming.")
-
-            # ── Apply lane: use store_lane (loading dictates the line) ──
-            desired_mode = store_lane
             self.get_logger().info(
-                f"[Lane logic] store_A={store_A} store_B={store_B} "
-                f"capp_A={capp_A} capp_B={capp_B} → mode='{desired_mode}'"
+                f"[Lane logic] dir='{self.agv_direction}' | Store (A:{store_A} B:{store_B}) | "
+                f"CAPP (A:{capp_A} B:{capp_B}) → mode='{desired_mode}'"
             )
+            
             synthetic = String()
             synthetic.data = desired_mode
             self.mode_callback(synthetic)
@@ -460,6 +473,10 @@ class WebcamLineFollow(Node):
             self.docking_phase = 0
             self.pending_docking_type = 0
             self.waiting_operator_confirm = False
+            self.waiting_capp_full_d1 = False
+            self.waiting_store_empty_d2 = False
+            self.post_docking_cooldown_until = 0.0
+            self.agv_direction = "to_store"
 
     def _publish_state(self, state: str):
         msg = String()
@@ -597,7 +614,9 @@ class WebcamLineFollow(Node):
             mask_sum = green_sum
 
         # ── Docking / Explosion Triggers (Regardless of follow_mode) ─────────
-        if not self.u_turning and self.docking_type == 0:
+        if (not self.u_turning
+                and self.docking_type == 0
+                and current_time >= self.post_docking_cooldown_until):
             if green_sum > self.EXPLOSION_THRESHOLD:
                 # Green explosion -> U-turn then Docking 1
                 self.u_turning = True
@@ -686,11 +705,32 @@ class WebcamLineFollow(Node):
                     self.cmd_vel_pub.publish(self.twist)
 
                     # When aligned
-                    if abs(err) <= 3: 
-                        self.docking_phase = 2
-                        self.docking_timer = current_time
-                        self.last_err = 0
-                        self.get_logger().info("Docking 1 Phase 1: Aligned. Moving backward.")
+                    if abs(err) <= 3:
+                        # ── CA-PP-full gate: nowhere to deliver, hold at Store ──
+                        capp_all_full = (
+                            any(self.rack_states[k] == 1 for k in ["CAPP-A1", "CAPP-A2", "CAPP-A3"])
+                            and any(self.rack_states[k] == 1 for k in ["CAPP-B1", "CAPP-B2", "CAPP-B3"])
+                        )
+                        if capp_all_full:
+                            # Aligned but CA-PP is full — hold here until space opens up
+                            if not self.waiting_capp_full_d1:
+                                self.waiting_capp_full_d1 = True
+                                self.current_state = "WAITING \u2014 NO RACK"
+                                self._publish_state(self.current_state)
+                                self.get_logger().warn(
+                                    "Docking 1 Phase 1: Aligned but CA-PP is full "
+                                    "\u2014 waiting for CA-PP slot to open."
+                                )
+                            self.twist.linear.x = 0.0
+                            self.twist.angular.z = 0.0
+                            self.cmd_vel_pub.publish(self.twist)
+                        else:
+                            # CA-PP has space — proceed to Phase 2 (backward)
+                            self.waiting_capp_full_d1 = False
+                            self.docking_phase = 2
+                            self.docking_timer = current_time
+                            self.last_err = 0
+                            self.get_logger().info("Docking 1 Phase 1: Aligned. Moving backward.")
                 else:
                     # Lost line during alignment
                     self.twist.linear.x = 0.0
@@ -719,15 +759,21 @@ class WebcamLineFollow(Node):
                     self.docking_phase = 0
                     self.current_state = "RUNNING"
                     self._current_linear_x = 0.0  # Reset slew rate for smooth start
+                    self.post_docking_cooldown_until = current_time + 5.0  # Prevent immediate re-trigger
+                    self.agv_direction = "to_capp"
                     self._publish_state(self.current_state)
-                    self.get_logger().info("Docking 1 complete: Resuming normal line following.")
+                    self.get_logger().info("Docking 1 complete: Switch to Leg 2 (to_capp). Resuming.")
+                    # Force a lane update immediately 
+                    synthetic: String = String()
+                    synthetic.data = "force_update:0:0"
+                    self.rack_status_callback(synthetic)
             
             return  # Skip normal PD while docking
 
         elif self.docking_type == 2:
             if self.docking_phase == 1:
                 # Phase 1: Move backwards 0.075 for 1s
-                if current_time - self.docking_timer <= 1.5:
+                if current_time - self.docking_timer <= 2.0:
                     self.twist.linear.x = -0.075
                     self.twist.angular.z = 0.0
                     self.cmd_vel_pub.publish(self.twist)
@@ -762,8 +808,8 @@ class WebcamLineFollow(Node):
                     self.twist.angular.z = angular_z
                     self.cmd_vel_pub.publish(self.twist)
 
-                    if abs(err) <= 3:
-                        # ── Sensor gate: check target column before Phase 3 ──
+                    if abs(err) <= 5:
+                        # ── Gate 2: target column sensor check ────────────
                         if self.follow_mode == "red":
                             col_occupied = any(
                                 self.rack_states[k] == 1
@@ -785,7 +831,7 @@ class WebcamLineFollow(Node):
                             self._publish_state(self.current_state)
                             self.get_logger().warn(
                                 "Docking 2 Phase 2: Sensor blocked on target column "
-                                "— waiting for operator confirmation."
+                                "\u2014 waiting for operator confirmation."
                             )
                         else:
                             self.docking_phase = 3
@@ -818,19 +864,44 @@ class WebcamLineFollow(Node):
                     self.docking_timer = current_time
                     self.get_logger().info("Docking 2 Phase 4 Done. Moving backward for 5s.")
             elif self.docking_phase == 5:
-                # Phase 5: Move backwards then U-turn
+                # Phase 5: Move backwards then U-turn if Store has material
                 if current_time - self.docking_timer <= 5.0:
                     self.twist.linear.x = -0.075
                     self.twist.angular.z = 0.0
                     self.cmd_vel_pub.publish(self.twist)
                 else:
-                    self.docking_type = 0
-                    self.docking_phase = 0
-                    self.u_turning = True
-                    self.u_turn_start_time = current_time
-                    self.current_state = "U-TURN"
-                    self._publish_state(self.current_state)
-                    self.get_logger().info("Docking 2 Phase 5 Done. Triggering U-TURN.")
+                    # ── Gate 1: Store-all-empty — no material to bring back ──
+                    store_all_empty = not any(
+                        self.rack_states[k] == 1
+                        for k in ["Store-A1", "Store-A2", "Store-A3",
+                                  "Store-B1", "Store-B2", "Store-B3"]
+                    )
+                    if store_all_empty:
+                        if not self.waiting_store_empty_d2:
+                            self.waiting_store_empty_d2 = True
+                            self.current_state = "WAITING \u2014 NO RACK"
+                            self._publish_state(self.current_state)
+                            self.get_logger().warn(
+                                "Docking 2 Phase 5: Unloaded but Store is empty "
+                                "\u2014 waiting for material at Store before returning."
+                            )
+                        self.twist.linear.x = 0.0
+                        self.twist.angular.z = 0.0
+                        self.cmd_vel_pub.publish(self.twist)
+                    else:
+                        self.waiting_store_empty_d2 = False
+                        self.docking_type = 0
+                        self.docking_phase = 0
+                        self.u_turning = True
+                        self.u_turn_start_time = current_time
+                        self.current_state = "U-TURN"
+                        self.agv_direction = "to_store"
+                        self._publish_state(self.current_state)
+                        self.get_logger().info("Docking 2 Phase 5 Done. Switch to Leg 1 (to_store). Triggering U-TURN.")
+                        # Force a lane update before starting U-turn
+                        synthetic: String = String()
+                        synthetic.data = "force_update:0:0"
+                        self.rack_status_callback(synthetic)
             return
 
         # ── Normal PD line-following ───────────────────────────────────
@@ -853,7 +924,7 @@ class WebcamLineFollow(Node):
                 angular_z = 0.0
 
             # ── Slew-rate limiter ──────────────────────────────────────
-            TARGET_LINEAR_X = 0.32
+            TARGET_LINEAR_X = 0.25
             self._current_linear_x = min(
                 self._current_linear_x + LINEAR_SLEW_RATE,
                 TARGET_LINEAR_X

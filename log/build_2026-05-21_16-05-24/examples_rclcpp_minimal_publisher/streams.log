@@ -1,0 +1,15 @@
+[0.608s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_minimal_publisher -- -j14 -l14
+[0.689s] gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_lambda'.  Stop.
+[0.689s] gmake[1]: *** [CMakeFiles/Makefile2:147: CMakeFiles/publisher_lambda.dir/all] Error 2
+[0.689s] gmake[1]: *** Waiting for unfinished jobs....
+[0.689s] gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_member_function_with_unique_network_flow_endpoints'.  Stop.
+[0.689s] gmake[1]: *** [CMakeFiles/Makefile2:225: CMakeFiles/publisher_member_function_with_unique_network_flow_endpoints.dir/all] Error 2
+[0.689s] gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_member_function_with_type_adapter'.  Stop.
+[0.692s] gmake[1]: *** [CMakeFiles/Makefile2:199: CMakeFiles/publisher_member_function_with_type_adapter.dir/all] Error 2
+[0.695s] gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_member_function'.  Stop.
+[0.696s] gmake[1]: *** [CMakeFiles/Makefile2:173: CMakeFiles/publisher_member_function.dir/all] Error 2
+[0.696s] gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_wait_for_all_acked'.  Stop.
+[0.696s] gmake[1]: *** [CMakeFiles/Makefile2:251: CMakeFiles/publisher_wait_for_all_acked.dir/all] Error 2
+[0.700s] gmake[2]: *** No rule to make target '/opt/ros/jazzy/lib/libfastcdr.so.2.2.5', needed by 'publisher_not_composable'.  Stop.
+[0.700s] gmake[1]: *** [CMakeFiles/Makefile2:277: CMakeFiles/publisher_not_composable.dir/all] Error 2
+[0.702s] gmake: *** [Makefile:146: all] Error 2
