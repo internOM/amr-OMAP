@@ -4,7 +4,7 @@
 
 # AGV 项目 — 说明文档
 
-**语言：** 🇬🇧 [English](https://github.com/internOM/amr-OMAP/blob/main/README.md) | 🇨🇳 [简体中文](https://github.com/internOM/amr-OMAP/blob/main/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E7%89%88%20(ReadMe%20CH).md)
+**语言：** 🇬🇧 [English](https://github.com/internOM/amr-OMAP/blob/main/README.md) | 🇨🇳 [简体中文](https://github.com/internOM/amr-OMAP/blob/main/README_CN.md)
 
 > **总体说明：** 本文档结构清晰，技术内容准确。主要不足之处在于：缺少故障排除章节、硬件接线参考，以及部分操作流程描述尚未反映最新改动（传感器门控逻辑、WAITING — NO RACK、WAITING — CONFIRM 状态）。建议在新代码完成后及时更新。此外，建议在文档开头增加一个快速入门章节，方便不需要了解完整技术细节的操作人员使用。
 

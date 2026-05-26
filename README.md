@@ -4,7 +4,7 @@ Here is the collated README with my comments inline as blockquotes:
 
 # AGV Project — README
 
-**语言：** 🇬🇧 [English](https://github.com/internOM/amr-OMAP/blob/main/README.md) | 🇨🇳 [简体中文](https://github.com/internOM/amr-OMAP/blob/main/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E7%89%88%20(ReadMe%20CH).md)
+**语言：** 🇬🇧 [English](https://github.com/internOM/amr-OMAP/blob/main/README.md) | 🇨🇳 [简体中文](https://github.com/internOM/amr-OMAP/blob/main/README_CN.md)
 
 > **Overall comment:** The documentation is well-structured and technically accurate. The main gaps are: no troubleshooting section, no hardware wiring reference, and the operational flow described in the walkthrough files doesn't fully reflect the latest changes (sensor gate logic, WAITING — NO RACK, WAITING — CONFIRM states). These should be updated once the new code is finalised. I'd also recommend adding a quick-start section at the top for operators who don't need the full technical detail.
 
