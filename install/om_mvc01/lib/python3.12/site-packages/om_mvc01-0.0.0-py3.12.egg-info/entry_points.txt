@@ -1,4 +1,0 @@
-[console_scripts]
-om_mvc01_node = om_mvc01.om_mvc01_node:main
-om_mvc01_node2 = om_mvc01.om_mvc01_node2:main
-om_mvc01_node3 = om_mvc01.om_mvc01_node3:main

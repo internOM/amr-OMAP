@@ -196,7 +196,7 @@ libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/libbuiltin_interfaces__ros
 libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/librmw.so
 libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 libwait_set_subscriber_library.so: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

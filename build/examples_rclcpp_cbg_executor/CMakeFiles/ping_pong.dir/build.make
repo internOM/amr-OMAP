@@ -185,7 +185,7 @@ ping_pong: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastrtps
 ping_pong: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 ping_pong: /opt/ros/jazzy/lib/librmw.so
 ping_pong: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-ping_pong: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+ping_pong: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 ping_pong: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 ping_pong: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 ping_pong: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

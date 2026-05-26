@@ -391,6 +391,14 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/rust_packages" TYPE FILE FILES "/home/intern1/ros2_ws/build/turtlesim/ament_cmake_index/share/ament_index/resource_index/rust_packages/turtlesim")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/turtlesim" TYPE DIRECTORY FILES "/home/intern1/ros2_ws/build/turtlesim/rosidl_generator_rs/turtlesim/rust")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/turtlesim/action" TYPE FILE FILES "/home/intern1/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim/action/RotateAbsolute.idl")
 endif()
 
@@ -852,6 +860,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/intern1/ros2_ws/build/turtlesim/turtlesim__py/cmake_install.cmake")
+  include("/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/cmake_install.cmake")
 
 endif()
 

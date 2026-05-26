@@ -153,7 +153,7 @@ publisher_wait_for_all_acked: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_t
 publisher_wait_for_all_acked: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 publisher_wait_for_all_acked: /opt/ros/jazzy/lib/librmw.so
 publisher_wait_for_all_acked: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-publisher_wait_for_all_acked: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+publisher_wait_for_all_acked: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 publisher_wait_for_all_acked: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 publisher_wait_for_all_acked: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 publisher_wait_for_all_acked: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

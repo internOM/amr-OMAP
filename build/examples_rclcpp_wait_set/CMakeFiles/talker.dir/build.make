@@ -164,7 +164,7 @@ libtalker.so: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastr
 libtalker.so: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 libtalker.so: /opt/ros/jazzy/lib/librmw.so
 libtalker.so: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-libtalker.so: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+libtalker.so: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 libtalker.so: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 libtalker.so: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 libtalker.so: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

@@ -1,0 +1,45 @@
+[0.825s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_timer': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/intern1/ros2_ws/src/examples/rclcpp/timers/minimal_timer -DCMAKE_INSTALL_PREFIX=/home/intern1/ros2_ws/install/examples_rclcpp_minimal_timer
+[3.798s] -- The C compiler identification is GNU 13.3.0
+[3.799s] -- The CXX compiler identification is GNU 13.3.0
+[3.799s] -- Detecting C compiler ABI info
+[3.799s] -- Detecting C compiler ABI info - done
+[3.800s] -- Check for working C compiler: /usr/bin/cc - skipped
+[3.800s] -- Detecting C compile features
+[3.800s] -- Detecting C compile features - done
+[3.800s] -- Detecting CXX compiler ABI info
+[3.800s] -- Detecting CXX compiler ABI info - done
+[3.800s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[3.800s] -- Detecting CXX compile features
+[3.801s] -- Detecting CXX compile features - done
+[3.801s] -- Found ament_cmake: 2.5.6 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[3.801s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[3.801s] -- Found rclcpp: 28.1.18 (/opt/ros/jazzy/share/rclcpp/cmake)
+[3.801s] -- Found rosidl_generator_c: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[3.801s] -- Found rosidl_generator_cpp: 4.6.7 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[3.801s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[3.802s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[3.803s] -- Found rmw_implementation_cmake: 7.3.3 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[3.804s] -- Found rmw_fastrtps_cpp: 8.4.3 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[3.804s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[3.804s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[3.805s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[3.805s] -- Found ament_lint_auto: 0.17.5 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[3.805s] -- Added test 'copyright' to check source files copyright and LICENSE
+[3.805s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[3.805s] -- Configured cppcheck include dirs: 
+[3.805s] -- Configured cppcheck exclude dirs and/or files: 
+[3.806s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[3.806s] -- Configured cpplint exclude dirs and/or files: 
+[3.806s] -- Added test 'lint_cmake' to check CMake code style
+[3.806s] -- Added test 'uncrustify' to check C / C++ code style
+[3.806s] -- Configured uncrustify additional arguments: 
+[3.806s] -- Added test 'xmllint' to check XML markup files
+[3.807s] -- Configuring done (2.8s)
+[3.807s] -- Generating done (0.0s)
+[3.807s] -- Build files have been written to: /home/intern1/ros2_ws/build/examples_rclcpp_minimal_timer
+[3.821s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_timer' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/intern1/ros2_ws/src/examples/rclcpp/timers/minimal_timer -DCMAKE_INSTALL_PREFIX=/home/intern1/ros2_ws/install/examples_rclcpp_minimal_timer
+[3.825s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_timer': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/om_mvc01:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_minimal_timer -- -j14 -l14
+[3.923s] [ 25%] [32mBuilding CXX object CMakeFiles/timer_lambda.dir/lambda.cpp.o[0m
+[3.925s] [ 50%] [32mBuilding CXX object CMakeFiles/timer_member_function.dir/member_function.cpp.o[0m
+[25.333s] [ 75%] [32m[1mLinking CXX executable timer_lambda[0m
+[26.333s] [ 75%] Built target timer_lambda

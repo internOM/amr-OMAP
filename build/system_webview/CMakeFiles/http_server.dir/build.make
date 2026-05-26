@@ -142,7 +142,7 @@ http_server: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastrt
 http_server: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 http_server: /opt/ros/jazzy/lib/librmw.so
 http_server: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-http_server: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+http_server: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 http_server: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 http_server: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 http_server: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

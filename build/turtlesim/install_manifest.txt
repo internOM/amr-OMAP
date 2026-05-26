@@ -201,6 +201,16 @@
 /home/intern1/ros2_ws/install/turtlesim/lib/python3.12/site-packages/turtlesim/turtlesim_s__rosidl_typesupport_introspection_c.so
 /home/intern1/ros2_ws/install/turtlesim/lib/python3.12/site-packages/turtlesim/turtlesim_s__rosidl_typesupport_c.so
 /home/intern1/ros2_ws/install/turtlesim/lib/libturtlesim__rosidl_generator_py.so
+/home/intern1/ros2_ws/install/turtlesim/share/ament_index/resource_index/rust_packages/turtlesim
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/Cargo.toml
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/src/srv/rmw.rs
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/src/srv.rs
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/src/lib.rs
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/src/msg/rmw.rs
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/src/msg.rs
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/src/action/rmw.rs
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/src/action.rs
+/home/intern1/ros2_ws/install/turtlesim/share/turtlesim/rust/build.rs
 /home/intern1/ros2_ws/install/turtlesim/share/turtlesim/action/RotateAbsolute.idl
 /home/intern1/ros2_ws/install/turtlesim/share/turtlesim/msg/Color.idl
 /home/intern1/ros2_ws/install/turtlesim/share/turtlesim/msg/Pose.idl

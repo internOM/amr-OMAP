@@ -173,7 +173,7 @@ thread_safe_wait_set: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_c.so
 thread_safe_wait_set: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_c.so
 thread_safe_wait_set: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastrtps_cpp.so
 thread_safe_wait_set: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
-thread_safe_wait_set: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+thread_safe_wait_set: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 thread_safe_wait_set: /opt/ros/jazzy/lib/librmw.so
 thread_safe_wait_set: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
 thread_safe_wait_set: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so

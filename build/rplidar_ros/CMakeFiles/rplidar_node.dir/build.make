@@ -422,7 +422,7 @@ rplidar_node: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastr
 rplidar_node: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 rplidar_node: /opt/ros/jazzy/lib/librmw.so
 rplidar_node: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-rplidar_node: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+rplidar_node: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 rplidar_node: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 rplidar_node: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 rplidar_node: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

@@ -143,7 +143,7 @@ static_wait_set_subscriber: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typ
 static_wait_set_subscriber: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 static_wait_set_subscriber: /opt/ros/jazzy/lib/librmw.so
 static_wait_set_subscriber: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-static_wait_set_subscriber: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+static_wait_set_subscriber: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 static_wait_set_subscriber: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 static_wait_set_subscriber: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 static_wait_set_subscriber: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

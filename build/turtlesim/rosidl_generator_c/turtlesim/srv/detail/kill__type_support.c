@@ -5,8 +5,8 @@
 #include <string.h>
 
 #include "turtlesim/srv/detail/kill__struct.h"
-#include "turtlesim/srv/detail/kill__functions.h"
 #include "turtlesim/srv/detail/kill__type_support.h"
+#include "turtlesim/srv/detail/kill__functions.h"
 #include "rosidl_typesupport_interface/macros.h"
 
 #ifdef __cplusplus

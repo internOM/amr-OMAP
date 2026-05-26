@@ -1,0 +1,44 @@
+[0.901s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor -- -j14 -l14
+[1.079s] [ 10%] [32mBuilding CXX object CMakeFiles/ping.dir/src/ping.cpp.o[0m
+[8.798s] [ 20%] [32mBuilding CXX object CMakeFiles/ping.dir/src/examples_rclcpp_cbg_executor/ping_node.cpp.o[0m
+[27.549s] [ 30%] [32m[1mLinking CXX executable ping[0m
+[27.945s] [ 30%] Built target ping
+[28.003s] [ 40%] [32mBuilding CXX object CMakeFiles/ping_pong.dir/src/ping_pong.cpp.o[0m
+[35.390s] [ 50%] [32mBuilding CXX object CMakeFiles/ping_pong.dir/src/examples_rclcpp_cbg_executor/pong_node.cpp.o[0m
+[47.233s] [ 60%] [32mBuilding CXX object CMakeFiles/ping_pong.dir/src/examples_rclcpp_cbg_executor/ping_node.cpp.o[0m
+[59.013s] [ 70%] [32m[1mLinking CXX executable ping_pong[0m
+[59.498s] [ 70%] Built target ping_pong
+[59.546s] [ 80%] [32mBuilding CXX object CMakeFiles/pong.dir/src/pong.cpp.o[0m
+[63.721s] [ 90%] [32mBuilding CXX object CMakeFiles/pong.dir/src/examples_rclcpp_cbg_executor/pong_node.cpp.o[0m
+[75.409s] [100%] [32m[1mLinking CXX executable pong[0m
+[75.822s] [100%] Built target pong
+[75.853s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor -- -j14 -l14
+[75.864s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor
+[75.885s] -- Install configuration: ""
+[75.885s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/lib/examples_rclcpp_cbg_executor/ping
+[75.892s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/lib/examples_rclcpp_cbg_executor/ping" to ""
+[75.892s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/lib/examples_rclcpp_cbg_executor/pong
+[75.898s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/lib/examples_rclcpp_cbg_executor/pong" to ""
+[75.899s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/lib/examples_rclcpp_cbg_executor/ping_pong
+[75.905s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/lib/examples_rclcpp_cbg_executor/ping_pong" to ""
+[75.905s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/include
+[75.906s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/include/examples_rclcpp_cbg_executor
+[75.906s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/include/examples_rclcpp_cbg_executor/pong_node.hpp
+[75.906s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/include/examples_rclcpp_cbg_executor/ping_node.hpp
+[75.906s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/ament_index/resource_index/package_run_dependencies/examples_rclcpp_cbg_executor
+[75.906s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/ament_index/resource_index/parent_prefix_path/examples_rclcpp_cbg_executor
+[75.907s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/environment/ament_prefix_path.sh
+[75.907s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/environment/ament_prefix_path.dsv
+[75.907s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/environment/path.sh
+[75.908s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/environment/path.dsv
+[75.908s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/local_setup.bash
+[75.909s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/local_setup.sh
+[75.909s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/local_setup.zsh
+[75.909s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/local_setup.dsv
+[75.909s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/package.dsv
+[75.910s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/ament_index/resource_index/packages/examples_rclcpp_cbg_executor
+[75.910s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/cmake/ament_cmake_export_dependencies-extras.cmake
+[75.910s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/cmake/examples_rclcpp_cbg_executorConfig.cmake
+[75.910s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/cmake/examples_rclcpp_cbg_executorConfig-version.cmake
+[75.910s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor/share/examples_rclcpp_cbg_executor/package.xml
+[75.915s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/examples_rclcpp_cbg_executor

@@ -238,7 +238,7 @@ libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/libservice_msgs__rosidl
 libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_generator_c.so
 libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_c.so
 libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
-libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/librmw.so
 libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
 libturtlesim__rosidl_generator_py.so: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so

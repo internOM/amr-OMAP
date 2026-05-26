@@ -165,7 +165,7 @@ composition_publisher: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupp
 composition_publisher: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 composition_publisher: /opt/ros/jazzy/lib/librmw.so
 composition_publisher: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-composition_publisher: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+composition_publisher: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 composition_publisher: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 composition_publisher: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 composition_publisher: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

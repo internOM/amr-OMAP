@@ -241,7 +241,7 @@ turtlesim_node: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_c.so
 turtlesim_node: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_c.so
 turtlesim_node: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastrtps_cpp.so
 turtlesim_node: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
-turtlesim_node: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+turtlesim_node: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 turtlesim_node: /opt/ros/jazzy/lib/librmw.so
 turtlesim_node: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
 turtlesim_node: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so

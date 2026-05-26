@@ -172,7 +172,7 @@ draw_square: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_c.so
 draw_square: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_c.so
 draw_square: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastrtps_cpp.so
 draw_square: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
-draw_square: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+draw_square: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 draw_square: /opt/ros/jazzy/lib/librmw.so
 draw_square: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
 draw_square: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so

@@ -35,3 +35,11 @@
 /home/intern1/ros2_ws/build/turtlesim/turtlesim__py/CMakeFiles/install.dir
 /home/intern1/ros2_ws/build/turtlesim/turtlesim__py/CMakeFiles/install/local.dir
 /home/intern1/ros2_ws/build/turtlesim/turtlesim__py/CMakeFiles/install/strip.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/turtlesim__rs.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/test.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/edit_cache.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/rebuild_cache.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/list_install_components.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/install.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/install/local.dir
+/home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/install/strip.dir

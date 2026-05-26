@@ -162,7 +162,7 @@ mimic: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_c.so
 mimic: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_c.so
 mimic: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastrtps_cpp.so
 mimic: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
-mimic: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+mimic: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 mimic: /opt/ros/jazzy/lib/librmw.so
 mimic: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
 mimic: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so

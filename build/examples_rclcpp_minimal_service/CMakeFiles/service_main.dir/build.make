@@ -163,7 +163,7 @@ service_main: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_fastr
 service_main: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 service_main: /opt/ros/jazzy/lib/librmw.so
 service_main: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-service_main: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+service_main: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 service_main: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 service_main: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 service_main: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

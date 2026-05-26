@@ -153,7 +153,7 @@ subscriber_not_composable: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_type
 subscriber_not_composable: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 subscriber_not_composable: /opt/ros/jazzy/lib/librmw.so
 subscriber_not_composable: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-subscriber_not_composable: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+subscriber_not_composable: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 subscriber_not_composable: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 subscriber_not_composable: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 subscriber_not_composable: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

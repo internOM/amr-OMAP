@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rack Control Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="roslib.min.js"></script>
+    <style>
+        :root {
+            --bg-color: hsl(222, 25%, 7%);
+            --panel-bg: hsla(222, 20%, 12%, 0.6);
+            --card-bg: hsla(222, 15%, 16%, 0.4);
+            --card-bg-hover: hsla(222, 15%, 20%, 0.8);
+            
+            --border-color: hsla(222, 20%, 25%, 0.4);
+            --border-glow: hsla(222, 20%, 35%, 0.2);
+            --text-main: hsl(0, 0%, 95%);
+            --text-muted: hsl(215, 20%, 65%);
+            
+            --color-empty: hsl(142, 70%, 45%);
+            --color-empty-glow: hsla(142, 70%, 45%, 0.4);
+            --color-full: hsl(38, 92%, 50%);
+            --color-full-glow: hsla(38, 92%, 50%, 0.4);
+            --color-disconnected: hsl(215, 12%, 35%);
+            
+            --glow-pulse-red: hsla(350, 70%, 50%, 0.4);
+            --glow-pulse-green: hsla(142, 70%, 45%, 0.4);
+            --glow-pulse-amber: hsla(38, 92%, 50%, 0.4);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, hsla(222, 30%, 15%, 0.5) 0px, transparent 50%),
+                radial-gradient(at 90% 10%, hsla(280, 30%, 15%, 0.3) 0px, transparent 50%),
+                radial-gradient(at 50% 90%, hsla(190, 30%, 15%, 0.4) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            user-select: none;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            padding: 1.25rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .control-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .input-row {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.1rem;
+        }
+
+        .input-row input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 0.45rem 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .input-row input[name="ip"] { width: 130px; }
+        .input-row input[name="port"] { width: 60px; border-left: 1px solid var(--border-color); }
+
+        .select-group {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .select-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.5rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .select-btn.active {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-connect {
+            background: linear-gradient(135deg, hsl(200, 80%, 50%) 0%, hsl(220, 80%, 40%) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.55rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            align-self: flex-end;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-connect:hover { transform: translateY(-1px); filter: brightness(1.1); }
+        .btn-connect:active { transform: translateY(1px); }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            height: 38px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-disconnected);
+            display: inline-block;
+        }
+        .status-dot.connected {
+            background-color: var(--color-empty);
+            box-shadow: 0 0 10px var(--color-empty);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .rack-panel { display: flex; flex-direction: column; }
+
+        .rack-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+
+        .rack-title { display: flex; align-items: center; gap: 0.65rem; }
+        .rack-title svg { width: 20px; height: 20px; fill: var(--text-muted); }
+        .rack-title h2 { font-size: 1.25rem; font-weight: 600; }
+
+        .rack-visualizer {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .shelf-layer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            position: relative;
+            padding-bottom: 0.4rem;
+        }
+
+        .shelf-layer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #374151 0%, #1f2937 50%, #374151 100%);
+            border-radius: 2px;
+        }
+
+        .layer-label {
+            grid-column: span 2;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            padding-left: 0.25rem;
+        }
+
+        .rack-slot {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .rack-slot:hover {
+            background: var(--card-bg-hover);
+            transform: translateY(-2px);
+            border-color: var(--text-muted);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .rack-slot:active {
+            transform: translateY(1px);
+        }
+
+        .slot-meta { display: flex; justify-content: space-between; align-items: center; }
+        .slot-id { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+        .slot-col-indicator {
+            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            color: var(--text-muted);
+        }
+
+        .slot-status-box {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0;
+        }
+
+        .status-icon-bg {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-text-val { font-size: 1.1rem; font-weight: 700; }
+
+        .rack-slot.state-empty {
+            border-color: var(--color-empty-glow);
+            box-shadow: inset 0 0 12px var(--color-empty-glow);
+        }
+        .rack-slot.state-empty .status-icon-bg {
+            background-color: var(--color-empty-glow);
+            color: var(--color-empty);
+        }
+        .rack-slot.state-empty .status-text-val { color: var(--color-empty); }
+
+        .rack-slot.state-full {
+            border-color: var(--color-full-glow);
+            box-shadow: inset 0 0 12px var(--color-full-glow);
+        }
+        .rack-slot.state-full .status-icon-bg {
+            background-color: var(--color-full-glow);
+            color: var(--color-full);
+        }
+        .rack-slot.state-full .status-text-val { color: var(--color-full); }
+
+        .rack-slot.state-disconnected {
+            opacity: 0.65;
+        }
+        .rack-slot.state-disconnected .status-icon-bg {
+            background-color: rgba(255, 255, 255, 0.04);
+            color: var(--color-disconnected);
+        }
+        .rack-slot.state-disconnected .status-text-val { color: var(--color-disconnected); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>RACK CONTROL DASHBOARD (MOCK)</h1>
+            <p>Click on any slot to toggle its status and publish to /rack_status</p>
+        </div>
+    </header>
+
+    <div class="glass-panel control-bar">
+        <div class="input-group">
+            <label>Bridge Connection Mode</label>
+            <div class="select-group">
+                <button type="button" class="select-btn active" id="mode-direct" onclick="setMode('direct')">Direct WS (Port 8000)</button>
+                <button type="button" class="select-btn" id="mode-ros" onclick="setMode('ros')">ROSBridge (Port 9090)</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Network IP & Port</label>
+            <div class="input-row">
+                <input type="text" id="conn-ip" value="localhost">
+                <input type="text" id="conn-port" value="8000">
+            </div>
+        </div>
+
+        <button class="btn-connect" onclick="toggleConnection()">
+            <span id="conn-btn-text">Connect</span>
+        </button>
+
+        <div class="status-badge">
+            <span class="status-dot" id="connection-dot"></span>
+            <span id="connection-status-text">Disconnected</span>
+        </div>
+    </div>
+
+    <div class="dashboard-grid" id="racks-container">
+        <!-- Generated via JS -->
+    </div>
+
+    <script>
+        const RACK_CONFIG = [
+            { id: "STORE-A3", label: "A3", col: "COL A", layer: "Layer 3 (Top)" },
+            { id: "STORE-B3", label: "B3", col: "COL B", layer: "Layer 3 (Top)" },
+            { id: "STORE-A2", label: "A2", col: "COL A", layer: "Layer 2 (Middle)" },
+            { id: "STORE-B2", label: "B2", col: "COL B", layer: "Layer 2 (Middle)" },
+            { id: "STORE-A1", label: "A1", col: "COL A", layer: "Layer 1 (Bottom)" },
+            { id: "STORE-B1", label: "B1", col: "COL B", layer: "Layer 1 (Bottom)" },
+            { id: "CAPP-A3", label: "A3", col: "COL A", layer: "Layer 3 (Top)" },
+            { id: "CAPP-B3", label: "B3", col: "COL B", layer: "Layer 3 (Top)" },
+            { id: "CAPP-A2", label: "A2", col: "COL A", layer: "Layer 2 (Middle)" },
+            { id: "CAPP-B2", label: "B2", col: "COL B", layer: "Layer 2 (Middle)" },
+            { id: "CAPP-A1", label: "A1", col: "COL A", layer: "Layer 1 (Bottom)" },
+            { id: "CAPP-B1", label: "B1", col: "COL B", layer: "Layer 1 (Bottom)" }
+        ];
+
+        let rackStates = {};
+        RACK_CONFIG.forEach(r => {
+            rackStates[r.id] = { status: 0, distance: 0.0 }; // Default to 0 (VACANT) for simulation
+        });
+
+        let socketMode = 'direct';
+        let socketConnection = null;
+        let rosClient = null;
+        let rosTopic = null;
+        let isConnected = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('conn-ip').value = window.location.hostname || 'localhost';
+            renderRacks();
+        });
+
+        function renderRacks() {
+            const container = document.getElementById('racks-container');
+            const groups = { 'STORE': [], 'CAPP': [] };
+            
+            RACK_CONFIG.forEach(r => {
+                const prefix = r.id.split('-')[0];
+                groups[prefix].push(r);
+            });
+
+            let html = '';
+            for (const [prefix, racks] of Object.entries(groups)) {
+                html += `
+                <div class="glass-panel rack-panel">
+                    <div class="rack-header">
+                        <div class="rack-title"><h2>${prefix} STATION RACK</h2></div>
+                    </div>
+                    <div class="rack-visualizer">
+                `;
+                
+                // Group by layer
+                const layers = ["Layer 3 (Top)", "Layer 2 (Middle)", "Layer 1 (Bottom)"];
+                layers.forEach(layer => {
+                    const layerRacks = racks.filter(r => r.layer === layer);
+                    if (layerRacks.length > 0) {
+                        html += `<div class="layer-label"><span>${layer}</span></div><div class="shelf-layer">`;
+                        layerRacks.forEach(r => {
+                            html += `
+                            <div class="rack-slot state-empty" id="slot-${r.id}" onclick="toggleRack('${r.id}')">
+                                <div class="slot-meta">
+                                    <span class="slot-id">${r.label}</span>
+                                    <span class="slot-col-indicator">${r.col}</span>
+                                </div>
+                                <div class="slot-status-box">
+                                    <div class="status-icon-bg" id="icon-${r.id}">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>
+                                    </div>
+                                    <span class="status-text-val" id="text-${r.id}">VACANT</span>
+                                </div>
+                            </div>`;
+                        });
+                        html += `</div>`;
+                    }
+                });
+                
+                html += `</div></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function toggleRack(rackId) {
+            if (!isConnected) {
+                alert("Please connect first to send mock statuses.");
+                return;
+            }
+
+            // Toggle state: if 0 (vacant), make 1 (occupied); if 1, make 0.
+            const currentState = rackStates[rackId].status;
+            const newState = currentState === 1 ? 0 : 1;
+            const newDist = newState === 1 ? 10.0 : 0.0;
+            
+            rackStates[rackId] = { status: newState, distance: newDist };
+            updateSlotVisual(rackId, newState);
+
+            // Publish update
+            publishUpdate(rackId, newState, newDist);
+        }
+
+        function updateSlotVisual(rackId, status) {
+            const slot = document.getElementById(`slot-${rackId}`);
+            const text = document.getElementById(`text-${rackId}`);
+            const icon = document.getElementById(`icon-${rackId}`);
+            
+            slot.className = `rack-slot ${status === 1 ? 'state-full' : 'state-empty'}`;
+            text.textContent = status === 1 ? 'OCCUPIED' : 'VACANT';
+            
+            if (status === 1) {
+                icon.innerHTML = `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /></svg>`;
+            } else {
+                icon.innerHTML = `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>`;
+            }
+        }
+
+        function publishUpdate(rackId, status, distance) {
+            if (socketMode === 'direct' && socketConnection && socketConnection.readyState === WebSocket.OPEN) {
+                const payload = {
+                    rack_id: rackId,
+                    status: status,
+                    distance_cm: distance
+                };
+                socketConnection.send(JSON.stringify(payload));
+            } else if (socketMode === 'ros' && rosTopic) {
+                // To match rack_websocket_server.py ROS msg format: "STORE-A1:1:10.0"
+                const std_msg = new ROSLIB.Message({
+                    data: `${rackId.toUpperCase()}:${status}:${distance.toFixed(1)}`
+                });
+                rosTopic.publish(std_msg);
+            }
+        }
+
+        function setMode(mode) {
+            if (isConnected) return;
+            socketMode = mode;
+            document.getElementById('mode-direct').classList.toggle('active', mode === 'direct');
+            document.getElementById('mode-ros').classList.toggle('active', mode === 'ros');
+            document.getElementById('conn-port').value = mode === 'direct' ? '8000' : '9090';
+        }
+
+        function toggleConnection() {
+            if (isConnected) disconnect();
+            else connect();
+        }
+
+        function setConnectionUIState(state) {
+            const dot = document.getElementById('connection-dot');
+            const text = document.getElementById('connection-status-text');
+            const btn = document.getElementById('conn-btn-text');
+
+            if (state === 'connected') {
+                isConnected = true;
+                dot.className = 'status-dot connected';
+                text.textContent = 'Connected';
+                btn.textContent = 'Disconnect';
+            } else {
+                isConnected = false;
+                dot.className = 'status-dot';
+                text.textContent = 'Disconnected';
+                btn.textContent = 'Connect';
+            }
+        }
+
+        function connect() {
+            const ip = document.getElementById('conn-ip').value.trim() || 'localhost';
+            const port = document.getElementById('conn-port').value.trim() || '8000';
+            
+            if (socketMode === 'direct') {
+                const url = `ws://${ip}:${port}`;
+                socketConnection = new WebSocket(url);
+                socketConnection.onopen = () => setConnectionUIState('connected');
+                socketConnection.onclose = () => setConnectionUIState('disconnected');
+                socketConnection.onerror = () => setConnectionUIState('disconnected');
+            } else {
+                const url = `ws://${ip}:${port}`;
+                rosClient = new ROSLIB.Ros({ url });
+                rosClient.on('connection', () => {
+                    setConnectionUIState('connected');
+                    rosTopic = new ROSLIB.Topic({
+                        ros: rosClient,
+                        name: '/rack_status',
+                        messageType: 'std_msgs/String'
+                    });
+                });
+                rosClient.on('close', () => setConnectionUIState('disconnected'));
+                rosClient.on('error', () => setConnectionUIState('disconnected'));
+            }
+        }
+
+        function disconnect() {
+            if (socketConnection) { socketConnection.close(); socketConnection = null; }
+            if (rosTopic) { rosTopic.unsubscribe(); rosTopic = null; }
+            if (rosClient) { rosClient.close(); rosClient = null; }
+            setConnectionUIState('disconnected');
+        }
+    </script>
+</body>
+</html>

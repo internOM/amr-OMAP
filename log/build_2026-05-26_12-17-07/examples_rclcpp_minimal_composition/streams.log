@@ -1,0 +1,43 @@
+[0.896s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition -- -j14 -l14
+[1.065s] [ 11%] [32mBuilding CXX object CMakeFiles/composition_nodes.dir/src/publisher_node.cpp.o[0m
+[11.930s] [ 22%] [32mBuilding CXX object CMakeFiles/composition_nodes.dir/src/subscriber_node.cpp.o[0m
+[28.934s] [ 33%] [32m[1mLinking CXX shared library libcomposition_nodes.so[0m
+[29.526s] [ 33%] Built target composition_nodes
+[29.562s] [ 44%] [32mBuilding CXX object CMakeFiles/composition_publisher.dir/src/standalone_publisher.cpp.o[0m
+[33.580s] [ 55%] [32m[1mLinking CXX executable composition_publisher[0m
+[33.816s] [ 55%] Built target composition_publisher
+[33.855s] [ 66%] [32mBuilding CXX object CMakeFiles/composition_composed.dir/src/composed.cpp.o[0m
+[40.432s] [ 77%] [32m[1mLinking CXX executable composition_composed[0m
+[40.910s] [ 77%] Built target composition_composed
+[40.953s] [ 88%] [32mBuilding CXX object CMakeFiles/composition_subscriber.dir/src/standalone_subscriber.cpp.o[0m
+[47.913s] [100%] [32m[1mLinking CXX executable composition_subscriber[0m
+[48.322s] [100%] Built target composition_subscriber
+[48.351s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition -- -j14 -l14
+[48.362s] Invoking command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition
+[48.386s] -- Install configuration: ""
+[48.386s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/environment/library_path.sh
+[48.387s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/environment/library_path.dsv
+[48.387s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/libcomposition_nodes.so
+[48.397s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/libcomposition_nodes.so" to ""
+[48.397s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/examples_rclcpp_minimal_composition/composition_publisher
+[48.397s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/examples_rclcpp_minimal_composition/composition_publisher" to ""
+[48.398s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/examples_rclcpp_minimal_composition/composition_subscriber
+[48.398s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/examples_rclcpp_minimal_composition/composition_subscriber" to ""
+[48.399s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/examples_rclcpp_minimal_composition/composition_composed
+[48.399s] -- Set non-toolchain portion of runtime path of "/home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib/examples_rclcpp_minimal_composition/composition_composed" to ""
+[48.399s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/ament_index/resource_index/package_run_dependencies/examples_rclcpp_minimal_composition
+[48.400s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/ament_index/resource_index/parent_prefix_path/examples_rclcpp_minimal_composition
+[48.400s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/environment/ament_prefix_path.sh
+[48.400s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/environment/ament_prefix_path.dsv
+[48.401s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/environment/path.sh
+[48.401s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/environment/path.dsv
+[48.401s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/local_setup.bash
+[48.401s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/local_setup.sh
+[48.401s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/local_setup.zsh
+[48.402s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/local_setup.dsv
+[48.402s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/package.dsv
+[48.402s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/ament_index/resource_index/packages/examples_rclcpp_minimal_composition
+[48.402s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/cmake/examples_rclcpp_minimal_compositionConfig.cmake
+[48.403s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/cmake/examples_rclcpp_minimal_compositionConfig-version.cmake
+[48.403s] -- Installing: /home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/share/examples_rclcpp_minimal_composition/package.xml
+[48.407s] Invoked command in '/home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/intern1/ros2_ws/build/examples_rclcpp_minimal_composition

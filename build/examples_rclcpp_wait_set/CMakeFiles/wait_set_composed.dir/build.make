@@ -166,7 +166,7 @@ wait_set_composed: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_
 wait_set_composed: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 wait_set_composed: /opt/ros/jazzy/lib/librmw.so
 wait_set_composed: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-wait_set_composed: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+wait_set_composed: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 wait_set_composed: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 wait_set_composed: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 wait_set_composed: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

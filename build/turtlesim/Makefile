@@ -470,6 +470,19 @@ turtlesim__py/fast:
 	$(MAKE) $(MAKESILENT) -f /home/intern1/ros2_ws/build/turtlesim/turtlesim__py/CMakeFiles/turtlesim__py.dir/build.make /home/intern1/ros2_ws/build/turtlesim/turtlesim__py/CMakeFiles/turtlesim__py.dir/build
 .PHONY : turtlesim__py/fast
 
+#=============================================================================
+# Target rules for targets named turtlesim__rs
+
+# Build rule for target.
+turtlesim__rs: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 turtlesim__rs
+.PHONY : turtlesim__rs
+
+# fast build rule for target.
+turtlesim__rs/fast:
+	$(MAKE) $(MAKESILENT) -f /home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/turtlesim__rs.dir/build.make /home/intern1/ros2_ws/build/turtlesim/turtlesim__rs/CMakeFiles/turtlesim__rs.dir/build
+.PHONY : turtlesim__rs/fast
+
 include/turtlesim/moc_turtle_frame.o: include/turtlesim/moc_turtle_frame.cpp.o
 .PHONY : include/turtlesim/moc_turtle_frame.o
 
@@ -2649,6 +2662,7 @@ help:
 	@echo "... turtlesim__cpp"
 	@echo "... turtlesim__py"
 	@echo "... turtlesim__rosidl_generator_type_description"
+	@echo "... turtlesim__rs"
 	@echo "... turtlesim_uninstall"
 	@echo "... uninstall"
 	@echo "... draw_square"

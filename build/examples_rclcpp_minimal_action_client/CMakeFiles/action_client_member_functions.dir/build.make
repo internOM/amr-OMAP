@@ -166,7 +166,7 @@ action_client_member_functions: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl
 action_client_member_functions: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 action_client_member_functions: /opt/ros/jazzy/lib/librmw.so
 action_client_member_functions: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-action_client_member_functions: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+action_client_member_functions: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 action_client_member_functions: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 action_client_member_functions: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 action_client_member_functions: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

@@ -153,7 +153,7 @@ multithreaded_executor: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesup
 multithreaded_executor: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 multithreaded_executor: /opt/ros/jazzy/lib/librmw.so
 multithreaded_executor: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-multithreaded_executor: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+multithreaded_executor: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 multithreaded_executor: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 multithreaded_executor: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 multithreaded_executor: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so

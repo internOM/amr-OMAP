@@ -1001,19 +1001,22 @@
                 setDisplayState("OBSTACLE", "stopped", "Obstacle detected — waiting for path to clear");
                 setAgvRunning(true);
             } else if (msg.data === "DOCKING 1") {
-                setDisplayState("DOCKING 1", "docking", "Docking 1 protocol active");
+                setDisplayState("DOCKING 1", "docking", "Docking at STORE rack — loading cycle active");
                 setAgvRunning(true);
             } else if (msg.data === "DOCKING 2") {
-                setDisplayState("DOCKING 2", "docking", "Docking 2 protocol active");
+                setDisplayState("DOCKING 2", "docking", "Docking at CAPP rack — unloading cycle active");
                 setAgvRunning(true);
             } else if (msg.data === "U-TURN") {
-                setDisplayState("U-TURN", "waiting", "U-Turn active");
+                setDisplayState("U-TURN", "waiting", "Executing U-turn");
                 setAgvRunning(true);
-            } else if (msg.data === "WAITING \u2014 NO RACK") {
-                setDisplayState("NO RACK", "stopped", "No rack available \u2014 AGV holding");
+            } else if (msg.data === "IDLE \u2014 CAPP FULL") {
+                setDisplayState("IDLE — CAPP FULL", "stopped", "CAPP rack full — holding at STORE until vacancy");
+                setAgvRunning(false);
+            } else if (msg.data === "IDLE \u2014 STORE EMPTY") {
+                setDisplayState("IDLE — STORE EMPTY", "stopped", "STORE is empty — holding until material arrives");
                 setAgvRunning(false);
             } else if (msg.data === "WAITING \u2014 CONFIRM") {
-                setDisplayState("CONFIRM GO", "waiting", "Sensor blocked \u2014 press GO to confirm and continue");
+                setDisplayState("CONFIRM GO", "waiting", "Sensor blocked — press GO to confirm and continue");
                 setAgvRunning(false);
             }
 

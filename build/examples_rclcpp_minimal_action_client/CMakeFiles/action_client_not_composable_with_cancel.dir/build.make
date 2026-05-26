@@ -166,7 +166,7 @@ action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/libbuiltin_interfac
 action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/librosidl_typesupport_fastrtps_cpp.so
 action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/librmw.so
 action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/librosidl_dynamic_typesupport.so
-action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/libfastcdr.so.2.2.5
+action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/libfastcdr.so.2.2.7
 action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/libbuiltin_interfaces__rosidl_typesupport_introspection_cpp.so
 action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_cpp.so
 action_client_not_composable_with_cancel: /opt/ros/jazzy/lib/librosidl_typesupport_introspection_c.so
