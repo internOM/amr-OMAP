@@ -7,7 +7,7 @@
 #This code works to a certain extent, and if you add features, be wary of the hours you will have to spend debugging.
 #Always remember to push to GitHub to save your progress. 
 
-#Hours spent debugging: 120
+#Hours spent debugging: 131
 #First    Intern: Tan Dong Xu
 #Second   Intern: Tang Wei Lun
 #Third    Intern: <place name here>
@@ -130,7 +130,7 @@ class WebcamLineFollow(Node):
         self._current_linear_x = 0.0
 
         # ── U-turn detection thresholds ────────────────────────────────
-        self.EXPLOSION_THRESHOLD     = 1350000  # green strip sum → green U-turn
+        self.EXPLOSION_THRESHOLD     = 900000  # green strip sum → green U-turn
         self.RED_EXPLOSION_PX        = 900000  # red strip pixels → red U-turn
         self.u_turning               = False
         self.u_turn_start_time       = None
@@ -174,6 +174,12 @@ class WebcamLineFollow(Node):
         # Cooldown after any docking completes — suppresses explosion re-trigger
         # while the AGV is still physically inside the docking zone.
         self.post_docking_cooldown_until = 0.0
+
+        # ── Next-station flag ─────────────────────────────────────────
+        # Set when a threshold explosion fires so that rack_status_callback
+        # only listens to the station the AGV is NOT heading toward.
+        # Values: None | "STORE" | "CAPP"
+        self.next_station: str | None = None
 
         self.twist = Twist()
 
@@ -313,20 +319,49 @@ class WebcamLineFollow(Node):
                 f"[Rack {rack_id}] {status_text} (dist={distance:.1f} cm)"
             )
 
-            # ── Lane routing: based on CAPP-A1 / CAPP-B1 occupancy ────
-            # Default is ALWAYS green.
-            # Only divert to red when CAPP-A1 is full AND CAPP-B1 has space.
-            # If both A1 and B1 are full → stay green; Docking 1 Phase 1 will hold.
-            capp_a1_full = self.rack_states["CAPP-A1"] == 1
-            capp_b1_full = self.rack_states["CAPP-B1"] == 1
-            capp_A_any   = any(self.rack_states[k] == 1 for k in ["CAPP-A1", "CAPP-A2", "CAPP-A3"])
-            capp_B_any   = any(self.rack_states[k] == 1 for k in ["CAPP-B1", "CAPP-B2", "CAPP-B3"])
-            capp_all_full = capp_A_any and capp_B_any
+            # ── Lane routing: based on CAPP and STORE occupancy ────────
+            # Go to red line IF:
+            # - CAPP-A is full AND CAPP-B is empty
+            # OR
+            # - STORE-B is full AND STORE-A is empty
+            #
+            # SAFETY: if next_station is already determined (flag set by a
+            # threshold explosion), only consult the OTHER station's sensors.
+            # This prevents a conflicting update from the destination station
+            # from flipping the mode while the AGV is already en route.
 
-            if capp_a1_full and not capp_b1_full:
-                desired_mode = "red"    # CAPP-A side full → take red lane (CAPP-B side)
+            capp_A_full  = any(self.rack_states[k] == 1 for k in ["CAPP-A1", "CAPP-A2", "CAPP-A3"])
+            capp_B_empty = all(self.rack_states[k] != 1 for k in ["CAPP-B1", "CAPP-B2", "CAPP-B3"])
+
+            store_B_full  = any(self.rack_states[k] == 1 for k in ["STORE-B1", "STORE-B2", "STORE-B3"])
+            store_A_empty = all(self.rack_states[k] != 1 for k in ["STORE-A1", "STORE-A2", "STORE-A3"])
+
+            if self.next_station == "STORE":
+                # Heading to STORE — only STORE sensors are authoritative.
+                # Ignore CAPP data entirely to avoid a spurious red-mode flip.
+                if store_B_full and store_A_empty:
+                    desired_mode = "red"
+                else:
+                    desired_mode = "green"
+                self.get_logger().debug(
+                    "[Lane logic] next_station=STORE — ignoring CAPP rack status."
+                )
+            elif self.next_station == "CAPP":
+                # Heading to CAPP — only CAPP sensors are authoritative.
+                # Ignore STORE data entirely to avoid a spurious green-mode flip.
+                if capp_A_full and capp_B_empty:
+                    desired_mode = "red"
+                else:
+                    desired_mode = "green"
+                self.get_logger().debug(
+                    "[Lane logic] next_station=CAPP — ignoring STORE rack status."
+                )
             else:
-                desired_mode = "green"  # default: green (empty/empty, B1 full, or both full)
+                # No committed destination yet — use combined logic as before.
+                if (capp_A_full and capp_B_empty) or (store_B_full and store_A_empty):
+                    desired_mode = "red"
+                else:
+                    desired_mode = "green"
 
             # ── IDLE — CAPP FULL release ────────────────────────────────────────
             # After D1 completes, AGV waits here until any CAPP slot becomes empty.
@@ -363,8 +398,9 @@ class WebcamLineFollow(Node):
 
             # ── Apply lane mode (always applied so mode never drifts) ───
             self.get_logger().info(
-                f"[Lane logic] CAPP-A1={capp_a1_full} CAPP-B1={capp_b1_full} "
-                f"capp_all_full={capp_all_full} → mode='{desired_mode}'"
+                f"[Lane logic] next_station={self.next_station} | "
+                f"capp_A_full={capp_A_full} capp_B_empty={capp_B_empty} | "
+                f"store_B_full={store_B_full} store_A_empty={store_A_empty} → mode='{desired_mode}'"
             )
             synthetic = String()
             synthetic.data = desired_mode
@@ -401,6 +437,13 @@ class WebcamLineFollow(Node):
             self.get_logger().warn(f"Unknown follow mode '{msg.data}' — ignoring.")
             return
 
+        if mode == "green" and self.docking_type == 2:
+            self.get_logger().debug(
+                "Mode → green requested but Docking 2 is active — ignoring to protect D2 sequence."
+            )
+            self._publish_mode(self.follow_mode)  # reflect actual mode without changing it
+            return
+
         if mode == self.follow_mode:
             # Idempotent — same mode republished (e.g. on reconnect). No action needed.
             self._publish_mode(mode)
@@ -418,16 +461,8 @@ class WebcamLineFollow(Node):
                 self.get_logger().info(
                     "Mode → green: stopped red tracking — reverting to green follow."
                 )
-            # Docking 2 and its subsequent U-Turn are red-specific manoeuvres;
-            # cancel them so the robot resumes green following without finishing
-            # an irrelevant manoeuvre.
-            if self.docking_type == 2:
-                self.docking_type = 0
-                self.docking_phase = 0
-                self.current_state = "RUNNING"
-                self._publish_state(self.current_state)
-                self.get_logger().info("Mode → green: cancelled active Docking 2.")
-            elif self.u_turning and self.pending_docking_type == 0:
+            # Cancel a bare red U-turn (not post-D2) so the robot resumes green following.
+            if self.u_turning and self.pending_docking_type == 0:
                 self.u_turning = False
                 self.u_turn_start_time = None
                 self.current_state = "RUNNING"
@@ -502,6 +537,7 @@ class WebcamLineFollow(Node):
             self.idle_capp_full = False
             self.idle_store_empty = False
             self.post_docking_cooldown_until = 0.0
+            self.next_station = None
 
     def _publish_state(self, state: str):
         msg = String()
@@ -650,24 +686,30 @@ class WebcamLineFollow(Node):
                 and self.docking_type == 0
                 and current_time >= self.post_docking_cooldown_until):
             if green_sum > self.EXPLOSION_THRESHOLD:
-                # Green explosion = at STORE rack
+                # Green explosion = at STORE rack — flag committed destination.
+                self.next_station = "STORE"
                 self.u_turning = True
                 self.u_turn_start_time = current_time
                 self.current_state = "U-TURN"
                 self._publish_state(self.current_state)
                 self.pending_docking_type = 1
                 self.get_logger().warn(
-                    "[THRESHOLD] Green threshold detected \u2014 at STORE rack. U-TURN \u2192 DOCKING 1."
+                    "[THRESHOLD] Green threshold detected \u2014 at STORE rack. "
+                    "next_station=STORE. U-TURN \u2192 DOCKING 1."
                 )
             elif red_strip_sum > self.RED_EXPLOSION_PX:
-                # Red explosion = at CAPP rack
+                # Red explosion = at CAPP rack — flag committed destination.
+                # AGV continues using the green tape for alignment in D2 Phase 1
+                # (green tape runs through the CAPP area; red is a crossing threshold marker).
+                self.next_station = "CAPP"
                 self.docking_type = 2
                 self.docking_phase = 1
                 self.docking_timer = current_time
                 self.current_state = "DOCKING 2"
                 self._publish_state(self.current_state)
                 self.get_logger().warn(
-                    "[THRESHOLD] Red threshold detected \u2014 at CAPP rack. DOCKING 2."
+                    "[THRESHOLD] Red threshold detected \u2014 at CAPP rack. "
+                    "next_station=CAPP. DOCKING 2."
                 )
 
         # ── Handle U-turn (Universal for active line color) ──────────────────
@@ -691,6 +733,7 @@ class WebcamLineFollow(Node):
                                 # U-turn after green explosion — enter Docking 1
                                 self.docking_type = 1
                                 self.docking_phase = 1
+                                self.docking_timer = current_time  # BUGFIX: reset timer so Phase 1 forward window starts now
                                 self.current_state = "DOCKING 1"
                                 self._publish_state(self.current_state)
                                 self.pending_docking_type = 0
@@ -757,9 +800,9 @@ class WebcamLineFollow(Node):
                     # No deadzone minimum — allow small corrections during combined phase
 
                     elapsed = current_time - self.docking_timer
-                    if elapsed <= 2.5:
+                    if elapsed <= 5.0:
                         # Still in combined forward + align window
-                        self.twist.linear.x = 0.05
+                        self.twist.linear.x = 0.025
                         self.twist.angular.z = angular_z
                         self.cmd_vel_pub.publish(self.twist)
                     else:
@@ -823,6 +866,7 @@ class WebcamLineFollow(Node):
                     )
                     self.docking_type = 0
                     self.docking_phase = 0
+                    self.next_station = None  # docking complete — clear committed destination
                     self.post_docking_cooldown_until = current_time + 5.0
                     if capp_full:
                         zero = Twist()
@@ -847,9 +891,15 @@ class WebcamLineFollow(Node):
         elif self.docking_type == 2:
             if self.docking_phase == 1:
                 # Phase 1: Move BACKWARDS at -0.05 m/s for 2.5 s while simultaneously
-                # aligning with PD control (no deadzone minimum — allow sub-0.05 rad/s
-                # corrections). Non-holonomic AGV needs motion to steer properly.
-                # Column/store checks are deferred to post-deposit phases.
+                # aligning with PD control when the green line is visible.
+                #
+                # KEY BEHAVIOUR: The red threshold tape overlaps the green tape in the
+                # camera strip, so green_sum=0 for the first several frames of D2.
+                # During the 2.5 s backward window we KEEP MOVING BACKWARD even when
+                # green is lost — the AGV was already aligned on entry (small err) so
+                # holding straight is safe.  After 2.5 s we wait for green to reappear
+                # before performing the strict alignment gate (err < 3).
+                elapsed = current_time - self.docking_timer
                 M = cv2.moments(mask)
                 if M['m00'] > 0:
                     cx = int(M['m10'] / M['m00'])
@@ -862,18 +912,15 @@ class WebcamLineFollow(Node):
 
                     angular_z = -self.Kp * err - self.Kd * derivative
                     angular_z = max(min(angular_z, self.MAX_ANG_Z), -self.MAX_ANG_Z)
-                    # No deadzone minimum — allow small corrections during combined phase
 
-                    elapsed = current_time - self.docking_timer
                     if elapsed <= 2.5:
-                        # Still in combined backward + align window
+                        # Combined backward + PD align window — green is visible
                         self.twist.linear.x = -0.05
                         self.twist.angular.z = angular_z
                         self.cmd_vel_pub.publish(self.twist)
                     else:
-                        # 2.5 s elapsed — check strict alignment, then proceed
+                        # 2.5 s elapsed and green visible — check strict alignment
                         if abs(err) < 3:
-                            # (store-empty check deferred to post-D2 U-turn completion)
                             self.docking_phase = 2
                             self.docking_timer = current_time
                             self.last_err = 0
@@ -881,7 +928,7 @@ class WebcamLineFollow(Node):
                                 "Docking 2 Phase 1: Aligned (err<3). Moving forward to deposit."
                             )
                         else:
-                            # Not yet aligned — keep aligning in place (no backward)
+                            # Still not aligned — rotate in place (no backward)
                             self.twist.linear.x = 0.0
                             self.twist.angular.z = angular_z
                             self.cmd_vel_pub.publish(self.twist)
@@ -889,9 +936,27 @@ class WebcamLineFollow(Node):
                                 f"Docking 2 Phase 1: still aligning, err={err}"
                             )
                 else:
-                    self.twist.linear.x = 0.0
-                    self.twist.angular.z = 0.0
-                    self.cmd_vel_pub.publish(self.twist)
+                    # Green not visible (red threshold tape covering it).
+                    if elapsed <= 2.5:
+                        # Still in backward window — keep moving straight, no correction.
+                        # AGV was aligned at entry; holding straight is safe.
+                        self.twist.linear.x = -0.05
+                        self.twist.angular.z = 0.0
+                        self.cmd_vel_pub.publish(self.twist)
+                        self.get_logger().debug(
+                            f"Docking 2 Phase 1: green obscured by red tape — "
+                            f"continuing backward straight (elapsed={elapsed:.1f}s)"
+                        )
+                    else:
+                        # Past 2.5 s — stop and wait for green to reappear
+                        # before performing alignment check.
+                        self.twist.linear.x = 0.0
+                        self.twist.angular.z = 0.0
+                        self.cmd_vel_pub.publish(self.twist)
+                        self.get_logger().info(
+                            f"Docking 2 Phase 1: backward done, waiting for green "
+                            f"line to reappear (green_sum={green_sum})"
+                        )
 
             elif self.docking_phase == 2:
                 # Phase 2: Move forward at 0.075 for 8s
@@ -964,6 +1029,7 @@ class WebcamLineFollow(Node):
                     # STORE-empty check happens after U-turn completes (pending_docking_type=2).
                     self.docking_type = 0
                     self.docking_phase = 0
+                    self.next_station = None  # docking complete — clear committed destination
                     self.post_docking_cooldown_until = current_time + 5.0
                     self.u_turning = True
                     self.u_turn_start_time = current_time

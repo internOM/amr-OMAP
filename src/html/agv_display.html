@@ -246,6 +246,64 @@
             min-height: 18px;
         }
 
+        /* ── Next Station badge ── */
+        .next-station-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 26px;
+        }
+
+        .next-station-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .next-station-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .next-station-badge.store {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+        }
+
+        .next-station-badge.capp {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .next-station-badge.unknown {
+            background: transparent;
+            border: 1px solid transparent;
+            color: transparent;
+        }
+
+        .next-station-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .next-station-badge.store .next-station-dot { background: #34d399; box-shadow: 0 0 4px #34d399; }
+        .next-station-badge.capp  .next-station-dot { background: #fca5a5; box-shadow: 0 0 4px #fca5a5; }
+
         /* ── Activity Log ── */
         .log-panel {
             background: var(--surface);
@@ -830,6 +888,13 @@
                 <div class="state-label">AGV State</div>
                 <div class="state-value waiting" id="state-value">WAITING</div>
                 <div class="state-sub" id="state-sub">Awaiting ROS connection…</div>
+                <div class="next-station-row">
+                    <span class="next-station-label">Next →</span>
+                    <span class="next-station-badge unknown" id="next-station-badge">
+                        <span class="next-station-dot"></span>
+                        <span id="next-station-text">--</span>
+                    </span>
+                </div>
             </div>
 
 
@@ -990,39 +1055,50 @@
 
             if (msg.data === "RUNNING") {
                 setDisplayState("RUNNING", "running", "Line following active");
+                setNextStation(null);
                 setAgvRunning(true);
             } else if (msg.data === "WAITING") {
                 setDisplayState("WAITING", "waiting", "Standby — Press GO to start");
+                setNextStation(null);
                 setAgvRunning(false);
             } else if (msg.data === "STOPPED") {
                 setDisplayState("STOPPED", "stopped", "Stopped · Teleop restored");
+                setNextStation(null);
                 setAgvRunning(false);
             } else if (msg.data === "OBSTACLE_DETECTED") {
                 setDisplayState("OBSTACLE", "stopped", "Obstacle detected — waiting for path to clear");
+                setNextStation(null);
                 setAgvRunning(true);
             } else if (msg.data === "DOCKING 1") {
-                setDisplayState("DOCKING 1", "docking", "Docking at STORE rack — loading cycle active");
+                setDisplayState("DOCKING 1", "docking", "At STORE rack — loading cycle active");
+                setNextStation("CAPP");   // after D1, AGV heads to CAPP
                 setAgvRunning(true);
             } else if (msg.data === "DOCKING 2") {
-                setDisplayState("DOCKING 2", "docking", "Docking at CAPP rack — unloading cycle active");
+                setDisplayState("DOCKING 2", "docking", "At CAPP rack — unloading cycle active");
+                setNextStation("STORE");  // after D2, AGV heads to STORE
                 setAgvRunning(true);
             } else if (msg.data === "U-TURN") {
                 setDisplayState("U-TURN", "waiting", "Executing U-turn");
+                // next_station carries over from whatever triggered the U-turn
                 setAgvRunning(true);
             } else if (msg.data === "IDLE \u2014 CAPP FULL") {
-                setDisplayState("IDLE — CAPP FULL", "stopped", "CAPP rack full — holding at STORE until vacancy");
+                setDisplayState("IDLE — CAPP FULL", "stopped", "CAPP rack full — holding until a slot opens");
+                setNextStation("CAPP");   // will head to CAPP once space is available
                 setAgvRunning(false);
             } else if (msg.data === "IDLE \u2014 STORE EMPTY") {
-                setDisplayState("IDLE — STORE EMPTY", "stopped", "STORE is empty — holding until material arrives");
+                setDisplayState("IDLE — STORE EMPTY", "stopped", "STORE empty — holding until material arrives");
+                setNextStation("STORE");  // will head to STORE once material appears
                 setAgvRunning(false);
             } else if (msg.data === "WAITING \u2014 CONFIRM") {
-                setDisplayState("CONFIRM GO", "waiting", "Sensor blocked — press GO to confirm and continue");
+                setDisplayState("CONFIRM GO", "waiting", "Box on sensor — press GO to confirm and retract");
+                setNextStation("STORE");  // D2 confirm → after retract, heads to STORE
                 setAgvRunning(false);
             }
 
             // Watchdog: If no status published after 3 seconds, node is offline
             stateTimeout = setTimeout(() => {
                 setDisplayState("INACTIVE", "stopped", "Line follow node offline");
+                setNextStation(null);
                 setAgvRunning(false);
                 setButtonsDisabled(true);
             }, 3000);
@@ -1076,6 +1152,25 @@
             val.className = "state-value " + cssClass;
             document.getElementById("state-sub").textContent = sub;
             card.className = "state-card " + cssClass;
+        }
+
+        /**
+         * Update the Next Station badge.
+         * @param {"STORE"|"CAPP"|null} station
+         */
+        function setNextStation(station) {
+            const badge = document.getElementById("next-station-badge");
+            const text  = document.getElementById("next-station-text");
+            if (station === "STORE") {
+                badge.className = "next-station-badge store";
+                text.textContent = "STORE";
+            } else if (station === "CAPP") {
+                badge.className = "next-station-badge capp";
+                text.textContent = "CAPP";
+            } else {
+                badge.className = "next-station-badge unknown";
+                text.textContent = "--";
+            }
         }
 
         /* ================================================================
