@@ -6,24 +6,24 @@ twist_mux:
       # Operator joystick always overrides everything.
       teleop:
         topic   : /cmd_vel_teleop
-        timeout : 0.5
+        timeout : 1.0
         priority: 255
 
       # ── Mid Priority: E-Stop / Localization Spins ─────────────────────────
       estop:
         topic   : /cmd_vel_estop
-        timeout : 0.5
+        timeout : 1.0
         priority: 100
 
       # ── Low Priority: AGV Line Following ───────────────────────────────────
       # Same priority slot as Nav2. AGV and Nav2 are never run simultaneously.
       agv:
         topic   : /cmd_vel_agv
-        timeout : 0.5
+        timeout : 1.0
         priority: 10
 
       # ── Lowest Priority: Nav2 Autonomous Navigation ────────────────────────
       navigation:
         topic   : /cmd_vel_nav
-        timeout : 0.5
+        timeout : 1.0
         priority: 10

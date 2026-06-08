@@ -1,0 +1,5 @@
+  File "/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/webcam_line_follow.py", line 920
+    angular_z = max(min(angular_z, self.MAX_ANG_Z), -self.MAX_ANG_qtqga29662
+                   ^
+SyntaxError: '(' was never closed
+

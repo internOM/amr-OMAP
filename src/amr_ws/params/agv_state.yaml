@@ -1,0 +1,7 @@
+# AGV persistent state — written automatically by webcam_line_follow.py
+# Do not edit manually while the AGV is running.
+#
+# next_station: where the AGV is heading on the NEXT run after boot.
+#   STORE  → AGV will go toward the STORE rack (green line / D1 docking)
+#   CAPP   → AGV will go toward the CAPP rack  (red line  / D2 docking)
+next_station: STORE

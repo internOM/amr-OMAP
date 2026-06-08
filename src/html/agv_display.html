@@ -1093,6 +1093,10 @@
                 setDisplayState("CONFIRM GO", "waiting", "Box on sensor — press GO to confirm and retract");
                 setNextStation("STORE");  // D2 confirm → after retract, heads to STORE
                 setAgvRunning(false);
+            } else if (msg.data === "WAITING \u2014 CONFIRM GO") {
+                setDisplayState("CONFIRM GO", "waiting", "Docking complete — press GO to resume");
+                setNextStation(null);
+                setAgvRunning(false);
             }
 
             // Watchdog: If no status published after 3 seconds, node is offline
