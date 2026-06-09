@@ -1,0 +1,41 @@
+[1.169s] Invoking command in '/home/intern1/ros2_ws/build/amr_ws': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/amr_ws/build --no-deps symlink_data --force
+[1.578s] running develop
+[1.845s] running egg_info
+[1.865s] writing amr_ws.egg-info/PKG-INFO
+[1.866s] writing dependency_links to amr_ws.egg-info/dependency_links.txt
+[1.866s] writing entry points to amr_ws.egg-info/entry_points.txt
+[1.866s] writing requirements to amr_ws.egg-info/requires.txt
+[1.867s] writing top-level names to amr_ws.egg-info/top_level.txt
+[1.908s] reading manifest file 'amr_ws.egg-info/SOURCES.txt'
+[1.909s] writing manifest file 'amr_ws.egg-info/SOURCES.txt'
+[1.932s] running build_ext
+[1.932s] Creating /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr-ws.egg-link (link to .)
+[1.933s] Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.934s] Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.934s] Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.935s] Installing agv_audio_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.935s] Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.935s] Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.935s] Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.935s] Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.936s] Installing hsv_probe_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.936s] Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.936s] Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.936s] Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.936s] Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.936s] Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.937s] Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.937s] Installing pose_persistence_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.937s] Installing rack_websocket_server script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.937s] Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.937s] Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[1.937s] 
+[1.938s] Installed /home/intern1/ros2_ws/build/amr_ws
+[1.938s] running symlink_data
+[1.938s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/resource/amr_ws -> /home/intern1/ros2_ws/install/amr_ws/share/ament_index/resource_index/packages
+[1.938s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/package.xml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws
+[1.938s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/launch/slam_toolbox_launch.py -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/launch
+[1.939s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/params/slam_param.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/params
+[1.939s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/waypoints/waypoints.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints
+[1.939s] symbolically linking /home/intern1/ros2_ws/build/amr_ws/nav2_params/twist_mux.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/nav2_params
+[1.986s] Invoked command in '/home/intern1/ros2_ws/build/amr_ws' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/intern1/ros2_ws/build/amr_ws/build --no-deps symlink_data --force

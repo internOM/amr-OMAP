@@ -1,0 +1,21 @@
+# Rack sensor persistent state — written automatically by rack_websocket_server.py
+# Do not edit manually while the server is running.
+# Status values:  1=FULL  0=EMPTY  -1=DISCONNECTED
+#
+# rack_states is an array of {slot: status} entries that webcam_line_follow.py
+# reads at startup to restore the last-known rack occupancy even if wifi is down.
+#
+last_updated: null
+rack_states:
+  CAPP-A1: 0
+  CAPP-A2: 0
+  CAPP-A3: 0
+  CAPP-B1: 0
+  CAPP-B2: 0
+  CAPP-B3: 0
+  STORE-A1: 0
+  STORE-A2: 0
+  STORE-A3: 0
+  STORE-B1: 0
+  STORE-B2: 0
+  STORE-B3: 0

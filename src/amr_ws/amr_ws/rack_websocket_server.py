@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+import yaml
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
@@ -8,6 +10,13 @@ import websockets
 import json
 import threading
 from datetime import datetime
+
+# Path where last-known rack statuses are persisted between runs.
+# webcam_line_follow.py reads this file at startup to pre-populate its
+# rack_states dict, providing offline resilience when wifi is unavailable.
+RACK_STATE_FILE = os.path.expanduser(
+    '~/ros2_ws/src/amr_ws/params/rack_state.yaml'
+)
 
 
 class RackWebSocketBridge(Node):
@@ -156,6 +165,9 @@ class RackWebSocketBridge(Node):
                             
                             # Publish to ROS2 topic
                             self._publish_rack_status(rack_id, status, distance)
+
+                            # Persist the full snapshot so AGV can read it at boot
+                            self._save_rack_state()
                             
                             # Broadcast change to all other connected clients
                             broadcast_msg = json.dumps({
@@ -210,6 +222,9 @@ class RackWebSocketBridge(Node):
                         "timestamp": timestamp_str
                     })
                     await self._broadcast(disconnect_msg)
+
+                    # Persist the disconnected state so next boot reflects offline sensors
+                    self._save_rack_state()
             
     def _publish_rack_status(self, rack_id, status, distance):
         """Publish rack status to ROS2 topic"""
@@ -217,9 +232,62 @@ class RackWebSocketBridge(Node):
         # Create message (using String for now)
         # Format: "rack_id:status:distance"
         msg = String()
-        msg.data = f'{rack_id}:{status}:{distance:.1f}'
+        msg.data = f'{rack_id.upper()}:{status}:{distance:.1f}'
         
         self.rack_status_pub.publish(msg)
+
+    def _save_rack_state(self):
+        """
+        Persist the current rack_data snapshot to rack_state.yaml.
+
+        The file is structured so that webcam_line_follow.py can read it with
+        a simple yaml.safe_load() call.  Only the integer 'status' field is
+        written for each slot — that is the only value the AGV routing logic
+        needs for offline resilience.
+
+        Status values:
+          1   → FULL   (slot occupied)
+          0   → EMPTY  (slot vacant)
+         -1   → DISCONNECTED (sensor offline)
+
+        The rack_id keys in rack_data use the websocket casing (e.g. 'Store-A1',
+        'CAPP-B3').  We normalise them to the uppercase form that webcam_line_follow
+        expects ('STORE-A1', 'CAPP-B3') before writing.
+        """
+        try:
+            # Build a normalised status dict keyed as STORE-XX / CAPP-XX
+            rack_states = {}
+            for rack_id, info in self.rack_data.items():
+                # Normalise casing: 'Store-A1' → 'STORE-A1'
+                normalised = rack_id.upper()  # 'CAPP-B2' stays, 'Store-A1'→'STORE-A1'
+                rack_states[normalised] = info.get('status', 0)
+
+            payload = {
+                '# Rack sensor persistent state — written automatically by rack_websocket_server.py': None,
+                '# Do not edit manually while the server is running.': None,
+                '# Status values:  1=FULL  0=EMPTY  -1=DISCONNECTED': None,
+                'last_updated': datetime.now().isoformat(),
+                'rack_states': rack_states,
+            }
+
+            path = os.path.realpath(RACK_STATE_FILE)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+
+            # Write comment header manually, then dump the data portion
+            with open(path, 'w') as f:
+                f.write('# Rack sensor persistent state — written automatically by rack_websocket_server.py\n')
+                f.write('# Do not edit manually while the server is running.\n')
+                f.write('# Status values:  1=FULL  0=EMPTY  -1=DISCONNECTED\n')
+                f.write('#\n')
+                yaml.dump(
+                    {'last_updated': datetime.now().isoformat(), 'rack_states': rack_states},
+                    f,
+                    default_flow_style=False,
+                    sort_keys=True,
+                )
+
+        except Exception as e:
+            self.get_logger().warn(f'[RackState] Could not save {RACK_STATE_FILE}: {e}')
         
 
 def main(args=None):

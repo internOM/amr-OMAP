@@ -1,0 +1,91 @@
+[4.695s] Invoking command in '/home/intern1/ros2_ws/build/amr_ws': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/intern1/ros2_ws/build/amr_ws/build
+[5.152s] running develop
+[5.346s] Removing /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr-ws.egg-link (link to .)
+[5.417s] Invoked command in '/home/intern1/ros2_ws/build/amr_ws' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --uninstall --editable --build-directory /home/intern1/ros2_ws/build/amr_ws/build
+[5.419s] Invoking command in '/home/intern1/ros2_ws/src/amr_ws': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/amr_ws build --build-base /home/intern1/ros2_ws/build/amr_ws/build install --record /home/intern1/ros2_ws/build/amr_ws/install.log --single-version-externally-managed install_data --force
+[5.953s] running egg_info
+[5.996s] writing ../../build/amr_ws/amr_ws.egg-info/PKG-INFO
+[5.997s] writing dependency_links to ../../build/amr_ws/amr_ws.egg-info/dependency_links.txt
+[5.998s] writing entry points to ../../build/amr_ws/amr_ws.egg-info/entry_points.txt
+[5.998s] writing requirements to ../../build/amr_ws/amr_ws.egg-info/requires.txt
+[5.999s] writing top-level names to ../../build/amr_ws/amr_ws.egg-info/top_level.txt
+[6.080s] reading manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+[6.082s] adding license file 'LICENSE'
+[6.083s] writing manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'
+[6.083s] running build
+[6.083s] running build_py
+[6.084s] copying amr_ws/webcam_line_follow.py -> /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws
+[6.085s] running install
+[6.097s] running install_lib
+[6.137s] creating /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.137s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/Automation_and_Lidar2.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.138s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/path_logger.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.139s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/cmdvelsmoothed_to_cmdvel.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.139s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/Demo_Automation.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.140s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/camera_follow.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.141s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/keyboard_listener.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.141s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/compass.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.141s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/Automation_and_Lidar.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.142s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/baselink_laser_tf.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.142s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/agv_audio_node.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.143s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/localization_node.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.143s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/joystick_to_motor.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.144s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/__init__.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.144s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/orchestrator_node.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.144s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/hsv_probe_node.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.145s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/pose_persistence_node.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.145s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/rack_websocket_server.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.146s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/return_home_node.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.147s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/webcam_line_follow.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.147s] copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/path_publisher.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws
+[6.151s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/Automation_and_Lidar2.py to Automation_and_Lidar2.cpython-312.pyc
+[6.156s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/path_logger.py to path_logger.cpython-312.pyc
+[6.166s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/cmdvelsmoothed_to_cmdvel.py to cmdvelsmoothed_to_cmdvel.cpython-312.pyc
+[6.166s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/Demo_Automation.py to Demo_Automation.cpython-312.pyc
+[6.168s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/camera_follow.py to camera_follow.cpython-312.pyc
+[6.169s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/keyboard_listener.py to keyboard_listener.cpython-312.pyc
+[6.170s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/compass.py to compass.cpython-312.pyc
+[6.171s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/Automation_and_Lidar.py to Automation_and_Lidar.cpython-312.pyc
+[6.175s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/baselink_laser_tf.py to baselink_laser_tf.cpython-312.pyc
+[6.176s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/agv_audio_node.py to agv_audio_node.cpython-312.pyc
+[6.179s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/localization_node.py to localization_node.cpython-312.pyc
+[6.183s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/joystick_to_motor.py to joystick_to_motor.cpython-312.pyc
+[6.185s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__init__.py to __init__.cpython-312.pyc
+[6.186s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/orchestrator_node.py to orchestrator_node.cpython-312.pyc
+[6.200s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/hsv_probe_node.py to hsv_probe_node.cpython-312.pyc
+[6.203s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/pose_persistence_node.py to pose_persistence_node.cpython-312.pyc
+[6.206s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/rack_websocket_server.py to rack_websocket_server.cpython-312.pyc
+[6.211s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/return_home_node.py to return_home_node.cpython-312.pyc
+[6.212s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/webcam_line_follow.py to webcam_line_follow.cpython-312.pyc
+[6.228s] byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/path_publisher.py to path_publisher.cpython-312.pyc
+[6.229s] running install_data
+[6.229s] copying resource/amr_ws -> /home/intern1/ros2_ws/install/amr_ws/share/ament_index/resource_index/packages
+[6.230s] copying package.xml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws
+[6.230s] copying launch/slam_toolbox_launch.py -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/launch
+[6.232s] copying params/slam_param.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/params
+[6.233s] copying waypoints/waypoints.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/waypoints
+[6.234s] copying nav2_params/twist_mux.yaml -> /home/intern1/ros2_ws/install/amr_ws/share/amr_ws/nav2_params
+[6.234s] running install_egg_info
+[6.273s] Copying ../../build/amr_ws/amr_ws.egg-info to /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info
+[6.277s] running install_scripts
+[6.631s] Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.631s] Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.631s] Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.632s] Installing agv_audio_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.633s] Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.633s] Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.634s] Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.635s] Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.635s] Installing hsv_probe_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.636s] Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.636s] Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.637s] Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.637s] Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.637s] Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.637s] Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.637s] Installing pose_persistence_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.637s] Installing rack_websocket_server script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.639s] Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.639s] Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws
+[6.639s] writing list of installed files to '/home/intern1/ros2_ws/build/amr_ws/install.log'
+[6.723s] Invoked command in '/home/intern1/ros2_ws/src/amr_ws' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/amr_ws build --build-base /home/intern1/ros2_ws/build/amr_ws/build install --record /home/intern1/ros2_ws/build/amr_ws/install.log --single-version-externally-managed install_data --force

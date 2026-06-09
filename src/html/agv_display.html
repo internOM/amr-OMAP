@@ -1002,8 +1002,9 @@
         ros.on("connection", () => {
             document.getElementById("connection-status").classList.add("connected");
             document.getElementById("status-text").textContent = "Connected";
-            setButtonsDisabled(true);
-            setDisplayState("INACTIVE", "stopped", "Searching for line follow node...");
+            // Do NOT reset display or buttons here — the /agv/state subscriber
+            // restores the correct state within 1 second via the node's 1 Hz heartbeat.
+            // Resetting would cause a visible flash and re-require the user to press GO.
             broadcastPresence();
         });
 
@@ -1012,7 +1013,11 @@
             document.getElementById("status-text").textContent = "Disconnected";
             setButtonsDisabled(true);
             setDisplayState("WAITING", "waiting", "Awaiting ROS connection…");
-            setAgvRunning(false);
+            stateKnown = false; // Prevent teleop from publishing until state is recovered
+            // Do NOT call setAgvRunning(false) here.
+            // If the AGV was running, keeping agvRunning=true keeps the joystick
+            // overlay locked, which prevents the teleop loop from publishing
+            // zero-velocity to /cmd_vel_teleop and stopping the AGV via twist_mux.
         });
 
         /* ================================================================
@@ -1048,61 +1053,54 @@
         const agvStateTopic = new ROSLIB.Topic({ ros: ros, name: "/agv/state", messageType: "std_msgs/String" });
 
         let stateTimeout = null;
+        let stateKnown = false;
 
         agvStateTopic.subscribe((msg) => {
             clearTimeout(stateTimeout);
             setButtonsDisabled(false);
+            stateKnown = true;
 
             if (msg.data === "RUNNING") {
                 setDisplayState("RUNNING", "running", "Line following active");
-                setNextStation(null);
+                // Badge is driven by /agv/next_station — do NOT clear it here.
                 setAgvRunning(true);
             } else if (msg.data === "WAITING") {
                 setDisplayState("WAITING", "waiting", "Standby — Press GO to start");
-                setNextStation(null);
                 setAgvRunning(false);
             } else if (msg.data === "STOPPED") {
                 setDisplayState("STOPPED", "stopped", "Stopped · Teleop restored");
-                setNextStation(null);
                 setAgvRunning(false);
             } else if (msg.data === "OBSTACLE_DETECTED") {
                 setDisplayState("OBSTACLE", "stopped", "Obstacle detected — waiting for path to clear");
-                setNextStation(null);
                 setAgvRunning(true);
             } else if (msg.data === "DOCKING 1") {
                 setDisplayState("DOCKING 1", "docking", "At STORE rack — loading cycle active");
-                setNextStation("CAPP");   // after D1, AGV heads to CAPP
                 setAgvRunning(true);
             } else if (msg.data === "DOCKING 2") {
                 setDisplayState("DOCKING 2", "docking", "At CAPP rack — unloading cycle active");
-                setNextStation("STORE");  // after D2, AGV heads to STORE
                 setAgvRunning(true);
             } else if (msg.data === "U-TURN") {
                 setDisplayState("U-TURN", "waiting", "Executing U-turn");
-                // next_station carries over from whatever triggered the U-turn
                 setAgvRunning(true);
             } else if (msg.data === "IDLE \u2014 CAPP FULL") {
                 setDisplayState("IDLE — CAPP FULL", "stopped", "CAPP rack full — holding until a slot opens");
-                setNextStation("CAPP");   // will head to CAPP once space is available
                 setAgvRunning(false);
             } else if (msg.data === "IDLE \u2014 STORE EMPTY") {
                 setDisplayState("IDLE — STORE EMPTY", "stopped", "STORE empty — holding until material arrives");
-                setNextStation("STORE");  // will head to STORE once material appears
                 setAgvRunning(false);
             } else if (msg.data === "WAITING \u2014 CONFIRM") {
                 setDisplayState("CONFIRM GO", "waiting", "Box on sensor — press GO to confirm and retract");
-                setNextStation("STORE");  // D2 confirm → after retract, heads to STORE
                 setAgvRunning(false);
             } else if (msg.data === "WAITING \u2014 CONFIRM GO") {
                 setDisplayState("CONFIRM GO", "waiting", "Docking complete — press GO to resume");
-                setNextStation(null);
                 setAgvRunning(false);
             }
 
             // Watchdog: If no status published after 3 seconds, node is offline
             stateTimeout = setTimeout(() => {
                 setDisplayState("INACTIVE", "stopped", "Line follow node offline");
-                setNextStation(null);
+                setNextStation(null);  // node is truly gone — safe to clear
+                stateKnown = false;    // Stop teleop publishing
                 setAgvRunning(false);
                 setButtonsDisabled(true);
             }, 3000);
@@ -1143,6 +1141,30 @@
         agvModeTopic.subscribe((msg) => {
             const mode = msg.data.toLowerCase();
             applyModeUI(mode);
+        });
+
+        /* ================================================================
+           /agv/next_station SUBSCRIBER
+           Authoritative next-station badge — published by the Python node
+           every 1 Hz (and immediately on every change).  Drives the badge
+           independently of the state string so it persists across RUNNING /
+           STOPPED / WAITING heartbeats without flickering to '--'.
+           ================================================================ */
+        const agvNextStationTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: "/agv/next_station",
+            messageType: "std_msgs/String"
+        });
+
+        agvNextStationTopic.subscribe((msg) => {
+            const station = msg.data.toUpperCase().trim();
+            if (station === "STORE") {
+                setNextStation("STORE");
+            } else if (station === "CAPP") {
+                setNextStation("CAPP");
+            } else {
+                setNextStation(null);
+            }
         });
 
 
@@ -1326,7 +1348,7 @@
                 currentAngular = Math.max(currentAngular - maxAngularSlew, targetAngular);
             }
 
-            if (agvRunning) return;
+            if (!stateKnown || agvRunning) return;
             cmdVel.publish(new ROSLIB.Message({
                 linear: { x: currentLinear, y: 0, z: 0 },
                 angular: { x: 0, y: 0, z: currentAngular }

@@ -35,6 +35,14 @@ AGV_STATE_FILE = os.path.expanduser(
     '~/ros2_ws/src/amr_ws/params/agv_state.yaml'
 )
 
+# ── Rack sensor persistent state file ───────────────────────────────────────
+# Written by rack_websocket_server.py on every sensor update.
+# Loaded here at startup so the AGV has last-known rack statuses even if
+# wifi is down and no WebSocket messages arrive after boot.
+RACK_STATE_FILE = os.path.expanduser(
+    '~/ros2_ws/src/amr_ws/params/rack_state.yaml'
+)
+
 # ── LiDAR tiered safety zones ────────────────────────────────────────────────
 # Each entry is (max_distance_m, half_cone_deg).
 # A beam triggers an obstacle stop when BOTH conditions are met:
@@ -63,7 +71,7 @@ OBSTACLE_CLEAR_DEBOUNCE = 20   # frames
 # Slew-rate limiter: how much linear.x can increase per image frame once the
 # robot resumes after an obstacle clear.  Target cruise speed = 0.25 m/s.
 # At ~10 Hz image rate this gives ≈ 2.5 s to reach cruise speed.
-LINEAR_SLEW_RATE = 0.01        # m/s per frame
+LINEAR_SLEW_RATE = 0.008        # m/s per frame
 
 # Minimum green pixel sum to trust the green line when reverting from red tracking.
 # Used in the no-line-detected fallback. Tune if needed.
@@ -107,6 +115,9 @@ class WebcamLineFollow(Node):
         # Ping Echo pub
         self.heartbeat_pub = self.create_publisher(String, '/ui_heartbeat', 10)
 
+        # Next-station feedback → UI badge (published every 1 Hz + on every change)
+        self.next_station_pub = self.create_publisher(String, '/agv/next_station', 10)
+
         # ── Follow mode ────────────────────────────────────────────────
         # "green" → always follow green tape
         # "red"   → follow green, but at an intersection divert onto red if
@@ -140,8 +151,8 @@ class WebcamLineFollow(Node):
         self._current_linear_x = 0.0
 
         # ── U-turn detection thresholds ────────────────────────────────
-        self.EXPLOSION_THRESHOLD     = 1000000  # green strip sum → green U-turn
-        self.RED_EXPLOSION_PX        = 900000  # red strip pixels → red U-turn
+        self.EXPLOSION_THRESHOLD     = 1100000  # green strip sum → green U-turn
+        self.RED_EXPLOSION_PX        = 1100000  # red strip pixels → red U-turn
         self.u_turning               = False
         self.u_turn_start_time       = None
         self.U_TURN_MIN_TIME         = 2.0      # seconds before checking for line again
@@ -169,12 +180,9 @@ class WebcamLineFollow(Node):
         self.pending_docking_type = 0
 
         # ── Rack sensor state (12 ultrasonic slots) ───────────────────
-        self.rack_states = {
-            "STORE-A1": 0, "STORE-A2": 0, "STORE-A3": 0,
-            "STORE-B1": 0, "STORE-B2": 0, "STORE-B3": 0,
-            "CAPP-A1": 0, "CAPP-A2": 0, "CAPP-A3": 0,
-            "CAPP-B1": 0, "CAPP-B2": 0, "CAPP-B3": 0,
-        }
+        # Populated from rack_state.yaml at startup (last-known values);
+        # overwritten live by rack_status_callback as new WebSocket data arrives.
+        self.rack_states = self._load_rack_states()
         self.waiting_operator_confirm = False
         # True when D1 full protocol done but CAPP is full — hold idle at STORE
         self.idle_capp_full = False
@@ -203,6 +211,7 @@ class WebcamLineFollow(Node):
         self.state_timer = self.create_timer(1.0, self.timer_state_callback)
         self._publish_state(self.current_state)
         self._publish_mode(self.follow_mode)
+        self._publish_next_station()
 
     # ── LiDAR safety callback ──────────────────────────────────────────────────
 
@@ -319,7 +328,7 @@ class WebcamLineFollow(Node):
                 )
                 return
 
-            rack_id  = parts[0]
+            rack_id  = parts[0].upper()
             status   = int(parts[1])
             distance = float(parts[2]) if len(parts) > 2 else 0.0
 
@@ -349,6 +358,7 @@ class WebcamLineFollow(Node):
                     # Instead: re-trigger the U-turn → Docking 1 sequence directly.
                     self.next_station = "CAPP"
                     self._save_next_station("CAPP")
+                    self._publish_next_station()
                     lane_mode = self._decide_lane_for_station("CAPP")
                     self.follow_mode = lane_mode
                     self._publish_mode(lane_mode)
@@ -529,19 +539,29 @@ class WebcamLineFollow(Node):
                 self.get_logger().info(
                     "Operator confirmed GO \u2014 starting D2 Phase 4 (backward retract)."
                 )
+            elif self.docking_type == 1:
+                # Pre-D1-exit confirm: operator confirms load, start Phase 4 move forward.
+                self.docking_phase = 4
+                self.docking_timer = time.time()
+                self.current_state = "DOCKING 1"
+                self._publish_state(self.current_state)
+                self.get_logger().info(
+                    "Operator confirmed GO \u2014 starting D1 Phase 4 (move forward)."
+                )
             else:
-                # Post-D1 confirm: resume normal line following.
                 self.current_state = "RUNNING"
                 self._current_linear_x = 0.0
                 self._publish_state(self.current_state)
-                self.get_logger().info(
-                    "Operator confirmed GO after Docking 1 \u2014 resuming line following."
-                )
             return
 
         if msg.data and not self.enabled:
             self.enabled = True
-            self.following_red = False
+            # Only reset red-follow state on a genuine cold start (STOPPED/WAITING).
+            # If re-enabling after a UI reconnect while the AGV was actively tracking
+            # the red line, preserving following_red prevents snapping back to green
+            # mid-route.
+            if self.current_state in ("STOPPED", "WAITING"):
+                self.following_red = False
             # If an obstacle is already present, reflect that immediately
             if self.obstacle_detected or time.time() < self.resume_time:
                 self.current_state = "OBSTACLE_DETECTED"
@@ -580,9 +600,51 @@ class WebcamLineFollow(Node):
             self.idle_capp_full = False
             self.idle_store_empty = False
             self.post_docking_cooldown_until = 0.0
-            self.next_station = None
+            # next_station is deliberately NOT cleared here.
+            # The YAML file always holds the last valid destination so a node
+            # restart recovers it.  Keeping it in memory means the UI badge
+            # keeps showing the correct target after a STOP + GO without restart.
 
     # ── AGV state persistence helpers ───────────────────────────────────
+
+    def _load_rack_states(self) -> dict:
+        """
+        Load the last-known rack statuses from rack_state.yaml.
+
+        The file is written by rack_websocket_server.py every time a sensor
+        update arrives.  Reading it at startup lets the AGV use the last valid
+        rack snapshot even when wifi is unavailable on boot.
+
+        Returns a fully-populated dict with all 12 keys.  Missing or invalid
+        slots default to 0 (EMPTY).  Status values of -1 (disconnected) are
+        preserved so the UI can show the sensor as offline.
+        """
+        defaults = {
+            "STORE-A1": 0, "STORE-A2": 0, "STORE-A3": 0,
+            "STORE-B1": 0, "STORE-B2": 0, "STORE-B3": 0,
+            "CAPP-A1":  0, "CAPP-A2":  0, "CAPP-A3":  0,
+            "CAPP-B1":  0, "CAPP-B2":  0, "CAPP-B3":  0,
+        }
+        try:
+            path = os.path.realpath(RACK_STATE_FILE)
+            if os.path.isfile(path):
+                with open(path, 'r') as f:
+                    data = yaml.safe_load(f) or {}
+                rack_section = data.get('rack_states', {})
+                if isinstance(rack_section, dict):
+                    for key in defaults:
+                        if key in rack_section:
+                            val = rack_section[key]
+                            if isinstance(val, int) and val in (-1, 0, 1):
+                                defaults[key] = val
+                    self.get_logger().info(
+                        f"[RackState] Loaded last-known rack statuses from {path}"
+                    )
+                    return defaults
+        except Exception as e:
+            self.get_logger().warn(f"[RackState] Could not load {RACK_STATE_FILE}: {e}")
+        self.get_logger().info("[RackState] No rack_state.yaml found — defaulting all slots to 0 (EMPTY).")
+        return defaults
 
     def _load_next_station(self) -> str:
         """
@@ -633,10 +695,19 @@ class WebcamLineFollow(Node):
         msg.data = mode
         self.mode_pub.publish(msg)
 
+    def _publish_next_station(self) -> None:
+        """Broadcast next_station to /agv/next_station so the UI badge always reflects truth.
+        Publishes an empty string when next_station is None (badge shows '--').
+        """
+        msg = String()
+        msg.data = self.next_station or ""
+        self.next_station_pub.publish(msg)
+
     def timer_state_callback(self):
-        """1 Hz heartbeat — keeps UI state and mode button always up to date."""
+        """1 Hz heartbeat — keeps UI state, mode button, and next-station badge up to date."""
         self._publish_state(self.current_state)
         self._publish_mode(self.follow_mode)
+        self._publish_next_station()
 
     # ── Image callback ─────────────────────────────────────────────────────────
 
@@ -742,7 +813,7 @@ class WebcamLineFollow(Node):
             # red following — the AGV may briefly lose the line while steering.
             if self.docking_type != 0 or self.u_turning:
                 self._red_lost_frames = 0
-            elif red_strip_px < 200:
+            elif red_strip_px < 75:
                 self._red_lost_frames += 1
                 if self._red_lost_frames >= self.RED_LOST_DEBOUNCE:
                     self.following_red = False
@@ -790,6 +861,7 @@ class WebcamLineFollow(Node):
                 # Decide lane NOW using only CAPP rack states.
                 self.next_station = "CAPP"
                 self._save_next_station("CAPP")
+                self._publish_next_station()
                 lane_mode = self._decide_lane_for_station("CAPP")
                 self.follow_mode = lane_mode
                 self._publish_mode(lane_mode)
@@ -808,6 +880,7 @@ class WebcamLineFollow(Node):
                 # Decide lane NOW using only STORE rack states.
                 self.next_station = "STORE"
                 self._save_next_station("STORE")
+                self._publish_next_station()
                 lane_mode = self._decide_lane_for_station("STORE")
                 self.follow_mode = lane_mode
                 self._publish_mode(lane_mode)
@@ -960,9 +1033,15 @@ class WebcamLineFollow(Node):
                     self.twist.angular.z = 0.0
                     self.cmd_vel_pub.publish(self.twist)
                 else:
-                    self.docking_phase = 4
-                    self.docking_timer = current_time
-                    self.get_logger().info("Docking 1 Phase 3 Done. Phase 4: Moving forward to exit loading zone.")
+                    # D1 Phase 3 complete — hold for operator GO confirmation before moving forward.
+                    zero = Twist()
+                    self.cmd_vel_pub.publish(zero)
+                    self.waiting_post_dock_confirm = True
+                    self.current_state = "WAITING \u2014 CONFIRM GO"
+                    self._publish_state(self.current_state)
+                    self.get_logger().warn(
+                        "Docking 1 Phase 3 complete \u2014 waiting for operator GO to advance to Phase 4."
+                    )
 
             elif self.docking_phase == 4:
                 # Phase 4: Move forward at 0.075 m/s for 5.0 s (exit loading zone)
@@ -971,19 +1050,20 @@ class WebcamLineFollow(Node):
                     self.twist.angular.z = 0.0
                     self.cmd_vel_pub.publish(self.twist)
                 else:
-                    # D1 complete — hold for operator GO confirmation before resuming.
-                    # CAPP-full idle check will happen after operator releases the AGV.
+                    # D1 complete — CAPP-full idle check will happen after resuming.
                     self.docking_type = 0
                     self.docking_phase = 0
-                    self.next_station = None  # clear committed destination
+                    # next_station kept alive (still "CAPP") so the UI badge
+                    # continues to show the correct destination while the AGV
+                    # resumes line-following toward CAPP.
                     self.post_docking_cooldown_until = current_time + 5.0
                     zero = Twist()
                     self.cmd_vel_pub.publish(zero)
-                    self.waiting_post_dock_confirm = True
-                    self.current_state = "WAITING \u2014 CONFIRM GO"
+                    self.current_state = "RUNNING"
+                    self._current_linear_x = 0.0
                     self._publish_state(self.current_state)
-                    self.get_logger().warn(
-                        "Docking 1 complete \u2014 waiting for operator GO to continue."
+                    self.get_logger().info(
+                        "Docking 1 complete \u2014 resuming line following."
                     )
             
             return  # Skip normal PD while docking
@@ -993,7 +1073,7 @@ class WebcamLineFollow(Node):
                 # Phase 1: Move BACKWARDS at -0.05 m/s for 2.5 s unconditionally to clear the red threshold,
                 # then align in place with PD control.
                 elapsed = current_time - self.docking_timer
-                if elapsed <= 4.5:
+                if elapsed <= 6.0:
                     # Move backward unconditionally
                     self.twist.linear.x = -0.05
                     self.twist.angular.z = 0.0
@@ -1033,7 +1113,7 @@ class WebcamLineFollow(Node):
                             )
                     else:
                         # Green not visible after backing up
-                        if elapsed <= 7.5:
+                        if elapsed <= 10.0:
                             # Wait up to 5s for green to reappear
                             self.twist.linear.x = 0.0
                             self.twist.angular.z = 0.0
@@ -1093,7 +1173,8 @@ class WebcamLineFollow(Node):
                     # Operator already confirmed before Phase 1; no second confirm needed.
                     self.docking_type = 0
                     self.docking_phase = 0
-                    self.next_station = None
+                    # next_station kept alive (still "STORE") so the UI badge
+                    # continues to show the correct destination during the U-turn.
                     self.post_docking_cooldown_until = current_time + 5.0
                     self.pending_docking_type = 2
                     self.u_turning = True
@@ -1173,7 +1254,7 @@ class WebcamLineFollow(Node):
                     if abs(ang_g) < self.MIN_ANG_Z_DEADZONE:
                         ang_g = 0.0
                     self._current_linear_x = min(
-                        self._current_linear_x + LINEAR_SLEW_RATE, 0.32
+                        self._current_linear_x + LINEAR_SLEW_RATE, 0.25
                     )
                     self.twist.linear.x = self._current_linear_x
                     self.twist.angular.z = ang_g
