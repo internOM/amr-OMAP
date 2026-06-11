@@ -71,7 +71,7 @@ OBSTACLE_CLEAR_DEBOUNCE = 20   # frames
 # Slew-rate limiter: how much linear.x can increase per image frame once the
 # robot resumes after an obstacle clear.  Target cruise speed = 0.25 m/s.
 # At ~10 Hz image rate this gives ≈ 2.5 s to reach cruise speed.
-LINEAR_SLEW_RATE = 0.008        # m/s per frame
+LINEAR_SLEW_RATE = 0.0025        # m/s per frame
 
 # Minimum green pixel sum to trust the green line when reverting from red tracking.
 # Used in the no-line-detected fallback. Tune if needed.
@@ -152,7 +152,7 @@ class WebcamLineFollow(Node):
 
         # ── U-turn detection thresholds ────────────────────────────────
         self.EXPLOSION_THRESHOLD     = 1100000  # green strip sum → green U-turn
-        self.RED_EXPLOSION_PX        = 1100000  # red strip pixels → red U-turn
+        self.RED_EXPLOSION_PX        = 1000000  # red strip pixels → red U-turn
         self.u_turning               = False
         self.u_turn_start_time       = None
         self.U_TURN_MIN_TIME         = 2.0      # seconds before checking for line again
@@ -384,11 +384,18 @@ class WebcamLineFollow(Node):
                 )
                 if store_occupied:
                     self.idle_store_empty = False
+                    
+                    # Recalculate lane mode based on the new material that was just placed
+                    lane_mode = self._decide_lane_for_station("STORE")
+                    self.follow_mode = lane_mode
+                    self._publish_mode(lane_mode)
+                    
                     self.current_state = "RUNNING"
                     self._current_linear_x = 0.0
                     self._publish_state(self.current_state)
                     self.get_logger().info(
-                        f"[Rack {rack_id}] STORE material detected — resuming from IDLE\u2014STORE EMPTY."
+                        f"[Rack {rack_id}] STORE material detected — resuming from IDLE\u2014STORE EMPTY. "
+                        f"(Lane recalculated to '{lane_mode}')"
                     )
 
             # ── Lane routing deliberately removed from here ─────────────────
@@ -1211,7 +1218,7 @@ class WebcamLineFollow(Node):
             if abs(err) > 100:
                 TARGET_LINEAR_X = 0.25
             else:
-                TARGET_LINEAR_X = 0.32
+                TARGET_LINEAR_X = 0.28
 
             # ── Slew-rate limiter ──────────────────────────────────────
             self._current_linear_x = min(

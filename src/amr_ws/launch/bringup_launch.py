@@ -80,6 +80,12 @@ def generate_launch_description():
         output='screen',
     )
 
+    shutdown_node = Node(
+        package='amr_ws',
+        executable='agv_shutdown_node',
+        output='screen',
+    )
+    
     return LaunchDescription([
         motor_launch,
         lidar_launch,
@@ -90,4 +96,6 @@ def generate_launch_description():
         twist_mux_node,
         rack_websocket_node,
         http_server,
+        shutdown_node,
     ])
+

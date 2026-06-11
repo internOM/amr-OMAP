@@ -47,13 +47,13 @@
 
             /* Default Desktop/Tablet Dimensions */
             --header-h: 64px;
-            --track-v-w: 90px;
-            --track-v-h: 220px;
-            --track-h-w: 220px;
-            --track-h-h: 90px;
-            --knob-size: 70px;
-            --label-font: 13px;
-            --label-mt: 16px;
+            --track-v-w: 120px;
+            --track-v-h: 300px;
+            --track-h-w: 300px;
+            --track-h-h: 120px;
+            --knob-size: 90px;
+            --label-font: 15px;
+            --label-mt: 18px;
 
             /* Motion */
             --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -702,12 +702,12 @@
         @media (orientation: landscape) and (max-height: 600px) {
             :root {
                 --header-h: 48px;
-                --track-v-w: 70px;
-                --track-v-h: 160px;
-                --track-h-w: 160px;
-                --track-h-h: 70px;
-                --knob-size: 56px;
-                --label-font: 11px;
+                --track-v-w: 90px;
+                --track-v-h: 200px;
+                --track-h-w: 200px;
+                --track-h-h: 90px;
+                --knob-size: 70px;
+                --label-font: 13px;
                 --label-mt: 10px;
             }
 
@@ -783,13 +783,13 @@
         @media (orientation: portrait) and (max-width: 800px) {
             :root {
                 --header-h: 56px;
-                --track-v-w: 80px;
-                --track-v-h: 180px;
-                --track-h-w: 180px;
-                --track-h-h: 80px;
-                --knob-size: 64px;
-                --label-font: 11px;
-                --label-mt: 12px;
+                --track-v-w: 100px;
+                --track-v-h: 240px;
+                --track-h-w: 240px;
+                --track-h-h: 100px;
+                --knob-size: 80px;
+                --label-font: 13px;
+                --label-mt: 14px;
             }
 
             .workspace {
@@ -860,6 +860,13 @@
             <div id="connection-status" class="status-badge" role="status" aria-live="polite">
                 <div class="dot" aria-hidden="true"></div> <span id="status-text">Disconnected</span>
             </div>
+            <button onclick="sendShutdown()" class="status-badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.5); cursor: pointer; padding: 6px 16px; font-weight: 700; transition: all 0.2s ease;">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                    <line x1="12" y1="2" x2="12" y2="12"></line>
+                </svg>
+                SHUTDOWN
+            </button>
         </div>
     </header>
 
@@ -1045,6 +1052,23 @@
 
         function sendStop() {
             agvStopTopic.publish(new ROSLIB.Message({ data: true }));
+        }
+
+        function sendShutdown() {
+            if (!confirm("Are you sure you want to SHUTDOWN the AGV?\nThis will turn off the Raspberry Pi.")) return;
+            const shutdownClient = new ROSLIB.Service({
+                ros: ros,
+                name: '/agv/shutdown',
+                serviceType: 'std_srvs/srv/Trigger'
+            });
+
+            const request = new ROSLIB.ServiceRequest({});
+            shutdownClient.callService(request, function(result) {
+                console.log('Shutdown initiated: ' + result.success);
+                if(result.success) {
+                    alert("AGV is shutting down...");
+                }
+            });
         }
 
         /* ================================================================

@@ -48,6 +48,7 @@ setup(
             'agv_audio_node = amr_ws.agv_audio_node:main',
             'hsv_probe_node = amr_ws.hsv_probe_node:main',
             'rack_websocket_server = amr_ws.rack_websocket_server:main',
+            'agv_shutdown_node = amr_ws.agv_shutdown_node:main',
         ],
     },
 )

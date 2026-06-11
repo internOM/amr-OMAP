@@ -14,6 +14,7 @@ amr_ws/Automation_and_Lidar2.py
 amr_ws/Demo_Automation.py
 amr_ws/__init__.py
 amr_ws/agv_audio_node.py
+amr_ws/agv_shudown_node.py
 amr_ws/baselink_laser_tf.py
 amr_ws/camera_follow.py
 amr_ws/cmdvelsmoothed_to_cmdvel.py

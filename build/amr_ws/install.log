@@ -1,5 +1,6 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/Automation_and_Lidar2.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/path_logger.py
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/agv_shudown_node.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/cmdvelsmoothed_to_cmdvel.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/Demo_Automation.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/camera_follow.py
@@ -20,6 +21,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/path_publisher.py
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/Automation_and_Lidar2.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/path_logger.cpython-312.pyc
+/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/agv_shudown_node.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/cmdvelsmoothed_to_cmdvel.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/Demo_Automation.cpython-312.pyc
 /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/__pycache__/camera_follow.cpython-312.pyc
@@ -55,6 +57,7 @@
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/Automation_and_Lidar2
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/Demo_Automation
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/agv_audio_node
+/home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/agv_shutdown_node
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/baselink_laser_tf
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/camera_follow
 /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws/cmdvelsmoothed_to_cmdvel

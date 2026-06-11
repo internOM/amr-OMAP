@@ -232,7 +232,7 @@ class RackWebSocketBridge(Node):
         # Create message (using String for now)
         # Format: "rack_id:status:distance"
         msg = String()
-        msg.data = f'{rack_id}:{status}:{distance:.1f}'
+        msg.data = f'{rack_id.upper()}:{status}:{distance:.1f}'
         
         self.rack_status_pub.publish(msg)
 

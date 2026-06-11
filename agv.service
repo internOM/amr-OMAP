@@ -1,0 +1,30 @@
+[Unit]
+Description=AGV ROS2 Bringup
+# Wait for WiFi to be up before starting (needed for rosbridge + rack websocket)
+After=network-online.target
+Wants=network-online.target
+# Stop retrying after 3 failed attempts within 30 seconds
+StartLimitIntervalSec=30
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=amr
+
+# Run the wrapper script
+ExecStart=/home/amr/agv/start_agv.sh
+
+# Restart automatically if the process crashes, 5s delay between attempts
+# (won't restart if you manually run: sudo systemctl stop agv)
+# Gives up after 3 attempts — see StartLimitBurst in [Unit]
+Restart=on-failure
+RestartSec=5
+
+# Pipe all output to journald
+# View with: journalctl -u agv.service -f
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+# Start on normal multi-user boot (standard for headless systems)
+WantedBy=multi-user.target
