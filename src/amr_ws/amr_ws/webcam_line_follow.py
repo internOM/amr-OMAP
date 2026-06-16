@@ -91,9 +91,12 @@ class WebcamLineFollow(Node):
         self.create_subscription(LaserScan, '/scan', self.scan_callback, 10)
 
         # UI control topics
-        self.create_subscription(Bool,   '/agv/cmd_enable', self.enable_callback, 10)
-        self.create_subscription(Bool,   '/agv/cmd_stop',   self.stop_callback,   10)
-        self.create_subscription(String, '/agv/cmd_mode',   self.mode_callback,   10)
+        self.create_subscription(Bool,   '/agv/cmd_enable',       self.enable_callback,        10)
+        self.create_subscription(Bool,   '/agv/cmd_stop',         self.stop_callback,          10)
+        self.create_subscription(String, '/agv/cmd_mode',         self.mode_callback,          10)
+
+        # Return Empty Box — toggles return_empty_box state
+        self.create_subscription(Bool,   '/agv/cmd_return_empty', self.return_empty_callback,  10)
 
         # Rack sensor status — published by rack_websocket_server.py
         # Format: "rack_id:status:distance_cm"  (status 1=FULL, 0=EMPTY)
@@ -128,6 +131,19 @@ class WebcamLineFollow(Node):
         # Tracks whether we are currently homing onto (following) a red line
         self.following_red = False
 
+        # ── Return Empty Box state ─────────────────────────────────────
+        # When True the AGV ignores green/red logic and instead follows the
+        # blue tape line.  A large blue blob (blue threshold) causes a pause.
+        self.return_empty_box = False
+
+        # True when the AGV is paused at a blue threshold marker (IDLE — RETURN BOX)
+        self.blue_threshold_pause = False
+
+        # True after operator presses GO at a blue threshold — AGV exits
+        # return-empty mode but keeps following blue until the line is lost,
+        # then reverts to green and decides lane for STORE.
+        self.blue_line_exit = False
+
         # ── Internal enable gate ───────────────────────────────────────
         # Node starts disabled; GO button on the UI enables it.
         self.enabled = False
@@ -150,9 +166,12 @@ class WebcamLineFollow(Node):
         # on resume instead of jumping straight to cruise speed.
         self._current_linear_x = 0.0
 
-        # ── U-turn detection thresholds ────────────────────────────────
+        # ── U-turn & marker detection thresholds ───────────────────────
         self.EXPLOSION_THRESHOLD     = 1100000  # green strip sum → green U-turn
-        self.RED_EXPLOSION_PX        = 1000000  # red strip pixels → red U-turn
+        self.RED_EXPLOSION_PX        = 1000000  # red strip sum → red U-turn
+        self.BLUE_THRESHOLD_SUM      = 1100000  # blue strip sum → blue pause at marker
+        self.BLUE_LINE_MIN_PX        = 300     # min pixels to actively follow blue line
+
         self.u_turning               = False
         self.u_turn_start_time       = None
         self.U_TURN_MIN_TIME         = 2.0      # seconds before checking for line again
@@ -161,6 +180,11 @@ class WebcamLineFollow(Node):
         # red_strip_px < threshold before reverting to green.
         self._red_lost_frames = 0
         self.RED_LOST_DEBOUNCE = 5   # ~0.8 s at 10 Hz image rate
+
+        # Debounce for "blue line lost"
+        self.following_blue = False
+        self._blue_lost_frames = 0
+        self.BLUE_LOST_DEBOUNCE = 5
 
         # ── PD controller ──────────────────────────────────────────────
         self.Kp = 0.0033
@@ -509,6 +533,37 @@ class WebcamLineFollow(Node):
         self._publish_mode(mode)
         self.get_logger().info(f"Follow mode: '{old_mode}' → '{mode}' (motion uninterrupted)")
 
+    # ── Return Empty Box callback ─────────────────────────────────────────────
+
+    def return_empty_callback(self, msg: Bool):
+        """
+        Toggle the Return Empty Box mode.
+
+        When True: AGV follows blue tape.  Blue thresholds cause a pause.
+        When False: Return to normal green/red line-following.
+        """
+        if msg.data == self.return_empty_box:
+            return  # idempotent — no change needed
+
+        self.return_empty_box = msg.data
+
+        if self.return_empty_box:
+            # Entering return-empty mode
+            self.blue_threshold_pause = False
+            self.current_state = "RETURN EMPTY"
+            self._publish_state(self.current_state)
+            self.get_logger().info(
+                "Return Empty Box mode ENABLED — following blue line."
+            )
+        else:
+            # Leaving return-empty mode
+            self.blue_threshold_pause = False
+            self.current_state = "RUNNING" if self.enabled else "STOPPED"
+            self._publish_state(self.current_state)
+            self.get_logger().info(
+                "Return Empty Box mode DISABLED — reverting to normal line following."
+            )
+
     # ── Enable / Stop & Ping callbacks ────────────────────────────────────────
 
     def heartbeat_callback(self, msg: String):
@@ -749,6 +804,13 @@ class WebcamLineFollow(Node):
             self.cmd_vel_pub.publish(zero)
             return
 
+        # Gate 5: Blue threshold pause — hold still until operator clears it
+        # (future: a dedicated resume command; for now toggling Empty off/on clears it)
+        if self.blue_threshold_pause:
+            zero = Twist()
+            self.cmd_vel_pub.publish(zero)
+            return
+
         frame = self.bridge.imgmsg_to_cv2(msg, "bgr8")
         h, w = frame.shape[:2]
         current_time = time.time()
@@ -764,9 +826,112 @@ class WebcamLineFollow(Node):
 
         # ── Green mask: computed only on the strip slice ───────────────────
         lower_green = np.array([35, 40, 40])
-        upper_green = np.array([120, 255, 255])
+        upper_green = np.array([85, 255, 255])
         mask_green  = cv2.inRange(hsv_strip, lower_green, upper_green)
         green_sum   = int(np.sum(mask_green))
+
+        # ── Blue mask: computed on the strip for Return Empty Box mode ────
+        # HSV blue typically lives around H=100–130.
+        lower_blue = np.array([95, 50, 50])
+        upper_blue = np.array([135, 255, 255])
+        mask_blue  = cv2.inRange(hsv_strip, lower_blue, upper_blue)
+        blue_strip_px  = int(np.sum(mask_blue > 0))    # pixel count (for line following)
+        blue_strip_sum = int(np.sum(mask_blue))        # raw sum (for threshold detection)
+        # ── Return Empty Box & Blue Line Interception ─────────────────────
+        #
+        # If return_empty_box or blue_line_exit is active, we check for blue tape.
+        # If blue tape is found, we set following_blue = True.
+        # Once following_blue is True, we track it (with debounce) so it doesn't
+        # jitter between blue and green if the blue line has small gaps.
+        #
+        if (self.return_empty_box or self.blue_line_exit) and not self.following_blue:
+            if blue_strip_px >= self.BLUE_LINE_MIN_PX:
+                self.following_blue = True
+                self.get_logger().info(
+                    f"Blue tape in strip (px={blue_strip_px}) — diverting to blue line."
+                )
+
+        if self.following_blue:
+            # Debounce: if blue disappears, wait a few frames before falling back
+            if blue_strip_px < 75:
+                self._blue_lost_frames += 1
+                if self._blue_lost_frames >= self.BLUE_LOST_DEBOUNCE:
+                    self.following_blue = False
+                    self._blue_lost_frames = 0
+                    self.get_logger().info("Blue line lost — reverting tracking.")
+                    
+                    if self.blue_line_exit:
+                        # Blue line exit complete → revert to STORE
+                        self.blue_line_exit = False
+                        self.next_station = "STORE"
+                        self._save_next_station("STORE")
+                        self._publish_next_station()
+                        lane_mode = self._decide_lane_for_station("STORE")
+                        self.follow_mode = lane_mode
+                        self._publish_mode(lane_mode)
+                        self.following_red = False
+                        self._current_linear_x = 0.0
+                        self.current_state = "RUNNING"
+                        self._publish_state(self.current_state)
+                        self.get_logger().info(
+                            f"[BlueLineExit] Blue lost — reverting to green, "
+                            f"next_station=STORE, lane='{lane_mode}'."
+                        )
+                    # Note: if it was return_empty_box, we just fall through to green PD
+            else:
+                self._blue_lost_frames = 0
+
+            # If still following blue after debounce check, perform blue PD & threshold logic
+            if self.following_blue:
+                M_b = cv2.moments(mask_blue)
+
+                # Blue threshold check (only if returning empty box, not exiting)
+                if self.return_empty_box and not self.blue_line_exit:
+                    if blue_strip_sum >= self.BLUE_THRESHOLD_SUM:
+                        if not self.blue_threshold_pause:
+                            self.blue_threshold_pause = True
+                            self.current_state = "IDLE \u2014 RETURN BOX"
+                            self._publish_state(self.current_state)
+                            self.get_logger().warn(
+                                f"[ReturnEmpty] Blue threshold detected "
+                                f"(sum={blue_strip_sum}) \u2014 decelerating to IDLE."
+                            )
+                        # Gate 5 handles deceleration; skip PD this frame
+                        return
+                
+                # Normal blue tape PD tracking
+                if M_b['m00'] > 0:
+                    cx_b = int(M_b['m10'] / M_b['m00'])
+                    err_b = cx_b - w // 2
+                    dt_b = 0.01 if self.last_time is None else current_time - self.last_time
+                    self.last_time = current_time
+                    deriv_b = (err_b - self.last_err) / dt_b
+                    self.last_err = err_b
+                    ang_b = -self.Kp * err_b - self.Kd * deriv_b
+                    ang_b = max(min(ang_b, self.MAX_ANG_Z), -self.MAX_ANG_Z)
+                    if abs(ang_b) < self.MIN_ANG_Z_DEADZONE:
+                        ang_b = 0.0
+                    self._current_linear_x = min(
+                        self._current_linear_x + LINEAR_SLEW_RATE, 0.25
+                    )
+                    self.twist.linear.x = self._current_linear_x
+                    self.twist.angular.z = ang_b
+                    self.cmd_vel_pub.publish(self.twist)
+                    
+                    if current_time - self._last_log_time >= 1.0:
+                        mode_str = "BlueLineExit" if self.blue_line_exit else "ReturnEmpty/Blue"
+                        self.get_logger().info(
+                            f"[{mode_str}] cx={cx_b}, err={err_b}, "
+                            f"ang_z={ang_b:.3f}, lin_x={self._current_linear_x:.3f}, "
+                            f"blue_px={blue_strip_px}"
+                        )
+                        self._last_log_time = current_time
+                
+                # We actively handled this frame with blue logic, skip green/red
+                return
+
+        # If return_empty_box is armed but no blue line is actively followed,
+        # fall through to normal green/red PD so the AGV keeps doing its current route.
 
         # ── Red mask: Computed on every frame so explosions trigger regardless of mode
         RED_STRIP_MIN  = 200
@@ -1171,7 +1336,7 @@ class WebcamLineFollow(Node):
                 # Phase 4: Move backwards at -0.075 for 7.5s, then check store state.
                 # This is the first point where store-empty is evaluated — after the
                 # full deposit cycle (Ph2 forward + Ph3 hold) has completed.
-                if current_time - self.docking_timer <= 5.0:
+                if current_time - self.docking_timer <= 3.0:
                     self.twist.linear.x = -0.075
                     self.twist.angular.z = 0.0
                     self.cmd_vel_pub.publish(self.twist)
@@ -1212,11 +1377,11 @@ class WebcamLineFollow(Node):
             if abs(angular_z) < self.MIN_ANG_Z_DEADZONE:
                 angular_z = 0.0
 
-            # ── High-error speed cap ───────────────────────────────────
-            # If the deviation from centre exceeds 100 px the AGV is in a
-            # sharp turn; cap cruise speed to 0.25 m/s to reduce overshoot.
-            if abs(err) > 100:
-                TARGET_LINEAR_X = 0.25
+            # ── High-angular-z speed cap ───────────────────────────────
+            # If angular_z exceeds ±0.20 rad/s the AGV is in a sharp turn;
+            # cap cruise speed to 0.24 m/s to reduce overshoot.
+            if abs(angular_z) > 0.20:
+                TARGET_LINEAR_X = 0.24
             else:
                 TARGET_LINEAR_X = 0.28
 

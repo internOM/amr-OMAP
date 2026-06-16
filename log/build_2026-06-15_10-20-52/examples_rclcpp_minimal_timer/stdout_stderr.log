@@ -1,0 +1,7 @@
+gmake[2]: *** [CMakeFiles/timer_member_function.dir/build.make:76: CMakeFiles/timer_member_function.dir/member_function.cpp.o] Interrupt
+gmake[2]: *** [CMakeFiles/timer_lambda.dir/build.make:76: CMakeFiles/timer_lambda.dir/lambda.cpp.o] Interrupt
+gmake[1]: *** [CMakeFiles/Makefile2:165: CMakeFiles/timer_member_function.dir/all] Interrupt
+gmake[1]: *** [CMakeFiles/Makefile2:139: CMakeFiles/timer_lambda.dir/all] Interrupt
+gmake: *** [Makefile:146: all] Interrupt
+[ 25%] [32mBuilding CXX object CMakeFiles/timer_lambda.dir/lambda.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/timer_member_function.dir/member_function.cpp.o[0m

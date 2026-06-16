@@ -1,0 +1,100 @@
+[0.000000] (-) TimerEvent: {}
+[0.000350] (-) JobUnselected: {'identifier': 'camera_follow'}
+[0.001029] (-) JobUnselected: {'identifier': 'education_material'}
+[0.001192] (-) JobUnselected: {'identifier': 'examples_rclcpp_async_client'}
+[0.001263] (-) JobUnselected: {'identifier': 'examples_rclcpp_cbg_executor'}
+[0.001312] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_action_client'}
+[0.001717] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_action_server'}
+[0.001763] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_client'}
+[0.001805] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_composition'}
+[0.002021] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_publisher'}
+[0.002065] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_service'}
+[0.002321] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_subscriber'}
+[0.002424] (-) JobUnselected: {'identifier': 'examples_rclcpp_minimal_timer'}
+[0.002531] (-) JobUnselected: {'identifier': 'examples_rclcpp_multithreaded_executor'}
+[0.002616] (-) JobUnselected: {'identifier': 'examples_rclcpp_wait_set'}
+[0.002700] (-) JobUnselected: {'identifier': 'examples_rclpy_executors'}
+[0.002802] (-) JobUnselected: {'identifier': 'examples_rclpy_guard_conditions'}
+[0.002860] (-) JobUnselected: {'identifier': 'examples_rclpy_minimal_action_client'}
+[0.002921] (-) JobUnselected: {'identifier': 'examples_rclpy_minimal_action_server'}
+[0.002965] (-) JobUnselected: {'identifier': 'examples_rclpy_minimal_client'}
+[0.003088] (-) JobUnselected: {'identifier': 'examples_rclpy_minimal_publisher'}
+[0.003202] (-) JobUnselected: {'identifier': 'examples_rclpy_minimal_service'}
+[0.003246] (-) JobUnselected: {'identifier': 'examples_rclpy_minimal_subscriber'}
+[0.003284] (-) JobUnselected: {'identifier': 'examples_rclpy_pointcloud_publisher'}
+[0.003323] (-) JobUnselected: {'identifier': 'launch_testing_examples'}
+[0.003360] (-) JobUnselected: {'identifier': 'ros2_slam_auto_navigation'}
+[0.003398] (-) JobUnselected: {'identifier': 'rplidar_ros'}
+[0.003437] (-) JobUnselected: {'identifier': 'sam_bot_description'}
+[0.003474] (-) JobUnselected: {'identifier': 'system_webview'}
+[0.003511] (-) JobUnselected: {'identifier': 'tb3_multi_robot'}
+[0.003548] (-) JobUnselected: {'identifier': 'turtlesim'}
+[0.003594] (amr_ws) JobQueued: {'identifier': 'amr_ws', 'dependencies': OrderedDict()}
+[0.003646] (amr_ws) JobStarted: {'identifier': 'amr_ws'}
+[0.099497] (-) TimerEvent: {}
+[0.199852] (-) TimerEvent: {}
+[0.300207] (-) TimerEvent: {}
+[0.400559] (-) TimerEvent: {}
+[0.500931] (-) TimerEvent: {}
+[0.601276] (-) TimerEvent: {}
+[0.701647] (-) TimerEvent: {}
+[0.802001] (-) TimerEvent: {}
+[0.902357] (-) TimerEvent: {}
+[1.002722] (-) TimerEvent: {}
+[1.103051] (-) TimerEvent: {}
+[1.203413] (-) TimerEvent: {}
+[1.303812] (-) TimerEvent: {}
+[1.345217] (amr_ws) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'egg_info', '--egg-base', '../../build/amr_ws', 'build', '--build-base', '/home/intern1/ros2_ws/build/amr_ws/build', 'install', '--record', '/home/intern1/ros2_ws/build/amr_ws/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/intern1/ros2_ws/src/amr_ws', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'VSCODE_CWD': '/home/intern1', 'GZ_SIM_RESOURCE_PATH': '/opt/ros/jazzy/share', 'USER': 'intern1', 'VSCODE_NLS_CONFIG': '{"userLocale":"en-us","osLocale":"en-us","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/antigravity/resources/app/out/nls.messages.json","locale":"en-us","availableLanguages":{}}', 'GZ_CONFIG_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/share/gz:/opt/ros/jazzy/opt/sdformat_vendor/share/gz:/opt/ros/jazzy/opt/gz_gui_vendor/share/gz:/opt/ros/jazzy/opt/gz_transport_vendor/share/gz:/opt/ros/jazzy/opt/gz_rendering_vendor/share/gz:/opt/ros/jazzy/opt/gz_plugin_vendor/share/gz:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/share/gz:/opt/ros/jazzy/opt/gz_msgs_vendor/share/gz:/opt/ros/jazzy/opt/gz_common_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/home/intern1/ros2_ws/install/turtlesim/lib:/home/intern1/ros2_ws/install/examples_rclcpp_wait_set/lib:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_subscriber/lib:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition/lib:/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/intern1', 'CHROME_DESKTOP': 'antigravity.desktop', 'OLDPWD': '/home/intern1/ros2_ws', 'DESKTOP_SESSION': 'ubuntu', 'VSCODE_IPC_HOOK': '/run/user/1000/vscode-239acafc-1.10-main.sock', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/antigravity.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'PAGER': 'cat', 'MANAGERPID': '2184', 'SYSTEMD_EXEC_PID': '2499', 'IM_CONFIG_CHECK_ENV': '1', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'ANTIGRAVITY_AGENT': '1', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '4017', '_colcon_cd_root': '/opt/ros/jazzy/', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/intern1/ros2_ws/install', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'intern1', 'JOURNAL_STREAM': '9:25042', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'intern1', 'TERM': 'dumb', 'GAZEBO_MODEL_PATH': ':/opt/ros/jazzy/share/turtlebot3_gazebo/models', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'FC_FONTATIONS': '1', 'ANTIGRAVITY_EDITOR_APP_ROOT': '/usr/share/antigravity/resources/app', 'PATH': '/home/intern1/.local/bin:/home/intern1/.local/bin:/home/intern1/ros2_ws/install/tb3_multi_robot/bin:/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/home/intern1/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/intern1:@/tmp/.ICE-unix/2451,unix/intern1:/tmp/.ICE-unix/2451', 'INVOCATION_ID': 'b79fbaa646f24534a7d98bd596ab36a7', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'wayland', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.0H2FQ3', 'LS_COLORS': '', 'SBX_CHROME_API_RQ': '1', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '99', 'AMENT_PREFIX_PATH': '/home/intern1/ros2_ws/install/turtlesim:/home/intern1/ros2_ws/install/tb3_multi_robot:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/sam_bot_description:/home/intern1/ros2_ws/install/rplidar_ros:/home/intern1/ros2_ws/install/ros2_slam_auto_navigation:/home/intern1/ros2_ws/install/launch_testing_examples:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions:/home/intern1/ros2_ws/install/examples_rclpy_executors:/home/intern1/ros2_ws/install/examples_rclcpp_wait_set:/home/intern1/ros2_ws/install/examples_rclcpp_multithreaded_executor:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_timer:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_service:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_client:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor:/home/intern1/ros2_ws/install/examples_rclcpp_async_client:/home/intern1/ros2_ws/install/education_material:/home/intern1/ros2_ws/install/camera_follow:/home/intern1/ros2_ws/install/amr_ws:/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GJS_DEBUG_OUTPUT': 'stderr', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'ANTIGRAVITY_TRAJECTORY_ID': '6e0ef2e6-bb82-47c9-baa9-6361ce31e128', 'PWD': '/home/intern1/ros2_ws/build/amr_ws', 'TURTLEBOT3_MODEL': 'burger', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'VSCODE_CODE_CACHE_PATH': '/home/intern1/.config/Antigravity/CachedData/15487b3041e65228cae24980a3f796c905ef582c', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/intern1/ros2_ws/build/amr_ws/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/turtlesim/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/tb3_multi_robot/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/launch_testing_examples/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_pointcloud_publisher/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_minimal_subscriber/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_minimal_service/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_minimal_publisher/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_minimal_client/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_server/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_minimal_action_client/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_guard_conditions/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/examples_rclpy_executors/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/education_material/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/camera_follow/lib/python3.12/site-packages:/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CMAKE_PREFIX_PATH': '/home/intern1/ros2_ws/install/turtlesim:/home/intern1/ros2_ws/install/system_webview:/home/intern1/ros2_ws/install/sam_bot_description:/home/intern1/ros2_ws/install/rplidar_ros:/home/intern1/ros2_ws/install/ros2_slam_auto_navigation:/home/intern1/ros2_ws/install/examples_rclcpp_wait_set:/home/intern1/ros2_ws/install/examples_rclcpp_multithreaded_executor:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_timer:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_subscriber:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_service:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_publisher:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_composition:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_client:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_action_server:/home/intern1/ros2_ws/install/examples_rclcpp_minimal_action_client:/home/intern1/ros2_ws/install/examples_rclcpp_cbg_executor:/home/intern1/ros2_ws/install/examples_rclcpp_async_client:/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor', 'VSCODE_PID': '4017'}, 'shell': False}
+[1.403983] (-) TimerEvent: {}
+[1.504311] (-) TimerEvent: {}
+[1.604636] (-) TimerEvent: {}
+[1.705050] (-) TimerEvent: {}
+[1.727291] (amr_ws) StdoutLine: {'line': b'running egg_info\n'}
+[1.767530] (amr_ws) StdoutLine: {'line': b'writing ../../build/amr_ws/amr_ws.egg-info/PKG-INFO\n'}
+[1.768274] (amr_ws) StdoutLine: {'line': b'writing dependency_links to ../../build/amr_ws/amr_ws.egg-info/dependency_links.txt\n'}
+[1.768751] (amr_ws) StdoutLine: {'line': b'writing entry points to ../../build/amr_ws/amr_ws.egg-info/entry_points.txt\n'}
+[1.768960] (amr_ws) StdoutLine: {'line': b'writing requirements to ../../build/amr_ws/amr_ws.egg-info/requires.txt\n'}
+[1.769150] (amr_ws) StdoutLine: {'line': b'writing top-level names to ../../build/amr_ws/amr_ws.egg-info/top_level.txt\n'}
+[1.805203] (-) TimerEvent: {}
+[1.830771] (amr_ws) StdoutLine: {'line': b"reading manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'\n"}
+[1.831316] (amr_ws) StdoutLine: {'line': b"adding license file 'LICENSE'\n"}
+[1.832221] (amr_ws) StdoutLine: {'line': b"writing manifest file '../../build/amr_ws/amr_ws.egg-info/SOURCES.txt'\n"}
+[1.832558] (amr_ws) StdoutLine: {'line': b'running build\n'}
+[1.832786] (amr_ws) StdoutLine: {'line': b'running build_py\n'}
+[1.833176] (amr_ws) StdoutLine: {'line': b'copying amr_ws/webcam_line_follow.py -> /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws\n'}
+[1.833947] (amr_ws) StdoutLine: {'line': b'running install\n'}
+[1.843177] (amr_ws) StdoutLine: {'line': b'running install_lib\n'}
+[1.873908] (amr_ws) StdoutLine: {'line': b'copying /home/intern1/ros2_ws/build/amr_ws/build/lib/amr_ws/webcam_line_follow.py -> /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws\n'}
+[1.876029] (amr_ws) StdoutLine: {'line': b'byte-compiling /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws/webcam_line_follow.py to webcam_line_follow.cpython-312.pyc\n'}
+[1.888495] (amr_ws) StdoutLine: {'line': b'running install_data\n'}
+[1.888992] (amr_ws) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.905357] (-) TimerEvent: {}
+[1.920897] (amr_ws) StdoutLine: {'line': b"removing '/home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info' (and everything under it)\n"}
+[1.921617] (amr_ws) StdoutLine: {'line': b'Copying ../../build/amr_ws/amr_ws.egg-info to /home/intern1/ros2_ws/install/amr_ws/lib/python3.12/site-packages/amr_ws-0.0.0-py3.12.egg-info\n'}
+[1.922236] (amr_ws) StdoutLine: {'line': b'running install_scripts\n'}
+[2.005516] (-) TimerEvent: {}
+[2.073265] (amr_ws) StdoutLine: {'line': b'Installing Automation_and_Lidar script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.074390] (amr_ws) StdoutLine: {'line': b'Installing Automation_and_Lidar2 script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.074610] (amr_ws) StdoutLine: {'line': b'Installing Demo_Automation script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.074815] (amr_ws) StdoutLine: {'line': b'Installing agv_audio_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.075196] (amr_ws) StdoutLine: {'line': b'Installing agv_shutdown_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.075383] (amr_ws) StdoutLine: {'line': b'Installing baselink_laser_tf script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.075563] (amr_ws) StdoutLine: {'line': b'Installing camera_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.075761] (amr_ws) StdoutLine: {'line': b'Installing cmdvelsmoothed_to_cmdvel script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.075942] (amr_ws) StdoutLine: {'line': b'Installing compass script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.076119] (amr_ws) StdoutLine: {'line': b'Installing hsv_probe_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.076296] (amr_ws) StdoutLine: {'line': b'Installing joystick_to_motor script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.076471] (amr_ws) StdoutLine: {'line': b'Installing keyboard_listener script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.076646] (amr_ws) StdoutLine: {'line': b'Installing localization_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.076849] (amr_ws) StdoutLine: {'line': b'Installing orchestrator_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.077035] (amr_ws) StdoutLine: {'line': b'Installing path_logger script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.077212] (amr_ws) StdoutLine: {'line': b'Installing path_publisher script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.077395] (amr_ws) StdoutLine: {'line': b'Installing pose_persistence_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.077573] (amr_ws) StdoutLine: {'line': b'Installing rack_websocket_server script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.077780] (amr_ws) StdoutLine: {'line': b'Installing return_home_node script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.077974] (amr_ws) StdoutLine: {'line': b'Installing webcam_line_follow script to /home/intern1/ros2_ws/install/amr_ws/lib/amr_ws\n'}
+[2.078180] (amr_ws) StdoutLine: {'line': b"writing list of installed files to '/home/intern1/ros2_ws/build/amr_ws/install.log'\n"}
+[2.105709] (-) TimerEvent: {}
+[2.119948] (amr_ws) CommandEnded: {'returncode': 0}
+[2.134153] (amr_ws) JobEnded: {'identifier': 'amr_ws', 'rc': 0}
+[2.135020] (-) EventReactorShutdown: {}

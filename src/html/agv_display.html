@@ -13,7 +13,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="roslib.min.js" as="script">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@700&display=swap" as="style">
+    <link rel="preload"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@700&display=swap"
+        as="style">
 
     <script src="roslib.min.js"></script>
     <link
@@ -288,6 +290,12 @@
             color: #fca5a5;
         }
 
+        .next-station-badge.returnbox {
+            background: rgba(96, 165, 250, 0.15);
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            color: #60a5fa;
+        }
+
         .next-station-badge.unknown {
             background: transparent;
             border: 1px solid transparent;
@@ -301,8 +309,33 @@
             flex-shrink: 0;
         }
 
-        .next-station-badge.store .next-station-dot { background: #34d399; box-shadow: 0 0 4px #34d399; }
-        .next-station-badge.capp  .next-station-dot { background: #fca5a5; box-shadow: 0 0 4px #fca5a5; }
+        .next-station-badge.store .next-station-dot {
+            background: #34d399;
+            box-shadow: 0 0 4px #34d399;
+        }
+
+        .next-station-badge.capp .next-station-dot {
+            background: #fca5a5;
+            box-shadow: 0 0 4px #fca5a5;
+        }
+
+        .next-station-badge.returnbox .next-station-dot {
+            background: #60a5fa;
+            box-shadow: 0 0 6px #60a5fa;
+            animation: pulse-blue 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-blue {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+        }
 
         /* ── Activity Log ── */
         .log-panel {
@@ -369,13 +402,20 @@
             line-height: 1.4;
             padding: 6px 10px;
             border-radius: 10px;
-            background: rgba(0,0,0,0.15);
+            background: rgba(0, 0, 0, 0.15);
             animation: log-slide-in 0.25s ease;
         }
 
         @keyframes log-slide-in {
-            from { opacity: 0; transform: translateY(-6px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .log-dot {
@@ -386,10 +426,24 @@
             flex-shrink: 0;
         }
 
-        .log-dot.green  { background: var(--success); box-shadow: 0 0 6px var(--success); }
-        .log-dot.red    { background: var(--danger);  box-shadow: 0 0 6px var(--danger);  }
-        .log-dot.amber  { background: var(--warning); box-shadow: 0 0 6px var(--warning); }
-        .log-dot.grey   { background: var(--text-muted); }
+        .log-dot.green {
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        .log-dot.red {
+            background: var(--danger);
+            box-shadow: 0 0 6px var(--danger);
+        }
+
+        .log-dot.amber {
+            background: var(--warning);
+            box-shadow: 0 0 6px var(--warning);
+        }
+
+        .log-dot.grey {
+            background: var(--text-muted);
+        }
 
         .log-time {
             font-family: 'JetBrains Mono', monospace;
@@ -404,9 +458,17 @@
             flex: 1;
         }
 
-        .log-msg.green { color: #34d399; }
-        .log-msg.red   { color: #fca5a5; }
-        .log-msg.amber { color: #fcd34d; }
+        .log-msg.green {
+            color: #34d399;
+        }
+
+        .log-msg.red {
+            color: #fca5a5;
+        }
+
+        .log-msg.amber {
+            color: #fcd34d;
+        }
 
         @keyframes pulse-border {
             0% {
@@ -431,8 +493,8 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-areas:
-                "run cam"
-                "stop stop";
+                "run  stop "
+                "cam  empty";
             gap: 16px;
         }
 
@@ -500,7 +562,8 @@
         .btn-mode {
             grid-area: cam;
             background: #1e293b;
-            color: #34d399; /* Green text by default */
+            color: #34d399;
+            /* Green text by default */
             border: 2px solid #064e3b;
             box-shadow: 0 6px 0 #0f172a, 0 15px 20px rgba(0, 0, 0, 0.4);
             transition: all 0.3s ease;
@@ -518,9 +581,6 @@
 
         .btn-stop {
             grid-area: stop;
-            height: 110px;
-            /* Make STOP bigger */
-            font-size: 20px;
             background: #7f1d1d;
             color: #fca5a5;
             border: 1px solid #b91c1c;
@@ -528,13 +588,34 @@
         }
 
         .btn-stop svg {
-            width: 36px;
-            height: 36px;
+            width: 28px;
+            height: 28px;
         }
 
         .btn-stop:active:not(:disabled) {
             transform: translateY(4px);
             box-shadow: 0 2px 0 #450a0a, 0 5px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-empty {
+            grid-area: empty;
+            background: #0c1a40;
+            color: #60a5fa;
+            border: 1px solid #1d4ed8;
+            box-shadow: 0 6px 0 #060e2a, 0 15px 20px rgba(0, 0, 0, 0.4);
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-empty.is-active {
+            background: #1d4ed8;
+            color: #dbeafe;
+            border-color: #60a5fa;
+            box-shadow: 0 6px 0 #1e3a8a, 0 0 18px rgba(96, 165, 250, 0.35), 0 15px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-empty:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #060e2a, 0 5px 10px rgba(0, 0, 0, 0.4);
         }
 
         /* ── Joystick Panels ── */
@@ -689,6 +770,7 @@
 
         /* Reduced Motion Support */
         @media (prefers-reduced-motion: reduce) {
+
             *,
             *::before,
             *::after {
@@ -860,8 +942,10 @@
             <div id="connection-status" class="status-badge" role="status" aria-live="polite">
                 <div class="dot" aria-hidden="true"></div> <span id="status-text">Disconnected</span>
             </div>
-            <button onclick="sendShutdown()" class="status-badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.5); cursor: pointer; padding: 6px 16px; font-weight: 700; transition: all 0.2s ease;">
-                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+            <button onclick="sendShutdown()" class="status-badge"
+                style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.5); cursor: pointer; padding: 6px 16px; font-weight: 700; transition: all 0.2s ease;">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
                     <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
                     <line x1="12" y1="2" x2="12" y2="12"></line>
                 </svg>
@@ -884,7 +968,9 @@
         </div>
 
         <section class="joy-panel left-joy" aria-label="Forward and reverse control">
-            <div id="joy-left-bg" class="joystick-bg vertical-track" role="slider" aria-label="Forward and reverse speed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+            <div id="joy-left-bg" class="joystick-bg vertical-track" role="slider"
+                aria-label="Forward and reverse speed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+                tabindex="0">
                 <div id="joy-left-knob" class="knob" aria-hidden="true"></div>
             </div>
             <div class="joy-label">FWD / REV</div>
@@ -907,20 +993,31 @@
 
 
             <div class="btn-stack">
-                <button class="ctrl-btn btn-mode" id="btn-mode" onclick="toggleMode()" disabled aria-label="Switch between green and red line following mode">
+                <button class="ctrl-btn btn-mode" id="btn-mode" onclick="toggleMode()" disabled
+                    aria-label="Switch between green and red line following mode">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <circle cx="8" cy="12" r="4" />
                         <rect x="2" y="6" width="20" height="12" rx="6" />
                     </svg>
                     Mode: Green
                 </button>
-                <button class="ctrl-btn btn-go" id="btn-go" onclick="sendEnable()" disabled aria-label="Start AGV line following">
+                <button class="ctrl-btn btn-go" id="btn-go" onclick="sendEnable()" disabled
+                    aria-label="Start AGV line following">
                     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M8 5v14l11-7z" />
                     </svg>
                     START
                 </button>
-                <button class="ctrl-btn btn-stop" id="btn-stop" onclick="sendStop()" disabled aria-label="Stop AGV immediately">
+                <button class="ctrl-btn btn-empty" id="btn-empty" onclick="toggleReturnEmpty()" disabled
+                    aria-label="Toggle Return Empty Box mode">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="14" rx="2" />
+                        <path d="M8 17v4M16 17v4M5 21h14" />
+                    </svg>
+                    Empty
+                </button>
+                <button class="ctrl-btn btn-stop" id="btn-stop" onclick="sendStop()" disabled
+                    aria-label="Stop AGV immediately">
                     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M6 6h12v12H6z" />
                     </svg>
@@ -930,7 +1027,9 @@
         </section>
 
         <section class="joy-panel right-joy" aria-label="Left and right turn control">
-            <div id="joy-right-bg" class="joystick-bg horizontal-track" role="slider" aria-label="Left and right turn speed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+            <div id="joy-right-bg" class="joystick-bg horizontal-track" role="slider"
+                aria-label="Left and right turn speed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+                tabindex="0">
                 <div id="joy-right-knob" class="knob" aria-hidden="true"></div>
             </div>
             <div class="joy-label">TURN L / R</div>
@@ -1004,6 +1103,7 @@
             document.getElementById("btn-go").disabled = disabled;
             document.getElementById("btn-mode").disabled = disabled;
             document.getElementById("btn-stop").disabled = disabled;
+            document.getElementById("btn-empty").disabled = disabled;
         }
 
         ros.on("connection", () => {
@@ -1050,8 +1150,59 @@
             enableTopic.publish(new ROSLIB.Message({ data: true }));
         }
 
+        let returnEmptyActive = false;
+
         function sendStop() {
             agvStopTopic.publish(new ROSLIB.Message({ data: true }));
+            // If return-empty mode is active, clear the UI toggle
+            if (returnEmptyActive) {
+                returnEmptyActive = false;
+                const btn = document.getElementById("btn-empty");
+                btn.classList.remove("is-active");
+                btn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="14" rx="2" />
+                        <path d="M8 17v4M16 17v4M5 21h14" />
+                    </svg>
+                    Empty
+                `;
+            }
+        }
+
+        /* ================================================================
+           /agv/cmd_return_empty TOPIC  — Return Empty Box toggle
+           ================================================================ */
+        const returnEmptyTopic = new ROSLIB.Topic({
+            ros: ros,
+            name: "/agv/cmd_return_empty",
+            messageType: "std_msgs/Bool"
+        });
+
+        function toggleReturnEmpty() {
+            returnEmptyActive = !returnEmptyActive;
+            returnEmptyTopic.publish(new ROSLIB.Message({ data: returnEmptyActive }));
+
+            const btn = document.getElementById("btn-empty");
+            if (returnEmptyActive) {
+                btn.classList.add("is-active");
+                btn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="14" rx="2" fill="currentColor" opacity="0.3"/>
+                        <rect x="3" y="3" width="18" height="14" rx="2" />
+                        <path d="M8 17v4M16 17v4M5 21h14" />
+                    </svg>
+                    Empty: ON
+                `;
+            } else {
+                btn.classList.remove("is-active");
+                btn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="14" rx="2" />
+                        <path d="M8 17v4M16 17v4M5 21h14" />
+                    </svg>
+                    Empty
+                `;
+            }
         }
 
         function sendShutdown() {
@@ -1063,9 +1214,9 @@
             });
 
             const request = new ROSLIB.ServiceRequest({});
-            shutdownClient.callService(request, function(result) {
+            shutdownClient.callService(request, function (result) {
                 console.log('Shutdown initiated: ' + result.success);
-                if(result.success) {
+                if (result.success) {
                     alert("AGV is shutting down...");
                 }
             });
@@ -1117,6 +1268,9 @@
                 setAgvRunning(false);
             } else if (msg.data === "WAITING \u2014 CONFIRM GO") {
                 setDisplayState("CONFIRM GO", "waiting", "Docking complete — press GO to resume");
+                setAgvRunning(false);
+            } else if (msg.data === "IDLE \u2014 RETURN BOX") {
+                setDisplayState("IDLE \u2014 RETURN BOX", "waiting", "Blue threshold reached \u2014 press GO to exit return-empty mode");
                 setAgvRunning(false);
             }
 
@@ -1186,6 +1340,8 @@
                 setNextStation("STORE");
             } else if (station === "CAPP") {
                 setNextStation("CAPP");
+            } else if (station === "RETURN BOX") {
+                setNextStation("RETURN BOX");
             } else {
                 setNextStation(null);
             }
@@ -1210,13 +1366,16 @@
          */
         function setNextStation(station) {
             const badge = document.getElementById("next-station-badge");
-            const text  = document.getElementById("next-station-text");
+            const text = document.getElementById("next-station-text");
             if (station === "STORE") {
                 badge.className = "next-station-badge store";
                 text.textContent = "STORE";
             } else if (station === "CAPP") {
                 badge.className = "next-station-badge capp";
                 text.textContent = "CAPP";
+            } else if (station === "RETURN BOX") {
+                badge.className = "next-station-badge returnbox";
+                text.textContent = "RETURN BOX";
             } else {
                 badge.className = "next-station-badge unknown";
                 text.textContent = "--";
@@ -1236,7 +1395,7 @@
         /* ================================================================
            JOYSTICK BINDING
            ================================================================ */
-        const MAX_LINEAR = 0.75;
+        const MAX_LINEAR = 0.50;
         const MAX_ANGULAR = 0.75;
 
         // TARGET requested by user joystick

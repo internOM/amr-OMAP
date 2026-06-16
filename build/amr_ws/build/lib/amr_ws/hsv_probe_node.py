@@ -32,6 +32,9 @@ LOWER_RED_LO = np.array([  0,  60,  60])
 UPPER_RED_LO = np.array([ 25, 255, 255])
 LOWER_RED_HI = np.array([140,  60,  60])
 UPPER_RED_HI = np.array([180, 255, 255])
+
+LOWER_BLUE = np.array([ 90,  50,  50])
+UPPER_BLUE = np.array([135, 255, 255])
 # ─────────────────────────────────────────────────────────────────────────────
 
 PATCH_SIZE  = 30   # px — size of the centre-point sample square
@@ -94,14 +97,20 @@ class HsvProbeNode(Node):
             cv2.inRange(hsv, LOWER_RED_LO, UPPER_RED_LO),
             cv2.inRange(hsv, LOWER_RED_HI, UPPER_RED_HI),
         )
+        blue_mask = cv2.inRange(hsv, LOWER_BLUE, UPPER_BLUE)
+
         green_px = int(np.sum(green_mask > 0))
         red_px   = int(np.sum(red_mask   > 0))
+        blue_px  = int(np.sum(blue_mask  > 0))
 
         # Strip-only counts (what the PD controller actually sees)
         green_strip_mask = green_mask[strip_top:strip_bot, :]
         red_strip_mask   = red_mask  [strip_top:strip_bot, :]
+        blue_strip_mask  = blue_mask [strip_top:strip_bot, :]
+
         green_strip_px   = int(np.sum(green_strip_mask > 0))
         red_strip_px     = int(np.sum(red_strip_mask   > 0))
+        blue_strip_px    = int(np.sum(blue_strip_mask  > 0))
 
         # ── Print ────────────────────────────────────────────────────────────
         self.get_logger().info(
@@ -124,6 +133,7 @@ class HsvProbeNode(Node):
             f"  CURRENT MASK COUNTS\n"
             f"    Green  full={green_px:7d} px   strip={green_strip_px:6d} px\n"
             f"    Red    full={red_px:7d} px   strip={red_strip_px:6d} px\n"
+            f"    Blue   full={blue_px:7d} px   strip={blue_strip_px:6d} px\n"
             f"{sep}"
         )
 

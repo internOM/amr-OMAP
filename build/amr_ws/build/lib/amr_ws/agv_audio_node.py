@@ -16,7 +16,7 @@ Pause/resume is done via OS signals:
 """
 
 import os
-import signal
+import time
 import subprocess
 import glob
 import rclpy
@@ -35,8 +35,14 @@ class AgvAudioNode(Node):
     def __init__(self):
         super().__init__('agv_audio_node')
 
-        self._proc = None        # subprocess.Popen handle for ffmpeg
-        self._is_paused = False  # True when we have sent a SIGSTOP
+        self._proc = None        # subprocess.Popen handle for ffmpeg music
+        self._music_running = False  # True when music should be playing (not killed by SFX)
+
+        # Position tracking — simulates true pause via -ss seek on resume.
+        # _music_position accumulates seconds played before each kill.
+        # _music_start_time is the wall-clock time the current session started.
+        self._music_position = 0.0
+        self._music_start_time = None
 
         # Inherit environment as-is — ffmpeg talks directly to ALSA,
         # no SDL or PulseAudio session variables needed.
@@ -45,7 +51,7 @@ class AgvAudioNode(Node):
         # SFX State tracking
         self._sfx_proc = None
         self._horn_timer = None
-        self._paused_by_sfx = False
+        self._paused_by_sfx = False   # True if music was killed to make room for SFX
         self._current_sfx_state = "STOPPED"
 
         self._playlist = sorted(glob.glob(os.path.join(AUDIO_DIR, '*.mp3')))
@@ -83,10 +89,12 @@ class AgvAudioNode(Node):
 
     def _check_track_finished(self):
         """Polls ffmpeg to see if the current track has finished automatically."""
-        if self._proc is not None and not self._is_paused:
+        if self._proc is not None and not self._paused_by_sfx:
             if self._proc.poll() is not None:
                 if self._playlist:
                     self._track_idx = (self._track_idx + 1) % len(self._playlist)
+                    self._music_position = 0.0   # reset position for the new track
+                    self._music_start_time = None
                     self.get_logger().info(f'Track finished. Moving to track {self._track_idx + 1}/{len(self._playlist)}')
                     self._start_audio()
 
@@ -117,10 +125,10 @@ class AgvAudioNode(Node):
         if not msg.data:
             return
 
+        self._music_running = True
         if self._proc is None or self._proc.poll() is not None:
-            self._start_audio()
-        elif self._is_paused:
-            self._toggle_pause()  # unpause
+            if not self._paused_by_sfx:  # don't start music while SFX is active
+                self._start_audio()
         else:
             self.get_logger().info('Audio already playing — ignoring duplicate GO')
 
@@ -129,30 +137,33 @@ class AgvAudioNode(Node):
         if not msg.data:
             return
 
+        self._music_running = False
         self._stop_sfx_mode()
         self._paused_by_sfx = False
-
-        if self._proc is not None and self._proc.poll() is None and not self._is_paused:
-            self._toggle_pause()  # pause
-        else:
-            self.get_logger().info('Audio already paused or not running — ignoring duplicate STOP')
+        self._kill_music()
 
     # ------------------------------------------------------------------
     # Internal Helpers
     # ------------------------------------------------------------------
 
     def _start_sfx_mode(self):
-        """Prepares for SFX by killing old SFX and pausing main playlist."""
+        """Prepares for SFX by killing music so the ALSA device is fully released."""
         self._kill_sfx()
-        if self._proc is not None and not self._is_paused:
-            self._toggle_pause()
+        if self._proc is not None and self._proc.poll() is None:
+            # Hard-kill the music process — SIGSTOP keeps it holding the hw device,
+            # which prevents a second ffmpeg from opening plughw:2,0.
+            self._kill_music()
             self._paused_by_sfx = True
+            self.get_logger().info('Music killed to release ALSA device for SFX.')
 
     def _stop_sfx_mode(self):
-        """Kills any active SFX and resumes main playlist if it was paused by SFX."""
+        """Kills any active SFX and restarts music from the same track if it was interrupted."""
         self._kill_sfx()
-        if self._paused_by_sfx:
-            self._toggle_pause()
+        if self._paused_by_sfx and self._music_running:
+            self._paused_by_sfx = False
+            self._start_audio()  # restart from the same track index
+            self.get_logger().info('SFX done — restarting music track.')
+        else:
             self._paused_by_sfx = False
 
     def _kill_sfx(self):
@@ -205,13 +216,15 @@ class AgvAudioNode(Node):
         )
 
     def _start_audio(self):
-        """Launch ffmpeg as a background process for the current track."""
+        """Launch ffmpeg for the current track, seeking to the saved position for true-pause resume."""
         if not self._playlist:
             self.get_logger().warn('Playlist is empty, cannot start audio.')
             return
 
+        seek_pos = self._music_position
         cmd = [
             'ffmpeg', '-y',
+            '-ss', str(seek_pos),        # seek before decode — resumes from paused position
             '-i', self._playlist[self._track_idx],
             '-f', 'alsa', ALSA_DEVICE,
         ]
@@ -223,47 +236,39 @@ class AgvAudioNode(Node):
                 stderr=subprocess.DEVNULL,
                 env=self._audio_env,
             )
-            self._is_paused = False
+            self._music_start_time = time.time()
             track_name = os.path.basename(self._playlist[self._track_idx])
-            self.get_logger().info(f'Audio playback started (PID {self._proc.pid}): {track_name}')
+            self.get_logger().info(
+                f'Audio playback started (PID {self._proc.pid}): {track_name} '
+                f'[seek={seek_pos:.1f}s]'
+            )
         except FileNotFoundError:
             self.get_logger().error(
                 'ffmpeg not found! Install it with: sudo apt install ffmpeg'
             )
 
-    def _toggle_pause(self):
-        """
-        Pause or resume ffmpeg using OS signals:
-          SIGSTOP - suspends the process (keeps position)
-          SIGCONT - resumes from where it was
-        """
-        if self._proc is None or self._proc.poll() is not None:
-            self.get_logger().warn('Tried to toggle pause but ffmpeg is not running')
-            return
-        try:
-            if self._is_paused:
-                os.kill(self._proc.pid, signal.SIGCONT)
-            else:
-                os.kill(self._proc.pid, signal.SIGSTOP)
-            self._is_paused = not self._is_paused
-            state = 'PAUSED' if self._is_paused else 'PLAYING'
-            self.get_logger().info(f'Audio state -> {state}')
-        except OSError as e:
-            self.get_logger().error(f'Failed to signal ffmpeg: {e}')
-            self._proc = None
+    def _kill_music(self):
+        """Snapshot playback position, then terminate the music ffmpeg process."""
+        # Accumulate how many seconds have played so resume can seek back here.
+        if self._music_start_time is not None:
+            self._music_position += time.time() - self._music_start_time
+            self._music_start_time = None
 
-    def _kill_audio(self):
-        """Terminate ffmpeg cleanly."""
-        self._kill_sfx()
         if self._proc is not None and self._proc.poll() is None:
-            self.get_logger().info('Terminating audio playback…')
             self._proc.terminate()
             try:
-                self._proc.wait(timeout=3)
+                self._proc.wait(timeout=2)
             except subprocess.TimeoutExpired:
                 self._proc.kill()
-            self._proc = None
-            self._is_paused = False
+            self.get_logger().info(
+                f'Music paused at {self._music_position:.1f}s (process terminated).'
+            )
+        self._proc = None
+
+    def _kill_audio(self):
+        """Terminate all audio (music + SFX) cleanly on shutdown."""
+        self._kill_sfx()
+        self._kill_music()
 
     # ------------------------------------------------------------------
     # Lifecycle
