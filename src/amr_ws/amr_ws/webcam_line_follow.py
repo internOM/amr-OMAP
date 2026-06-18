@@ -7,7 +7,7 @@
 #This code works to a certain extent, and if you add features, be wary of the hours you will have to spend debugging.
 #Always remember to push to GitHub to save your progress. 
 
-#Hours spent debugging: 131
+#Hours spent debugging: 171
 #First    Intern: Tan Dong Xu
 #Second   Intern: Tang Wei Lun
 #Third    Intern: Neo Wei Yuan
@@ -188,7 +188,7 @@ class WebcamLineFollow(Node):
 
         # ── PD controller ──────────────────────────────────────────────
         self.Kp = 0.0033
-        self.Kd = 0.00074
+        self.Kd = 0.00073
         self.last_err = 0
         self.last_time = None
         self.MAX_ANG_Z = 1.0

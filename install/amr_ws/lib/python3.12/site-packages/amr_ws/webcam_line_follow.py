@@ -188,7 +188,7 @@ class WebcamLineFollow(Node):
 
         # ── PD controller ──────────────────────────────────────────────
         self.Kp = 0.0033
-        self.Kd = 0.00074
+        self.Kd = 0.00073
         self.last_err = 0
         self.last_time = None
         self.MAX_ANG_Z = 1.0

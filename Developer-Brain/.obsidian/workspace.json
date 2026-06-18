@@ -1,0 +1,217 @@
+{
+  "main": {
+    "id": "53a012719d166c8a",
+    "type": "split",
+    "children": [
+      {
+        "id": "cc22f9054d67072c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "939797ba7badda1c",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1f56f8dc8477f295",
+    "type": "split",
+    "children": [
+      {
+        "id": "6d0f57ac1d99a40d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "96aa8d19d4493c6e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "3b7ca7ac728bd7ac",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "68a2113621d14a04",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "af78a1340de289e2",
+    "type": "split",
+    "children": [
+      {
+        "id": "3a0f2d484aceb0c9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b6fab10cece43bd9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "expected_agv_behavior/core_navigation_and_docking.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for core_navigation_and_docking"
+            }
+          },
+          {
+            "id": "bc56563b433ccd58",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "expected_agv_behavior/core_navigation_and_docking.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from core_navigation_and_docking"
+            }
+          },
+          {
+            "id": "9ad07cc46a118e6b",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "170548d22462954c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "1c089e973ead7179",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "expected_agv_behavior/core_navigation_and_docking.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of core_navigation_and_docking"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "digitalgarden:Digital Garden Publication Center": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "939797ba7badda1c",
+  "lastOpenFiles": [
+    "core_node_architectures/rack_websocket_server.md",
+    "ui_dashboards/agv_display.md",
+    "agv_display_dashboard.md",
+    "core_node_architectures/webcam_line_follow.md",
+    "debugging_breakthroughs/audio_systemd_stability.md",
+    "ui_dashboards/agv_shutdown_controls.md",
+    "core_node_architectures/agv_shutdown_node.md",
+    "expected_agv_behavior.md",
+    "core_node_architectures/agv_audio_node.md",
+    "core_node_architectures.md",
+    "debugging_breakthroughs.md",
+    "launch_behaviors.md",
+    "launch_behaviors/bringup_launch.md",
+    "launch_behaviors/slam_toolbox_launch.md",
+    "expected_agv_behavior/core_navigation_and_docking.md",
+    "debugging_breakthroughs/tf_staleness_recovery.md",
+    "debugging_breakthroughs/line_changing_and_safety.md",
+    "debugging_breakthroughs/docking_and_uturn_logic.md",
+    "debugging_breakthroughs/amr_to_agv_transition.md",
+    "core_node_architectures/webcam_state_machine.md",
+    "core_node_architectures/orchestrator_node.md",
+    "parameter_files/agv_state_yaml.md",
+    "parameter_files/rack_state_yaml.md",
+    "ui_dashboards.md",
+    "debugging_breakthroughs/next_station_rack_filter.md",
+    "expected_agv_behavior/ui_integration_flow.md",
+    "expected_agv_behavior",
+    "ui_dashboards",
+    "debugging_breakthroughs",
+    "launch_behaviors",
+    "core_node_architectures"
+  ]
+}
